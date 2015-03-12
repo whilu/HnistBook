@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout="@layout/preference_item"
+    android:title="@string/title_activity_setting">
+    <PreferenceCategory
+        android:layout="@layout/preference_category_widget"
+        android:title="APP选择">
+
+        <CheckBoxPreference
+            android:layout="@layout/preference_item"
+            android:title="接收每日书籍推送消息"
+            android:key="@string/notify_priority"
+            android:summaryOn="当前为接收消息推送(默认)"
+            android:summaryOff="当前为不接受消息推送"
+            android:defaultValue="true"/>
+        <Preference
+            android:layout="@layout/preference_item"
+            android:title="清理缓存"
+            android:summary="点击清空缓存文件"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:layout="@layout/preference_item"
+            android:title="夜间模式"
+            android:summaryOff="关闭"
+            android:summaryOn="已开启"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:layout="@layout/preference_item"
+            android:title="自动检测更新"
+            android:summaryOff="当前为关闭状态"
+            android:summaryOn="当前为开启状态"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:layout="@layout/preference_category_widget"
+        android:title="帮助">
+        <Preference
+            android:layout="@layout/preference_item"
+            android:title="关于">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://lujun.sinaapp.com"/>
+        </Preference>
+
+        <Preference
+            android:layout="@layout/preference_item"
+            android:title="手动检查更新">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://lujun.sinaapp.com"/>
+        </Preference>
+
+        <Preference
+            android:layout="@layout/preference_item"
+            android:title="喜欢书志"
+            android:summary="若您觉得书志很赞，去应用商店给我们赏个好评吧！非常感谢！">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=me.drakeet.seashell"/>
+        </Preference>
+
+    </PreferenceCategory>
+</PreferenceScreen>

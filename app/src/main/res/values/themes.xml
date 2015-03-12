@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppTheme.Base"></style>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <!-- Actionbar color -->
+        <item name="colorPrimary">@color/theme_primary</item>
+        <!--Status bar color-->
+        <item name="colorPrimaryDark">@color/theme_primary_dark</item>
+        <!--App bar 上的标题与更多菜单中的文字颜色-->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!--Accent color各控制元件(如：check box、switch 或是 radoi) 被勾选 (checked) 或是选定 (selected) 的颜色-->
+        <item name="colorAccent">@color/accent_material_dark</item>
+        <!--navigationBar Color,api21+ use-->
+        <!--<item name="navigationBarColor">@color/theme_primary</item>-->
+        <!--各控制元件的预设颜色-->
+        <item name="colorControlNormal">@color/background_material_light</item>
+        <!--Window color-->
+        <item name="android:windowBackground">@color/background_material_light</item>
+        <!--菜单item文字颜色-->
+        <item name="android:textColor">@color/background_material_dark</item>
+
+        <!--up icon另一种模式-->
+        <item name="drawerArrowStyle">@style/AppTheme.TwoDrawerArrowStyle</item>
+    </style>
+
+    <!--navigation drarwer另一种风格-->
+    <style name="AppTheme.TwoDrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <!--up arrow不再旋转动画-->
+        <!--<item name="spinBars">false</item>-->
+        <!--设置drawer arrow的颜色-->
+        <item name="color">@color/background_material_light</item>
+    </style>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="hnistbook"></dbname>
+    <version value="1"></version>
+
+    <list></list>
+</litepal>

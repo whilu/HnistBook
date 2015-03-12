@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="planets_array">
+        <item>今天</item>
+        <item>本周</item>
+        <item>本月</item>
+        <item>本年</item>
+    </string-array>
+</resources>
