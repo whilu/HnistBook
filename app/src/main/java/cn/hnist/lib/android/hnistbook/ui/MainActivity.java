@@ -31,7 +31,6 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
-    private int iii;
     private ListView mDrawerList;
     private CharSequence mTitle, mDrawerTitle;
     private String[] mPlanetTitles;
