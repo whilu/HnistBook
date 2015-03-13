@@ -3,52 +3,76 @@
     android:id="@+id/srl_home2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:weightSum="1">
+    android:orientation="vertical"
+    android:background="@color/gray">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="245dp"
-        android:orientation="horizontal"
-        android:layout_weight="0.13">
+        android:layout_height="match_parent">
 
-        <ImageView
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:src="@drawable/book_test" />
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_weight="1">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/background_material_dark"
-                android:drawableLeft="@drawable/ic_search_white_24dp"
-                android:drawablePadding="3dp"
-                android:singleLine="true"
-                android:textSize="14sp"
-                android:gravity="left|center_vertical"
-                android:text="平凡的世界" />
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/gray_text"
-        android:textSize="14sp"
-        android:gravity="left"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="但凡有点思想的人，他的体内必定有一股力量撕扯着他的灵魂，他的欲望超越温饱..." />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/background_material_dark"
+                    android:singleLine="true"
+                    android:textSize="28sp"
+                    android:gravity="center"
+                    android:text="平凡的世界" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/deep_gray"
+                    android:singleLine="true"
+                    android:textSize="17sp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="路遥/北京十月文艺出版社/2008-9" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="360dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_margin="30dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/book_test" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray_text"
+                    android:textSize="16sp"
+                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:text="但凡有点思想的人，他的体内必定有一股力量撕扯着他的灵魂，他的欲望超越温饱..." />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>

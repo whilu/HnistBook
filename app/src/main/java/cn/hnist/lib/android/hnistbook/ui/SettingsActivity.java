@@ -14,6 +14,7 @@ import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
  * Created by lujun on 2015/3/4.
  */
 public class SettingsActivity extends SlidingActivity {
+
     private Toolbar mToolBar;
     private SettingsFragment mSettingsFragment;
 

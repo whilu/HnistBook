@@ -20,6 +20,7 @@ import cn.hnist.lib.android.hnistbook.R;
 import static cn.hnist.lib.android.hnistbook.util.IntentUtils.KEY_PREVIEW_IMAGE;
 
 public class SlidingActivity extends ActionBarActivity {//TODO 修改FragmengActivity为ActionBarActivity
+
     private static final float MIN_SCALE = 0.85f;
 
     private View mPreview;

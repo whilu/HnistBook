@@ -28,6 +28,7 @@ import cn.hnist.lib.android.hnistbook.ui.fragments.HomeFragment;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 
 public class MainActivity extends ActionBarActivity {
+
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
