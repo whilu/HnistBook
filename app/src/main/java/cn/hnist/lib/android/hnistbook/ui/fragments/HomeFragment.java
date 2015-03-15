@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.TextViewVertical;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
 
 /**
@@ -23,6 +24,7 @@ public class HomeFragment extends Fragment {
     private ViewPagerAdapter mViewPagerAdapter;
     private PageChangedListener mPageChangeListener;
     private ArrayList<View> views;
+    private TextViewVertical tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,16 @@ public class HomeFragment extends Fragment {
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.setOnPageChangeListener(mPageChangeListener);
         mViewPager.setCurrentItem(1);
+
+        //
+        tvPage2Author = (TextViewVertical) views.get(1).findViewById(R.id.tv_page2_author);
+        tvPage2PYear = (TextViewVertical) views.get(1).findViewById(R.id.tv_page2_pyear);
+        tvPage2Publisher = (TextViewVertical) views.get(1).findViewById(R.id.tv_page2_publisher);
+        tvPage2ISBN = (TextViewVertical) views.get(1).findViewById(R.id.tv_page2_isbn);
+        tvPage2Author.setText("路遥著");
+        tvPage2Publisher.setText("北京十月文艺出版社");
+        tvPage2PYear.setText("2015/9");
+        tvPage2ISBN.setText("98989876545");
     }
 
     /**

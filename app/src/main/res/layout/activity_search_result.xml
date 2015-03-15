@@ -12,6 +12,13 @@
         android:minHeight="?attr/actionBarSize">
     </android.support.v7.widget.Toolbar>
 
+
+    <cn.hnist.lib.android.hnistbook.bean.TextViewVertical
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        textSize="60" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

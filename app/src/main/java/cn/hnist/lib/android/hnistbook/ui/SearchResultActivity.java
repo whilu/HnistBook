@@ -7,6 +7,7 @@ import android.util.Log;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
+import cn.hnist.lib.android.hnistbook.bean.TextViewVertical;
 
 /**
  * Created by lujun on 2015/3/2.
@@ -17,6 +18,8 @@ public class SearchResultActivity extends SlidingActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
+        TextViewVertical tv = (TextViewVertical) findViewById(R.id.tv);
+        tv.setText("你四大圣地");
     }
 
     @Override
