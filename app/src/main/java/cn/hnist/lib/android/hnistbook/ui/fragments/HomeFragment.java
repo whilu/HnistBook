@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public class HomeFragment extends Fragment {
     private PageChangedListener mPageChangeListener;
     private ArrayList<View> views;
     private TextViewVertical tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
+    private ScrollView svPage2Main;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,10 +61,13 @@ public class HomeFragment extends Fragment {
         mViewPager.setCurrentItem(1);
 
         //
+        svPage2Main = (ScrollView) views.get(1).findViewById(R.id.sv_page2_main);
         tvPage2Author = (TextViewVertical) views.get(1).findViewById(R.id.tv_page2_author);
         tvPage2PYear = (TextViewVertical) views.get(1).findViewById(R.id.tv_page2_pyear);
         tvPage2Publisher = (TextViewVertical) views.get(1).findViewById(R.id.tv_page2_publisher);
         tvPage2ISBN = (TextViewVertical) views.get(1).findViewById(R.id.tv_page2_isbn);
+        //
+        svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
         tvPage2Author.setText("路遥著");
         tvPage2Publisher.setText("北京十月文艺出版社");
         tvPage2PYear.setText("2015/9");
