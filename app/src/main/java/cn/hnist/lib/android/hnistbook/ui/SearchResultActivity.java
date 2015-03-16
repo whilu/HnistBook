@@ -1,9 +1,8 @@
 package cn.hnist.lib.android.hnistbook.ui;
 
-import android.app.SearchManager;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
@@ -14,31 +13,26 @@ import cn.hnist.lib.android.hnistbook.bean.TextViewVertical;
  */
 public class SearchResultActivity extends SlidingActivity {
 
+    private Toolbar mToolBar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
+        mToolBar = (Toolbar) findViewById(R.id.search_result_toolbar);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(R.string.action_search);
         TextViewVertical tv = (TextViewVertical) findViewById(R.id.tv);
-        tv.setText("你四大圣地");
+        tv.setText("四大圣地");
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        // TODO Auto-generated method stub
-        Log.i("SearchResultActivity", "onNewIntent() is called");
-        super.onNewIntent(intent);
-        doSearchQuery(intent);
-    }
-
-
-    private void doSearchQuery(Intent intent) {
-        Log.i("SearchResultActivity", "doSearchQuery() is called");
-        if (intent == null)
-            return;
-        String queryAction = intent.getAction();
-        if (Intent.ACTION_SEARCH.equals(queryAction)) {
-            String queryString = intent.getStringExtra(SearchManager.QUERY);
-            Log.i("SearchResultActivity", "doSearchQuery()" + queryString);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

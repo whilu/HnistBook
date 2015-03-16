@@ -2,26 +2,18 @@ package cn.hnist.lib.android.hnistbook.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
@@ -102,23 +94,6 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    private void setupSearchView(Menu menu){
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        if (searchView == null){
-            Log.i("SearchView", "SearchView null");
-            return;
-        }
-        searchView.setIconifiedByDefault(true);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        ComponentName componentName = new ComponentName(this, SearchResultActivity.class);
-        SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
-        if (searchableInfo == null){
-            Log.i("SearchableInfo", "Failed to find search info");
-            return;
-        }
-        searchView.setSearchableInfo(searchableInfo);
     }
 
     @Override
