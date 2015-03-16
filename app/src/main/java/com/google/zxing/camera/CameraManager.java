@@ -234,8 +234,11 @@ public final class CameraManager {
       } else if (height > MAX_FRAME_HEIGHT) {
         height = MAX_FRAME_HEIGHT;
       }
+
+      //TODO modify the center finder x&y offset
+      //by lujun 2015/3/16
       int leftOffset = (screenResolution.x - width) / 2;
-      int topOffset = (screenResolution.y - height) / 6;
+      int topOffset = (screenResolution.y - height) / 3;
       framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
 //      Log.d(TAG, "Calculated framing rect: " + framingRect);
     }

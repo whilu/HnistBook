@@ -51,12 +51,12 @@ public class CaptureActivity extends SlidingActivity implements Callback {
 		setContentView(R.layout.activity_scan_code);
 		CameraManager.init(getApplication());
 		viewfinderView  = (ViewfinderView) this.findViewById(R.id.viewfinder_view);
-		inactivityTimer = new InactivityTimer(this);
-		hasSurface = false;
         mToolBar = (Toolbar) findViewById(R.id.scancode_toolbar);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.action_scan);
+		inactivityTimer = new InactivityTimer(this);
+		hasSurface = false;
 	}
 
     @Override
