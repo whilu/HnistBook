@@ -108,6 +108,7 @@ public class CaptureActivity extends Activity implements Callback {
 	
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		try {
+            Toast.makeText(CaptureActivity.this, "" + CameraManager.get(), Toast.LENGTH_SHORT).show();
 			CameraManager.get().openDriver(surfaceHolder);
 		} catch (IOException ioe) {
             ioe.printStackTrace();
