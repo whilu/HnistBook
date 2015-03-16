@@ -27,17 +27,16 @@
             android:layout_height="wrap_content" />
 
         <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
 
             <TextView
                 android:id="@+id/scan_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="140dp"
+                android:layout_marginBottom="40dp"
                 android:gravity="center"
                 android:text="请将二维码或条形码置于框内"
                 android:textColor="@color/white"

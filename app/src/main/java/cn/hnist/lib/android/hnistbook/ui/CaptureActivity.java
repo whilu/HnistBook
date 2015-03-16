@@ -1,6 +1,8 @@
 package cn.hnist.lib.android.hnistbook.ui;
 
-import android.app.Activity;
+import java.io.IOException;
+import java.util.Vector;
+
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -9,6 +11,8 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -21,16 +25,13 @@ import com.google.zxing.decoding.CaptureActivityHandler;
 import com.google.zxing.decoding.InactivityTimer;
 import com.google.zxing.view.ViewfinderView;
 
-import java.io.IOException;
-import java.util.Vector;
-
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
 
 /**
- * Initial the camera
+ * Created by lujun on 2015/3/16.
  */
-public class CaptureActivity extends Activity implements Callback {
-	/** Members*/
+public class CaptureActivity extends SlidingActivity implements Callback {
 	private static final float BEEP_VOLUME = 0.10f;
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -41,19 +42,33 @@ public class CaptureActivity extends Activity implements Callback {
 	private boolean hasSurface;
 	private boolean playBeep;
 	private String characterSet;
+    private Toolbar mToolBar;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scan_code);
-        CameraManager.init(getApplication());
-        viewfinderView  = (ViewfinderView) this.findViewById(R.id.viewfinder_view);
-        inactivityTimer = new InactivityTimer(this);
-        hasSurface = false;
+		CameraManager.init(getApplication());
+		viewfinderView  = (ViewfinderView) this.findViewById(R.id.viewfinder_view);
+		inactivityTimer = new InactivityTimer(this);
+		hasSurface = false;
+        mToolBar = (Toolbar) findViewById(R.id.scancode_toolbar);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(R.string.action_scan);
 	}
 
-	@Override
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
 	protected void onResume() {
 		super.onResume();
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
@@ -83,8 +98,8 @@ public class CaptureActivity extends Activity implements Callback {
 			handler.quitSynchronously();
 			handler = null;
 		}
-//		CameraManager.get().camearFlash(CaptureActivity.this, 0);
-//		CameraManager.get().closeDriver();
+		CameraManager.get().camearFlash(CaptureActivity.this, 0);
+		CameraManager.get().closeDriver();
 	}
 
 	@Override
@@ -103,22 +118,20 @@ public class CaptureActivity extends Activity implements Callback {
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
 		//FIXME
-
+        Toast.makeText(this, resultString, Toast.LENGTH_SHORT).show();
 	}
 	
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		try {
-            Toast.makeText(CaptureActivity.this, "" + CameraManager.get(), Toast.LENGTH_SHORT).show();
 			CameraManager.get().openDriver(surfaceHolder);
 		} catch (IOException ioe) {
-            ioe.printStackTrace();
 			return;
 		} catch (RuntimeException e) {
-            e.printStackTrace();
 			return;
 		}
 		if (handler == null) {
-			handler = new CaptureActivityHandler(this, decodeFormats, characterSet);
+			handler = new CaptureActivityHandler(this, decodeFormats,
+					characterSet);
 		}
 	}
 

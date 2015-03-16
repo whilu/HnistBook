@@ -139,8 +139,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             IntentUtils.startPreviewActivity(this, new Intent(this, SettingsActivity.class));
         }else if (id == R.id.action_scan){
-//            IntentUtils.startPreviewActivity(this, new Intent(this, CaptureActivity.class));
-            startActivity(new Intent(this, CaptureActivity.class));
+            IntentUtils.startPreviewActivity(this, new Intent(this, CaptureActivity.class));
         }else if (id == R.id.action_search){
             IntentUtils.startPreviewActivity(this, new Intent(this, SearchResultActivity.class));
         }
