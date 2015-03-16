@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -137,7 +138,11 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             IntentUtils.startPreviewActivity(this, new Intent(this, SettingsActivity.class));
-//            startActivity(new Intent(this, SettingsActivity.class));
+        }else if (id == R.id.action_scan){
+//            IntentUtils.startPreviewActivity(this, new Intent(this, CaptureActivity.class));
+            startActivity(new Intent(this, CaptureActivity.class));
+        }else if (id == R.id.action_search){
+            IntentUtils.startPreviewActivity(this, new Intent(this, SearchResultActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
