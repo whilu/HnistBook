@@ -23,6 +23,7 @@ import android.widget.Toast;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
+import cn.hnist.lib.android.hnistbook.ui.fragments.BookListFragment;
 import cn.hnist.lib.android.hnistbook.ui.fragments.HomeFragment;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 
@@ -37,7 +38,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private CharSequence mTitle, mDrawerTitle;
     private String[] mPlanetTitles;
     private FragmentManager fragmentManager;
-    private HomeFragment homeFragment;
+    private Fragment[] fragments;
     private int[] mPlanetIcons;
 
     @Override
@@ -58,11 +59,14 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mPlanetIcons = new int[]{
                 R.drawable.ic_account_circle_grey600_36dp,
                 R.drawable.ic_account_circle_grey600_36dp,
-                R.drawable.ic_account_circle_grey600_36dp,
                 R.drawable.ic_account_circle_grey600_36dp
         };
         fragmentManager = getFragmentManager();
-        homeFragment = new HomeFragment();
+        fragments = new Fragment[]{
+                new HomeFragment(),
+                new BookListFragment(),
+                new BookListFragment()
+        };
 
         mDrawerList.setAdapter(new SliderMenuAdapter(mPlanetTitles, mPlanetIcons));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -90,7 +94,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         if (savedInstanceState == null){
             selectItem(0);
-            replaceFragment(homeFragment);
+            replaceFragment(fragments[0]);
         }
     }
 
@@ -173,6 +177,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
             view.setPressed(true);
+            replaceFragment(fragments[position]);
         }
     }
 

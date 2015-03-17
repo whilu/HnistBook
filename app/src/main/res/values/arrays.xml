@@ -2,8 +2,7 @@
 <resources>
     <string-array name="planets_array">
         <item>今天</item>
-        <item>本周</item>
-        <item>本月</item>
-        <item>本年</item>
+        <item>七天</item>
+        <item>一月</item>
     </string-array>
 </resources>
