@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
 import cn.hnist.lib.android.hnistbook.ui.fragments.HomeFragment;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
@@ -123,7 +125,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(this, "" + query, Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(query)){
+            Intent searchIntent = new Intent(this, SearchResultActivity.class);
+            searchIntent.putExtra(Config.SEARCH_KEY, query);
+            IntentUtils.startPreviewActivity(this, searchIntent);
+            mSearchView.onActionViewCollapsed();
+        }
         return false;
     }
 

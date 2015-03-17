@@ -2,9 +2,11 @@ package cn.hnist.lib.android.hnistbook.ui;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
 import cn.hnist.lib.android.hnistbook.bean.TextViewVertical;
 
@@ -14,6 +16,7 @@ import cn.hnist.lib.android.hnistbook.bean.TextViewVertical;
 public class SearchResultActivity extends SlidingActivity {
 
     private Toolbar mToolBar;
+    private String searchKeyWords = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,9 +25,13 @@ public class SearchResultActivity extends SlidingActivity {
         mToolBar = (Toolbar) findViewById(R.id.search_result_toolbar);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.action_search);
-        TextViewVertical tv = (TextViewVertical) findViewById(R.id.tv);
-        tv.setText("你好啊");
+        if (getIntent().getStringExtra(Config.SEARCH_KEY) != null
+                && !TextUtils.isEmpty(getIntent().getStringExtra(Config.SEARCH_KEY))){
+            searchKeyWords = getIntent().getStringExtra(Config.SEARCH_KEY);
+            setTitle("《" + searchKeyWords + "》");
+            TextViewVertical tv = (TextViewVertical) findViewById(R.id.tv);
+            tv.setText(searchKeyWords);
+        }
     }
 
     @Override
