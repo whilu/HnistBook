@@ -2,29 +2,35 @@ package cn.hnist.lib.android.hnistbook.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
 import cn.hnist.lib.android.hnistbook.ui.fragments.HomeFragment;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener,
+        SearchView.OnCloseListener {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
+    private SearchView mSearchView;
     private ListView mDrawerList;
     private CharSequence mTitle, mDrawerTitle;
     private String[] mPlanetTitles;
@@ -93,8 +99,37 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        if (searchItem != null){
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            mSearchView = (SearchView) searchItem.getActionView();
+            if(mSearchView != null){
+                mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+                mSearchView.setIconified(true);
+                mSearchView.setQueryHint(getResources().getString(R.string.search_hint));
+                mSearchView.setOnQueryTextListener(this);
+                mSearchView.setOnCloseListener(this);
+            }
+        }
         return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Toast.makeText(this, "" + query, Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onClose() {
+        return false;
     }
 
     @Override
@@ -117,9 +152,8 @@ public class MainActivity extends ActionBarActivity {
         }else if (id == R.id.action_scan){
             IntentUtils.startPreviewActivity(this, new Intent(this, CaptureActivity.class));
         }else if (id == R.id.action_search){
-            IntentUtils.startPreviewActivity(this, new Intent(this, SearchResultActivity.class));
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

@@ -11,4 +11,5 @@
 
     <string name="notify_priority">notify_priority</string>
     <string name="title_activity_setting">设置</string>
+    <string name="search_hint">请输入书名</string>
 </resources>

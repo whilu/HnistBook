@@ -8,6 +8,7 @@
         android:title="@string/action_search"
         android:orderInCategory="1"
         android:icon="@drawable/ic_search_white_24dp"
+        app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_scan"
