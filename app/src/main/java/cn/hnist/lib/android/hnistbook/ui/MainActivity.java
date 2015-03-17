@@ -2,28 +2,37 @@ package cn.hnist.lib.android.hnistbook.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import java.util.List;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
 import cn.hnist.lib.android.hnistbook.ui.fragments.HomeFragment;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener,
+        SearchView.OnCloseListener{
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
+    private SearchView mSearchView;
     private Toolbar mToolbar;
     private ListView mDrawerList;
     private CharSequence mTitle, mDrawerTitle;
@@ -61,7 +70,8 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//打开up botton
         mTitle = mDrawerTitle = getSupportActionBar().getTitle();
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close){
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
+                R.string.drawer_open, R.string.drawer_close){
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -92,8 +102,44 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        /*mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        //setup searchView
+        mSearchView.setIconifiedByDefault(true);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if (searchManager != null){
+            List<SearchableInfo> searchables = searchManager.getSearchablesInGlobalSearch();
+
+            SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
+            for (SearchableInfo inf : searchables){
+                if (inf.getSuggestAuthority() != null
+                        && inf.getSuggestAuthority().startsWith("applications")){
+                    info = inf;
+                }
+                mSearchView.setSearchableInfo(info);
+            }
+            mSearchView.setOnQueryTextListener(this);
+            mSearchView.setOnCloseListener(this);
+        }*/
         return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onClose() {
+        return false;
     }
 
     @Override
@@ -115,9 +161,9 @@ public class MainActivity extends ActionBarActivity {
             IntentUtils.startPreviewActivity(this, new Intent(this, SettingsActivity.class));
         }else if (id == R.id.action_scan){
             IntentUtils.startPreviewActivity(this, new Intent(this, CaptureActivity.class));
-        }else if (id == R.id.action_search){
+        }/*else if (id == R.id.action_search){
             IntentUtils.startPreviewActivity(this, new Intent(this, SearchResultActivity.class));
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
