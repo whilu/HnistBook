@@ -1,65 +1,63 @@
 package cn.hnist.lib.android.hnistbook.ui.adapter;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import cn.hnist.lib.android.hnistbook.GlApplication;
+import java.util.List;
+
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.model.Book;
 
 /**
  * Created by lujun on 2015/3/1.
  */
-public class BookAdapter extends BaseAdapter {
-    private LayoutInflater mInflater;
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
-    public BookAdapter(){
-        mInflater = LayoutInflater.from(GlApplication.getContext());
+    private List<Book> mBooks;
+
+    public BookAdapter(List<Book> books) {
+        this.mBooks = books;
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.book_list_item, null);
+        return new ViewHolder(view);
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public void onBindViewHolder(ViewHolder viewHolder, int i){
+        Book book = mBooks.get(i);
+        viewHolder.ivBookImg.setImageResource(R.drawable.book);
+        viewHolder.tvBookTitle.setText(book.getTitle());
+        viewHolder.tvBookAuthor.setText(book.getAuthor());
+        viewHolder.tvBookPublish.setText(book.getPublisher() + "/" + book.getPublishDate());
+        viewHolder.tvBookIsbn.setText(book.getIsbn());
     }
 
     @Override
-    public int getCount() {
-        return 0;
+    public int getItemCount(){
+        return mBooks == null ? 0 : mBooks.size();
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
-        if (convertView == null){
-            holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.book_list_item, null);
-            holder.ivBookImg = (ImageView) convertView.findViewById(R.id.iv_bli_book_img);
-            holder.tvBookTitle = (TextView) convertView.findViewById(R.id.tv_bli_book_title);
-            holder.tvBookAuthor = (TextView) convertView.findViewById(R.id.tv_bli_book_author);
-            holder.tvBookPublish = (TextView) convertView.findViewById(R.id.tv_bli_book_publish);
-            holder.tvBookIsbn = (TextView) convertView.findViewById(R.id.tv_bli_book_isbn);
-            convertView.setTag(holder);
-        }else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        //
-
-        return convertView;
-    }
-
-    class ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView ivBookImg;
         TextView tvBookTitle;
         TextView tvBookAuthor;
         TextView tvBookPublish;
         TextView tvBookIsbn;
+
+        public ViewHolder(View view){
+            super(view);
+            ivBookImg = (ImageView) view.findViewById(R.id.iv_bli_book_img);
+            tvBookTitle = (TextView) view.findViewById(R.id.tv_bli_book_title);
+            tvBookAuthor = (TextView) view.findViewById(R.id.tv_bli_book_author);
+            tvBookPublish = (TextView) view.findViewById(R.id.tv_bli_book_publish);
+            tvBookIsbn = (TextView) view.findViewById(R.id.tv_bli_book_isbn);
+        }
     }
 }
