@@ -6,16 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
+import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.model.Book;
 
 /**
  * Created by lujun on 2015/3/1.
  */
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>
+        implements View.OnClickListener {
 
     private List<Book> mBooks;
 
@@ -23,12 +26,15 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         this.mBooks = books;
     }
 
+    // 创建View，被LayoutManager调用
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.book_list_item, null);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_item, parent, false);
+        view.setOnClickListener(this);
         return new ViewHolder(view);
     }
 
+    // 将数据与界面进行绑定
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i){
         Book book = mBooks.get(i);
@@ -37,6 +43,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         viewHolder.tvBookAuthor.setText(book.getAuthor());
         viewHolder.tvBookPublish.setText(book.getPublisher() + "/" + book.getPublishDate());
         viewHolder.tvBookIsbn.setText(book.getIsbn());
+        viewHolder.itemView.setTag(mBooks.get(i));
     }
 
     @Override
@@ -45,11 +52,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView ivBookImg;
-        TextView tvBookTitle;
-        TextView tvBookAuthor;
-        TextView tvBookPublish;
-        TextView tvBookIsbn;
+        final ImageView ivBookImg;
+        final TextView tvBookTitle;
+        final TextView tvBookAuthor;
+        final TextView tvBookPublish;
+        final TextView tvBookIsbn;
 
         public ViewHolder(View view){
             super(view);
@@ -59,5 +66,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             tvBookPublish = (TextView) view.findViewById(R.id.tv_bli_book_publish);
             tvBookIsbn = (TextView) view.findViewById(R.id.tv_bli_book_isbn);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(GlApplication.getContext(), ((Book) v.getTag()).getTitle(), Toast.LENGTH_SHORT).show();
     }
 }
