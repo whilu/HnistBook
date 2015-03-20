@@ -21,6 +21,7 @@ import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.model.Book;
 import cn.hnist.lib.android.hnistbook.ui.BookDetailActivity;
 import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
+import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 
 /**
  * Created by lujun on 2015/3/17.
@@ -76,8 +77,7 @@ public class BookListFragment extends Fragment {
             mAdapter.setOnItemClickListener(new BookAdapter.ViewHolder.ItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-//                    Toast.makeText(getActivity(), ((Book) view.getTag()).getTitle(), Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getActivity(), BookDetailActivity.class));
+                    IntentUtils.startPreviewActivity(getActivity(), new Intent(getActivity(), BookDetailActivity.class));
                 }
             });
             mRecycleView.setAdapter(mAdapter);

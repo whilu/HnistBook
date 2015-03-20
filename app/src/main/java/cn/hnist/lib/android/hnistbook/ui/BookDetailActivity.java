@@ -21,7 +21,7 @@ public class BookDetailActivity extends SlidingActivity {
         mToolBar = (Toolbar) findViewById(R.id.book_detail_toolbar);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("书本详细");
+        setTitle("《" + "平凡的世界" + "》");
     }
 
     @Override

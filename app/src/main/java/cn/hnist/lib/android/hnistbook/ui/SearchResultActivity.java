@@ -33,7 +33,7 @@ public class SearchResultActivity extends SlidingActivity {
         if (getIntent().getStringExtra(Config.SEARCH_KEY) != null
                 && !TextUtils.isEmpty(getIntent().getStringExtra(Config.SEARCH_KEY))){
             searchKeyWords = getIntent().getStringExtra(Config.SEARCH_KEY);
-            setTitle("《" + searchKeyWords + "》");
+            setTitle(searchKeyWords);
             mFragment = new BookListFragment();
             if (mFragment != null){
                 replaceFragment(mFragment);
