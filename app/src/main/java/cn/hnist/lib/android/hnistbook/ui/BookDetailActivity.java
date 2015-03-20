@@ -1,16 +1,16 @@
 package cn.hnist.lib.android.hnistbook.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
 
 /**
  * Created by lujun on 2015/3/18.
  */
-public class BookDetailActivity extends ActionBarActivity {
+public class BookDetailActivity extends SlidingActivity {
 
     private Toolbar mToolBar;
 

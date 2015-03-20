@@ -1,6 +1,7 @@
 package cn.hnist.lib.android.hnistbook.ui.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -11,12 +12,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.model.Book;
+import cn.hnist.lib.android.hnistbook.ui.BookDetailActivity;
 import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
 
 /**
@@ -28,7 +31,7 @@ public class BookListFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycleView;
     private LinearLayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
+    private BookAdapter mAdapter;
     private List<Book> mBooks;
 
     @Override
@@ -70,6 +73,13 @@ public class BookListFragment extends Fragment {
                 mBooks.add(book);
             }
             mAdapter = new BookAdapter(mBooks);
+            mAdapter.setOnItemClickListener(new BookAdapter.ViewHolder.ItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+//                    Toast.makeText(getActivity(), ((Book) view.getTag()).getTitle(), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), BookDetailActivity.class));
+                }
+            });
             mRecycleView.setAdapter(mAdapter);
             mRecycleView.setOnScrollListener(
                     new RecyclerView.OnScrollListener() {
