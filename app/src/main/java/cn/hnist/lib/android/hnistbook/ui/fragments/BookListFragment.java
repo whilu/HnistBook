@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.model.Book;
 import cn.hnist.lib.android.hnistbook.ui.BookDetailActivity;
 import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
@@ -34,6 +35,7 @@ public class BookListFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private BookAdapter mAdapter;
     private List<Book> mBooks;
+    private Bundle mBundle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,10 @@ public class BookListFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mBooks = new ArrayList<Book>();
+        if (getActivity().getIntent() != null){
+            mBundle = getActivity().getIntent().getExtras();
+            Toast.makeText(getActivity(), mBundle.getString(Constant.BOOK_LST_TEST_KEY), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initView(){

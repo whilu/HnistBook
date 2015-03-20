@@ -2,6 +2,7 @@ package cn.hnist.lib.android.hnistbook.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Config;
+import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
 import cn.hnist.lib.android.hnistbook.ui.fragments.BookListFragment;
 
@@ -34,6 +36,11 @@ public class SearchResultActivity extends SlidingActivity {
                 && !TextUtils.isEmpty(getIntent().getStringExtra(Config.SEARCH_KEY))){
             searchKeyWords = getIntent().getStringExtra(Config.SEARCH_KEY);
             setTitle(searchKeyWords);
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.BOOK_LST_TEST_KEY, "SearchResultActivity");
+            intent.putExtras(bundle);
+            setIntent(intent);
             mFragment = new BookListFragment();
             if (mFragment != null){
                 replaceFragment(mFragment);

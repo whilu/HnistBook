@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Config;
+import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
 import cn.hnist.lib.android.hnistbook.ui.fragments.BookListFragment;
 import cn.hnist.lib.android.hnistbook.ui.fragments.HomeFragment;
@@ -40,6 +41,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private FragmentManager fragmentManager;
     private Fragment[] fragments;
     private int[] mPlanetIcons;
+    private Bundle mBundle;
+    private String[] testStrs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 R.drawable.ic_account_circle_grey600_36dp
         };
         fragmentManager = getFragmentManager();
+        //
+        mBundle = new Bundle();
+        testStrs = new String[]{"MainActivity0", "MainActivit1", "MainActivity2"};
+        //
+
         fragments = new Fragment[]{
                 new HomeFragment(),
                 new BookListFragment(),
@@ -177,6 +185,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
             view.setPressed(true);
+
+            Intent intent = new Intent();
+            mBundle.clear();
+            mBundle.putString(Constant.BOOK_LST_TEST_KEY, testStrs[position]);
+            intent.putExtras(mBundle);
+            setIntent(intent);
             replaceFragment(fragments[position]);
         }
     }
