@@ -1,4 +1,4 @@
-package cn.hnist.lib.android.hnistbook.model;
+package cn.hnist.lib.android.hnistbook.bean;
 
 import org.litepal.crud.DataSupport;
 
@@ -6,6 +6,8 @@ import org.litepal.crud.DataSupport;
  * Created by lujun on 2015/3/18.
  */
 public class Book extends DataSupport {
+
+    private String id;
 
     private String imgUrl;
 
@@ -18,6 +20,21 @@ public class Book extends DataSupport {
     private String publishDate;
 
     private String isbn;
+
+    public Book(){
+        super();
+    }
+
+    public Book(String imgUrl, String title, String author, String publisher,
+                String publishDate, String isbn){
+        super();
+        this.imgUrl = imgUrl;
+        this.title = title;
+        this.author = author;
+        this.publisher = publisher;
+        this.publishDate = publishDate;
+        this.isbn = isbn;
+    }
 
     public String getImgUrl(){ return imgUrl; }
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.hnist.lib.android.hnistbook.R;
-import cn.hnist.lib.android.hnistbook.model.Book;
+import cn.hnist.lib.android.hnistbook.bean.Book;
 
 /**
  * Created by lujun on 2015/3/1.
