@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
-import cn.hnist.lib.android.hnistbook.model.Book;
 import cn.hnist.lib.android.hnistbook.ui.BookDetailActivity;
 import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
