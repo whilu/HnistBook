@@ -5,5 +5,8 @@ package cn.hnist.lib.android.hnistbook.bean;
  */
 public class Constant {
 
-    public final static String BOOK_LST_TEST_KEY = "BookListFragment_bundle_key";
+    public final static String BOOK_LST_SEARCH_KEY = "BookListFragment_search_key";
+    public final static String SEARCH_KEY = "search_key_words";
+
+    public static enum BOOK{id, isbn10, isbn13, title};
 }

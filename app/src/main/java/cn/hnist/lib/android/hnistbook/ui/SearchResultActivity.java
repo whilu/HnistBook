@@ -32,13 +32,13 @@ public class SearchResultActivity extends SlidingActivity {
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fragmentManager = getFragmentManager();
-        if (getIntent().getStringExtra(Config.SEARCH_KEY) != null
-                && !TextUtils.isEmpty(getIntent().getStringExtra(Config.SEARCH_KEY))){
-            searchKeyWords = getIntent().getStringExtra(Config.SEARCH_KEY);
+        if (getIntent().getStringExtra(Constant.SEARCH_KEY) != null
+                && !TextUtils.isEmpty(getIntent().getStringExtra(Constant.SEARCH_KEY))){
+            searchKeyWords = getIntent().getStringExtra(Constant.SEARCH_KEY);
             setTitle(searchKeyWords);
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putString(Constant.BOOK_LST_TEST_KEY, "SearchResultActivity");
+            bundle.putString(Constant.BOOK_LST_SEARCH_KEY, searchKeyWords);
             intent.putExtras(bundle);
             setIntent(intent);
             mFragment = new BookListFragment();

@@ -9,20 +9,34 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.ui.BookDetailActivity;
 import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
+import cn.hnist.lib.android.hnistbook.util.NetWorkUtils;
 
 /**
  * Created by lujun on 2015/3/17.
@@ -35,7 +49,11 @@ public class BookListFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private BookAdapter mAdapter;
     private List<Book> mBooks;
+    private Intent mBookDetailIntent;
     private Bundle mBundle;
+    private RequestQueue mQueue;
+    private String keyword = "";
+    private int start = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,10 +74,9 @@ public class BookListFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mBooks = new ArrayList<Book>();
-        if (getActivity().getIntent() != null){
-            mBundle = getActivity().getIntent().getExtras();
-            Toast.makeText(getActivity(), mBundle.getString(Constant.BOOK_LST_TEST_KEY), Toast.LENGTH_SHORT).show();
-        }
+        mBundle = new Bundle();
+        mBookDetailIntent = new Intent(getActivity(), BookDetailActivity.class);
+        mQueue = Volley.newRequestQueue(getActivity());
     }
 
     private void initView(){
@@ -69,20 +86,19 @@ public class BookListFragment extends Fragment {
             mRecycleView.setLayoutManager(mLayoutManager);
             mRecycleView.setHasFixedSize(true);// 若每个item的高度固定，设置此项可以提高性能
             mRecycleView.setItemAnimator(new DefaultItemAnimator());// item 动画效果
-            for (int i = 0; i < 2; i++){
-                Book book = new Book();
-                book.setTitle("平凡的世界" + i);
-                book.setAuthor(new String[]{"路遥" + i});
-                book.setPublisher("北京十月文艺出版社" + i);
-                book.setPubdate("2001-01-01" + i);
-                book.setIsbn13("98768654322" + ":" + i);
-                mBooks.add(book);
-            }
             mAdapter = new BookAdapter(mBooks);
             mAdapter.setOnItemClickListener(new BookAdapter.ViewHolder.ItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    IntentUtils.startPreviewActivity(getActivity(), new Intent(getActivity(), BookDetailActivity.class));
+                    mBundle.clear();
+                    mBundle.putString(Constant.BOOK.title.toString(),
+                            ((Book) view.getTag()).getTitle());
+                    mBundle.putString(Constant.BOOK.isbn13.toString(),
+                            (((Book) view.getTag()).getIsbn13()));
+                    mBundle.putString(Constant.BOOK.isbn10.toString(),
+                            (((Book) view.getTag()).getIsbn10()));
+                    mBookDetailIntent.putExtras(mBundle);
+                    IntentUtils.startPreviewActivity(getActivity(), mBookDetailIntent);
                 }
             });
             mRecycleView.setAdapter(mAdapter);
@@ -110,45 +126,119 @@ public class BookListFragment extends Fragment {
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    onUpdate();
+                    onUpdate(keyword);
                 }
             });
+            if (getActivity().getIntent() != null){
+                Bundle bundle = getActivity().getIntent().getExtras();
+                if (bundle != null){
+                    keyword = bundle.getString(Constant.BOOK_LST_SEARCH_KEY);
+                    if (!TextUtils.isEmpty(keyword)){
+                        onUpdate(keyword);
+                    }else {
+                        Toast.makeText(getActivity(),
+                                getResources().getString(R.string.msg_key_word_null),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(getActivity(),
+                            getResources().getString(R.string.msg_intent_extras_null),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }else {
+                Toast.makeText(getActivity(),
+                        getResources().getString(R.string.msg_intent_null),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    private void onUpdate(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
-                    Book book = new Book();
-                    book.setTitle("平凡的世界");
-                    book.setAuthor(new String[]{"路遥"});
-                    book.setPublisher("北京十月文艺出版社");
-                    book.setPubdate("2001-01-01");
-                    book.setIsbn13("98768654322");
-                    mBooks.add(book);
-                    mAdapter.notifyDataSetChanged();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        }, 2000);
+    private void onUpdate(String keyword){
+        if (TextUtils.isEmpty(keyword)){
+            Toast.makeText(getActivity(),
+                    getResources().getString(R.string.msg_key_word_null),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_internet),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
+            mSwipeRefreshLayout.setRefreshing(true);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=" + start,
+                    null,
+                    new Response.Listener<JSONObject>(){
+
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            setData(jsonObject, true);
+                        }
+                    },
+                    new Response.ErrorListener(){
+
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            onUpdateComplete();
+                            Toast .makeText(getActivity(), volleyError.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            mQueue.add(jsonObjectRequest);
+        }
     }
 
     private void onLoadMore(){
-        new Handler().postDelayed(new Runnable() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=" + start,
+                null,
+                new Response.Listener<JSONObject>(){
 
-            @Override
-            public void run() {
-                Book book = new Book();
-                book.setTitle("平凡的世界");
-                book.setAuthor(new String[]{"路遥"});
-                book.setPublisher("北京十月文艺出版社");
-                book.setPubdate("2001-01-01");
-                book.setIsbn13("98768654322");
-                mBooks.add(book);
-                mAdapter.notifyDataSetChanged();
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        setData(jsonObject, false);
+                    }
+                },
+                new Response.ErrorListener(){
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        onUpdateComplete();
+                        Toast .makeText(getActivity(), volleyError.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+        mQueue.add(jsonObjectRequest);
+    }
+
+    private void setData(JSONObject jsonObject, boolean isUpdate){
+        if (jsonObject != null){
+            if (isUpdate){// update
+                mBooks.clear();
             }
-        }, 2000);
+            String json_arr = "";
+            try{
+                json_arr = jsonObject.getJSONArray("books").toString();
+                start = start - 1 + (int) jsonObject.get("count");
+            } catch (JSONException e){
+                e.printStackTrace();
+            }
+
+            List<Book> books = JSON.parseArray(json_arr, Book.class);
+            if (books.size() <= 0){
+                Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mBooks.addAll(books);
+            mAdapter.notifyDataSetChanged();
+        }
+        onUpdateComplete();
+    }
+
+    private void onUpdateComplete(){
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

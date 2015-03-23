@@ -43,6 +43,8 @@ public class Book extends DataSupport {
 
     private String author_intro;
 
+    private String summary;
+
     private String catalog;//序言
 
     private String ebook_url;
@@ -58,7 +60,7 @@ public class Book extends DataSupport {
                 Images images, String[] author, String[] translator, String publisher,
                 String pubdate, Rating rating, List<Tag> tags, String binding,
                 String price, Series series, String pages, String author_intro,
-                String catalog, String ebook_url, String ebook_price){
+                String summary, String catalog, String ebook_url, String ebook_price){
         super();
         this.id = id;
         this.isbn10 = isbn10;
@@ -82,6 +84,7 @@ public class Book extends DataSupport {
         this.series = series;
         this.pages = pages;
         this.author_intro = author_intro;
+        this.summary = summary;
         this.catalog = catalog;
         this.ebook_url = ebook_url;
         this.ebook_price = ebook_price;
@@ -174,6 +177,10 @@ public class Book extends DataSupport {
     public String getAuthor_intro(){ return author_intro; }
 
     public void setAuthor_intro(String author_intro){ this.author_intro = author_intro; }
+
+    public String getSummary(){ return summary; }
+
+    public void setSummary(String summary){ this.summary = summary; }
 
     public String getCatalog(){ return catalog; }
 

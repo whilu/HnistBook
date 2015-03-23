@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
+import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Book;
 
@@ -36,9 +39,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i){
         Book book = mBooks.get(i);
-        viewHolder.ivBookImg.setImageResource(R.drawable.book);
+        Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
+                .into(viewHolder.ivBookImg);
         viewHolder.tvBookTitle.setText(book.getTitle());
-        viewHolder.tvBookAuthor.setText(book.getAuthor()[0]);
+//        viewHolder.tvBookAuthor.setText(book.getAuthor()[0]);
         viewHolder.tvBookPublish.setText(book.getPublisher() + "/" + book.getPubdate());
         viewHolder.tvBookIsbn.setText(book.getIsbn13());
         viewHolder.itemView.setTag(mBooks.get(i));

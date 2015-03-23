@@ -5,5 +5,5 @@ package cn.hnist.lib.android.hnistbook.bean;
  */
 public class Config {
 
-    public static final String SEARCH_KEY = "search_key_words";
+
 }

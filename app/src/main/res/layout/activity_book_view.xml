@@ -49,9 +49,9 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/iv_bda_book_img"
                             android:layout_width="match_parent"
                             android:layout_height="160dp"
-                            android:src="@drawable/book"
                             android:scaleType="fitCenter"
                             android:layout_weight="1.8"/>
 
@@ -62,6 +62,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1">
                             <TextView
+                                android:id="@+id/tv_bda_book_title"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
@@ -69,10 +70,10 @@
                                 android:singleLine="true"
                                 android:gravity="center_vertical"
                                 android:drawablePadding="5dp"
-                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"
-                                android:text="平凡的世界"/>
+                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"/>
 
                             <TextView
+                                android:id="@+id/tv_bda_book_author"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
@@ -80,11 +81,11 @@
                                 android:singleLine="true"
                                 android:gravity="center_vertical"
                                 android:drawablePadding="5dp"
-                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"
-                                android:text="路遥"/>
+                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"/>
 
 
                             <TextView
+                                android:id="@+id/tv_bda_book_publisher"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
@@ -92,10 +93,10 @@
                                 android:singleLine="true"
                                 android:gravity="center_vertical"
                                 android:drawablePadding="5dp"
-                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"
-                                android:text="北京十月文艺出版社"/>
+                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"/>
 
                             <TextView
+                                android:id="@+id/tv_bda_book_pubdate"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
@@ -103,10 +104,10 @@
                                 android:singleLine="true"
                                 android:gravity="center_vertical"
                                 android:drawablePadding="5dp"
-                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"
-                                android:text="2011-9"/>
+                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"/>
 
                             <TextView
+                                android:id="@+id/tv_bda_book_pages"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
@@ -114,10 +115,10 @@
                                 android:singleLine="true"
                                 android:gravity="center_vertical"
                                 android:drawablePadding="5dp"
-                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"
-                                android:text="452页"/>
+                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"/>
 
                             <TextView
+                                android:id="@+id/tv_bda_book_price"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
@@ -125,10 +126,10 @@
                                 android:singleLine="true"
                                 android:gravity="center_vertical"
                                 android:drawablePadding="5dp"
-                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"
-                                android:text="28.00元"/>
+                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"/>
 
                             <TextView
+                                android:id="@+id/tv_bda_book_isbn"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
@@ -136,13 +137,13 @@
                                 android:singleLine="true"
                                 android:gravity="center_vertical"
                                 android:drawablePadding="5dp"
-                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"
-                                android:text="98987654562"/>
+                                android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"/>
 
                         </LinearLayout>
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_bda_book_tags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
@@ -151,8 +152,7 @@
                         android:gravity="center_vertical"
                         android:drawablePadding="5dp"
                         android:singleLine="true"
-                        android:drawableLeft="@drawable/ic_loyalty_grey600_24dp"
-                        android:text="农村、青年、中国、奋斗、命运、人生、家庭、爱情" />
+                        android:drawableLeft="@drawable/ic_loyalty_grey600_24dp" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -176,12 +176,12 @@
                         android:text="简介" />
 
                     <TextView
+                        android:id="@+id/tv_bda_book_summary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/gray_text"
                         android:textSize="16sp"
-                        android:layout_marginTop="3dp"
-                        android:text="这是一部全景式地表现中国当代城乡社会生活的长篇小说。在原书三本的基础上缩写为一本，内容更为集中。作者在近十年问广阔背景上，通过复杂的矛盾纠葛，刻划了社会各阶层众多普通人的形象。劳动与爱情，挫折与追求，痛苦与欢乐，日常生活与巨大社会冲突，纷繁地交织在一起，深刻地展示了普通人在大时代历史进程中所走过的艰难曲折的道路。" />
+                        android:layout_marginTop="3dp" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>

@@ -176,7 +176,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public boolean onQueryTextSubmit(String query) {
         if (!TextUtils.isEmpty(query)){
             Intent searchIntent = new Intent(this, SearchResultActivity.class);
-            searchIntent.putExtra(Config.SEARCH_KEY, query);
+            searchIntent.putExtra(Constant.SEARCH_KEY, query);
             IntentUtils.startPreviewActivity(this, searchIntent);
             mSearchView.onActionViewCollapsed();
         }
@@ -225,7 +225,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
             Intent intent = new Intent();
             mBundle.clear();
-            mBundle.putString(Constant.BOOK_LST_TEST_KEY, testStrs[position]);
+            mBundle.putString(Constant.BOOK_LST_SEARCH_KEY, testStrs[position]);
             intent.putExtras(mBundle);
             setIntent(intent);
             replaceFragment(fragments[position]);
