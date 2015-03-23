@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
-import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
+import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 import cn.hnist.lib.android.hnistbook.ui.fragments.BookListFragment;
 
 /**

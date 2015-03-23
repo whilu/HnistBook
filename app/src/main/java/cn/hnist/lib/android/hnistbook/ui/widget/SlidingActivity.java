@@ -1,4 +1,4 @@
-package cn.hnist.lib.android.hnistbook.bean;
+package cn.hnist.lib.android.hnistbook.ui.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import com.nineoldandroids.view.ViewHelper;
 
 import cn.hnist.lib.android.hnistbook.R;

@@ -5,7 +5,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import cn.hnist.lib.android.hnistbook.R;
-import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
+import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 
 /**
  * Created by lujun on 2015/3/18.

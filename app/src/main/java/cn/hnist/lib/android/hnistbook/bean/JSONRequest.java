@@ -16,7 +16,6 @@ public class JSONRequest<T> extends Request<T> {
 
     private final Response.Listener<T> mListener;
     private Class<T> mClass;
-    private JSON mJson;
 
     public JSONRequest(int method, String url, Class<T> clazz, Response.Listener<T> listener,
                        Response.ErrorListener errorListener){

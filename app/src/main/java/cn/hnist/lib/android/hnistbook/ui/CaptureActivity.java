@@ -26,7 +26,7 @@ import com.google.zxing.decoding.InactivityTimer;
 import com.google.zxing.view.ViewfinderView;
 
 import cn.hnist.lib.android.hnistbook.R;
-import cn.hnist.lib.android.hnistbook.bean.SlidingActivity;
+import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 
 /**
  * Created by lujun on 2015/3/16.

@@ -90,7 +90,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent">
 
-                                <cn.hnist.lib.android.hnistbook.bean.TextViewVertical
+                                <cn.hnist.lib.android.hnistbook.ui.widget.TextViewVertical
                                     android:id="@+id/tv_page2_author"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
@@ -102,7 +102,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent">
 
-                                <cn.hnist.lib.android.hnistbook.bean.TextViewVertical
+                                <cn.hnist.lib.android.hnistbook.ui.widget.TextViewVertical
                                     android:id="@+id/tv_page2_publisher"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
@@ -114,7 +114,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent">
 
-                                <cn.hnist.lib.android.hnistbook.bean.TextViewVertical
+                                <cn.hnist.lib.android.hnistbook.ui.widget.TextViewVertical
                                     android:id="@+id/tv_page2_pyear"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
@@ -126,7 +126,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent">
 
-                                <cn.hnist.lib.android.hnistbook.bean.TextViewVertical
+                                <cn.hnist.lib.android.hnistbook.ui.widget.TextViewVertical
                                     android:id="@+id/tv_page2_isbn"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"

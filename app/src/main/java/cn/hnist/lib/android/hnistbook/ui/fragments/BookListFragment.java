@@ -71,12 +71,11 @@ public class BookListFragment extends Fragment {
             mRecycleView.setItemAnimator(new DefaultItemAnimator());// item 动画效果
             for (int i = 0; i < 2; i++){
                 Book book = new Book();
-                book.setImgUrl("");
                 book.setTitle("平凡的世界" + i);
-                book.setAuthor("路遥" + i);
+                book.setAuthor(new String[]{"路遥" + i});
                 book.setPublisher("北京十月文艺出版社" + i);
-                book.setPublishDate("2001-01-01" + i);
-                book.setIsbn("98768654322" + ":" + i);
+                book.setPubdate("2001-01-01" + i);
+                book.setIsbn13("98768654322" + ":" + i);
                 mBooks.add(book);
             }
             mAdapter = new BookAdapter(mBooks);
@@ -123,12 +122,11 @@ public class BookListFragment extends Fragment {
             public void run() {
                 if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
                     Book book = new Book();
-                    book.setImgUrl("");
                     book.setTitle("平凡的世界");
-                    book.setAuthor("路遥");
+                    book.setAuthor(new String[]{"路遥"});
                     book.setPublisher("北京十月文艺出版社");
-                    book.setPublishDate("2001-01-01");
-                    book.setIsbn("98768654322");
+                    book.setPubdate("2001-01-01");
+                    book.setIsbn13("98768654322");
                     mBooks.add(book);
                     mAdapter.notifyDataSetChanged();
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -143,12 +141,11 @@ public class BookListFragment extends Fragment {
             @Override
             public void run() {
                 Book book = new Book();
-                book.setImgUrl("");
-                book.setTitle("平凡的世界xxx");
-                book.setAuthor("路遥xxx");
-                book.setPublisher("北京十月文艺出版社xxx");
-                book.setPublishDate("2001-01-0xxx1");
-                book.setIsbn("98768654322xx");
+                book.setTitle("平凡的世界");
+                book.setAuthor(new String[]{"路遥"});
+                book.setPublisher("北京十月文艺出版社");
+                book.setPubdate("2001-01-01");
+                book.setIsbn13("98768654322");
                 mBooks.add(book);
                 mAdapter.notifyDataSetChanged();
             }

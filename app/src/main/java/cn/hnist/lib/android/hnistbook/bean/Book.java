@@ -73,6 +73,7 @@ public class Book extends DataSupport {
         this.images = images;
         this.author = author;
         this.translator = translator;
+        this.publisher = publisher;
         this.pubdate = pubdate;
         this.rating = rating;
         this.tags = tags;

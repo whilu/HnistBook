@@ -13,8 +13,8 @@ import android.widget.ScrollView;
 import java.util.ArrayList;
 
 import cn.hnist.lib.android.hnistbook.R;
-import cn.hnist.lib.android.hnistbook.bean.TextViewVertical;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
+import cn.hnist.lib.android.hnistbook.ui.widget.TextViewVertical;
 
 /**
  * Created by lujun on 2015/3/9.

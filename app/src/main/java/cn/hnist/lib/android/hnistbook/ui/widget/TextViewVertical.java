@@ -1,4 +1,4 @@
-package cn.hnist.lib.android.hnistbook.bean;
+package cn.hnist.lib.android.hnistbook.ui.widget;
 
 /**************************
  * 作者：古月摇光
@@ -16,9 +16,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.FontMetrics;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.util.AttributeSet;

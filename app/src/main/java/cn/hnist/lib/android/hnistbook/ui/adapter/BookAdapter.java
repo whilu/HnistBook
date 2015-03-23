@@ -38,9 +38,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         Book book = mBooks.get(i);
         viewHolder.ivBookImg.setImageResource(R.drawable.book);
         viewHolder.tvBookTitle.setText(book.getTitle());
-        viewHolder.tvBookAuthor.setText(book.getAuthor());
-        viewHolder.tvBookPublish.setText(book.getPublisher() + "/" + book.getPublishDate());
-        viewHolder.tvBookIsbn.setText(book.getIsbn());
+        viewHolder.tvBookAuthor.setText(book.getAuthor()[0]);
+        viewHolder.tvBookPublish.setText(book.getPublisher() + "/" + book.getPubdate());
+        viewHolder.tvBookIsbn.setText(book.getIsbn13());
         viewHolder.itemView.setTag(mBooks.get(i));
     }
 
