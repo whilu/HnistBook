@@ -24,6 +24,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,8 +134,13 @@ public class BookListFragment extends Fragment {
                 if (bundle != null){
                     keyword = bundle.getString(Constant.BOOK_LST_SEARCH_KEY);
                     if (!TextUtils.isEmpty(keyword)){
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        onUpdate(keyword);
+                        try{
+                            keyword = URLEncoder.encode(keyword, "UTF-8");// 若关键字是中文，编码
+                            mSwipeRefreshLayout.setRefreshing(true);
+                            onUpdate(keyword);
+                        }catch (UnsupportedEncodingException e){
+                            e.printStackTrace();
+                        }
                     }else {
                         Toast.makeText(getActivity(),
                                 getResources().getString(R.string.msg_key_word_null),

@@ -113,6 +113,7 @@ public class BookDetailActivity extends SlidingActivity {
         }else {
             ivBookImg.setImageResource(R.drawable.ic_launcher);
         }
+        if (TextUtils.isEmpty(getTitle())){ setTitle(book.getTitle()); }
         tvBookTitle.setText(book.getTitle());
         String author = "";
         for (int j = 0; j < book.getAuthor().length; j++){

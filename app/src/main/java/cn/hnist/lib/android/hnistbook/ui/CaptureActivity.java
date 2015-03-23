@@ -3,6 +3,7 @@ package cn.hnist.lib.android.hnistbook.ui;
 import java.io.IOException;
 import java.util.Vector;
 
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -16,7 +17,6 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -26,7 +26,10 @@ import com.google.zxing.decoding.InactivityTimer;
 import com.google.zxing.view.ViewfinderView;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.Book;
+import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
+import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 
 /**
  * Created by lujun on 2015/3/16.
@@ -43,6 +46,8 @@ public class CaptureActivity extends SlidingActivity implements Callback {
 	private boolean playBeep;
 	private String characterSet;
     private Toolbar mToolBar;
+    private Intent mIntent;
+    private Bundle mBundle;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -57,6 +62,8 @@ public class CaptureActivity extends SlidingActivity implements Callback {
         setTitle(R.string.action_scan);
 		inactivityTimer = new InactivityTimer(this);
 		hasSurface = false;
+        mIntent = new Intent(this, BookDetailActivity.class);
+        mBundle = new Bundle();
 	}
 
     @Override
@@ -117,8 +124,13 @@ public class CaptureActivity extends SlidingActivity implements Callback {
 		inactivityTimer.onActivity();
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
-		//FIXME
-        Toast.makeText(this, resultString, Toast.LENGTH_SHORT).show();
+		//TODO 扫码成功回调
+        mBundle.clear();
+        mBundle.putString(Constant.BOOK.title.toString(), "");
+        mBundle.putString(Constant.BOOK.isbn13.toString(), "" + resultString);
+        mBundle.putString(Constant.BOOK.isbn10.toString(), "" + resultString);
+        mIntent.putExtras(mBundle);
+        IntentUtils.startPreviewActivity(this, mIntent);
 	}
 	
 	private void initCamera(SurfaceHolder surfaceHolder) {
