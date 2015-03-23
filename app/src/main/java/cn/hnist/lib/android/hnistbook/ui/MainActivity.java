@@ -18,20 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 
 import cn.hnist.lib.android.hnistbook.R;
-import cn.hnist.lib.android.hnistbook.api.Api;
-import cn.hnist.lib.android.hnistbook.bean.Book;
-import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
-import cn.hnist.lib.android.hnistbook.bean.JSONRequest;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
 import cn.hnist.lib.android.hnistbook.ui.fragments.BookListFragment;
 import cn.hnist.lib.android.hnistbook.ui.fragments.HomeFragment;
@@ -65,33 +56,6 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
      * init ui & members
      */
     private void init(Bundle savedInstanceState){
-
-        //
-        /*String json_student =  "{\"male\":true, \"id\":\"42\",\"imgUrl\":\"http://baidu.com\",\"1title\":\"Sherlock Holmes\"," +
-                "\"author\":\"lujun\", \"publisher\":\"lujunpub\", \"publishDate\":\"22-01\", \"isbn\":\"43434343434344\"}";
-        Book book = JSON.parseObject(json_student, Book.class);
-        System.out.println(book.toString());*/
-//        Toast .makeText(this, book.getTitle() + "", Toast.LENGTH_SHORT).show();
-
-        mQueue = Volley.newRequestQueue(this);
-        JSONRequest<Book> jsonRequest = new JSONRequest<Book>(
-                Api.GET_ISBNBOOK_URL + "9787505715660",
-                Book.class,
-                new Response.Listener<Book>() {
-                    @Override
-                    public void onResponse(Book book) {
-                        Toast .makeText(MainActivity.this, book.getIsbn10() + "", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast .makeText(MainActivity.this, volleyError.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-        mQueue.add(jsonRequest);
-        //
-
         mDrawerLayout = (DrawerLayout) this.findViewById(R.id.drawer);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

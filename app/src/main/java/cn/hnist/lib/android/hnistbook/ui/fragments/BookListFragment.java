@@ -3,14 +3,12 @@ package cn.hnist.lib.android.hnistbook.ui.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,6 +132,7 @@ public class BookListFragment extends Fragment {
                 if (bundle != null){
                     keyword = bundle.getString(Constant.BOOK_LST_SEARCH_KEY);
                     if (!TextUtils.isEmpty(keyword)){
+                        mSwipeRefreshLayout.setRefreshing(true);
                         onUpdate(keyword);
                     }else {
                         Toast.makeText(getActivity(),
@@ -168,7 +167,7 @@ public class BookListFragment extends Fragment {
         if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
             mSwipeRefreshLayout.setRefreshing(true);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=" + start,
+                    Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=0",
                     null,
                     new Response.Listener<JSONObject>(){
 
@@ -184,6 +183,9 @@ public class BookListFragment extends Fragment {
                             onUpdateComplete();
                             Toast .makeText(getActivity(), volleyError.getMessage(),
                                     Toast.LENGTH_SHORT).show();
+                            /*Toast .makeText(getActivity(),
+                                    getResources().getString(R.string.msg_find_error),
+                                    Toast.LENGTH_SHORT).show();*/
                         }
                     });
             mQueue.add(jsonObjectRequest);
@@ -221,7 +223,7 @@ public class BookListFragment extends Fragment {
             String json_arr = "";
             try{
                 json_arr = jsonObject.getJSONArray("books").toString();
-                start = start - 1 + (int) jsonObject.get("count");
+                start += (int) jsonObject.get("count");
             } catch (JSONException e){
                 e.printStackTrace();
             }

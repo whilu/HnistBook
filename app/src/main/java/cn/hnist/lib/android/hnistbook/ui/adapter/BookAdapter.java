@@ -1,6 +1,7 @@
 package cn.hnist.lib.android.hnistbook.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +40,19 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i){
         Book book = mBooks.get(i);
-        Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
-                .into(viewHolder.ivBookImg);
+        if (!TextUtils.isEmpty(book.getImages().getSmall())){
+            Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
+                    .into(viewHolder.ivBookImg);
+        }else {
+            viewHolder.ivBookImg.setImageResource(R.drawable.ic_launcher);
+        }
         viewHolder.tvBookTitle.setText(book.getTitle());
-//        viewHolder.tvBookAuthor.setText(book.getAuthor()[0]);
+        String author = "";
+        for (int j = 0; j < book.getAuthor().length; j++){
+            author += book.getAuthor()[j] + "、";
+        }
+        if (author.length() > 0){ author = author.substring(0, author.length() - 1); }
+        viewHolder.tvBookAuthor.setText(author);
         viewHolder.tvBookPublish.setText(book.getPublisher() + "/" + book.getPubdate());
         viewHolder.tvBookIsbn.setText(book.getIsbn13());
         viewHolder.itemView.setTag(mBooks.get(i));

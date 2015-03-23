@@ -44,7 +44,7 @@
                     android:textSize="18sp"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:text="平凡的世界" />
+                    android:text="" />
 
                 <TextView
                     android:id="@+id/tv_bli_book_author"
@@ -54,7 +54,7 @@
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:layout_marginTop="2dp"
-                    android:text="路遥" />
+                    android:text="" />
 
                 <TextView
                     android:id="@+id/tv_bli_book_publish"
@@ -64,7 +64,7 @@
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:layout_marginTop="2dp"
-                    android:text="人民文学出版社/1900-01-01" />
+                    android:text="" />
 
                 <TextView
                     android:id="@+id/tv_bli_book_isbn"
@@ -74,7 +74,7 @@
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:layout_marginTop="2dp"
-                    android:text="98787654324" />
+                    android:text="" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

@@ -94,6 +94,9 @@ public class BookDetailActivity extends SlidingActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast .makeText(BookDetailActivity.this, volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
+                        /*Toast .makeText(getActivity(),
+                                    getResources().getString(R.string.msg_find_error),
+                                    Toast.LENGTH_SHORT).show();*/
                     }
                 });
         mQueue.add(jsonRequest);
@@ -105,9 +108,18 @@ public class BookDetailActivity extends SlidingActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        Glide.with(this).load(book.getImages().getMedium()).into(ivBookImg);
+        if (!TextUtils.isEmpty(book.getImages().getMedium())){
+            Glide.with(this).load(book.getImages().getMedium()).into(ivBookImg);
+        }else {
+            ivBookImg.setImageResource(R.drawable.ic_launcher);
+        }
         tvBookTitle.setText(book.getTitle());
-        tvBookAuthor.setText(book.getAuthor()[0]);
+        String author = "";
+        for (int j = 0; j < book.getAuthor().length; j++){
+            author += book.getAuthor()[j] + "、";
+        }
+        if (author.length() > 0){ author = author.substring(0, author.length() - 1); }
+        tvBookAuthor.setText(author);
         tvBookPublisher.setText(book.getPublisher());
         tvBookPubdate.setText(book.getPubdate());
         tvBookPages.setText(book.getPages());
