@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,8 @@ public class BookDetailActivity extends SlidingActivity {
     private ImageView ivBookImg;
     private TextView tvBookTitle, tvBookAuthor, tvBookPublisher, tvBookPubdate, tvBookPages,
             tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags;
+    private ScrollView svContent;
+    private LinearLayout llProgressBar;
     private Bundle mBundle;
     private RequestQueue mQueue;
 
@@ -50,6 +55,8 @@ public class BookDetailActivity extends SlidingActivity {
         tvBookIsbn = (TextView) findViewById(R.id.tv_bda_book_isbn);
         tvBookSummary = (TextView) findViewById(R.id.tv_bda_book_summary);
         tvBookTags = (TextView) findViewById(R.id.tv_bda_book_tags);
+        svContent = (ScrollView) findViewById(R.id.sv_bda_content);
+        llProgressBar = (LinearLayout) findViewById(R.id.ll_progressBar_bda_view);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if ((mBundle = getIntent().getExtras()) != null){
@@ -77,6 +84,7 @@ public class BookDetailActivity extends SlidingActivity {
         if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             Toast .makeText(this, getResources().getString(R.string.msg_no_internet),
                     Toast.LENGTH_SHORT).show();
+            onLoadComplete();
             return;
         }
         mQueue = Volley.newRequestQueue(this);
@@ -87,6 +95,7 @@ public class BookDetailActivity extends SlidingActivity {
                     @Override
                     public void onResponse(Book book) {
                         setData(book);
+                        onLoadComplete();
                     }
                 },
                 new Response.ErrorListener() {
@@ -94,6 +103,7 @@ public class BookDetailActivity extends SlidingActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast .makeText(BookDetailActivity.this, volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
+                        onLoadComplete();
                         /*Toast .makeText(getActivity(),
                                     getResources().getString(R.string.msg_find_error),
                                     Toast.LENGTH_SHORT).show();*/
@@ -133,6 +143,11 @@ public class BookDetailActivity extends SlidingActivity {
         if (tags.length() > 0){ tags = tags.substring(0, tags.length() - 1); }
         tvBookTags.setText(tags);
         tvBookSummary.setText(book.getSummary());
+    }
+
+    private void onLoadComplete(){
+        llProgressBar.setVisibility(View.GONE);
+        svContent.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,8 +137,13 @@ public class BookListFragment extends Fragment {
                     if (!TextUtils.isEmpty(keyword)){
                         try{
                             keyword = URLEncoder.encode(keyword, "UTF-8");// 若关键字是中文，编码
-                            mSwipeRefreshLayout.setRefreshing(true);
-                            onUpdate(keyword);
+                            mSwipeRefreshLayout.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mSwipeRefreshLayout.setRefreshing(true);
+                                    onUpdate(keyword);
+                                }
+                            });
                         }catch (UnsupportedEncodingException e){
                             e.printStackTrace();
                         }
@@ -164,15 +170,17 @@ public class BookListFragment extends Fragment {
             Toast.makeText(getActivity(),
                     getResources().getString(R.string.msg_key_word_null),
                     Toast.LENGTH_SHORT).show();
+            onUpdateComplete();
             return;
         }
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_internet),
                     Toast.LENGTH_SHORT).show();
+            onUpdateComplete();
             return;
         }
+//        Log.d("debug", "" + mSwipeRefreshLayout.isRefreshing());
         if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
-            mSwipeRefreshLayout.setRefreshing(true);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=0",
                     null,

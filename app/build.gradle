@@ -37,5 +37,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.github.traex.rippleeffect:library:1.2.3'
     compile 'com.github.bumptech.glide:glide:3.5.2'
+    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'com.alibaba:fastjson:1.1.43.android'
 }
