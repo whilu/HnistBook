@@ -120,8 +120,6 @@ public class BookDetailActivity extends SlidingActivity {
         }
         if (!TextUtils.isEmpty(book.getImages().getMedium())){
             Glide.with(this).load(book.getImages().getMedium()).into(ivBookImg);
-        }else {
-            ivBookImg.setImageResource(R.drawable.ic_launcher);
         }
         if (TextUtils.isEmpty(getTitle())){ setTitle(book.getTitle()); }
         tvBookTitle.setText(book.getTitle());

@@ -8,6 +8,7 @@
     <color name="gray">#ffeeeeee</color>
     <color name="deep_gray">#ff666666</color>
     <color name="gray_text">#ffaaaaaa</color>
+    <color name="transparent">#00000000</color>
 
     <!-- zxing -->
     <color name="bg_color">#EDEDED</color>

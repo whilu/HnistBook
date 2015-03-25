@@ -19,8 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.android.volley.RequestQueue;
-
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
@@ -40,10 +38,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private String[] mPlanetTitles;
     private FragmentManager fragmentManager;
     private Fragment[] fragments;
-    private int[] mPlanetIcons;
     private Bundle mBundle;
     private String[] testStrs;
-    private RequestQueue mQueue;
+    private static int[] mPlanetIcons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +58,9 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mPlanetIcons = new int[]{
-                R.drawable.ic_account_circle_grey600_36dp,
-                R.drawable.ic_account_circle_grey600_36dp,
-                R.drawable.ic_account_circle_grey600_36dp
+                R.drawable.ic_today_grey600_48dp,
+                R.drawable.ic_view_week_grey600_48dp,
+                R.drawable.ic_view_day_grey600_48dp
         };
         fragmentManager = getFragmentManager();
         //

@@ -76,13 +76,13 @@ public class SettingsActivity extends SlidingActivity {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference.getKey().equals(getString(R.string.pkey_push_service))){
                 // TODO 推送开关，是否需要持久化处理
-                Toast.makeText(getActivity(), "推送" + (boolean) newValue, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "推送" + (Boolean) newValue, Toast.LENGTH_SHORT).show();
             }else if (preference.getKey().equals(getString(R.string.pkey_night_model))){
                 // TODO 夜间模式开关
-                Toast.makeText(getActivity(), "夜间" + (boolean) newValue, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "夜间" + (Boolean) newValue, Toast.LENGTH_SHORT).show();
             }else if (preference.getKey().equals(getString(R.string.pkey_auto_check_update))){
                 // TODO 自动检测更新开关
-                Toast.makeText(getActivity(), "自动检测更新" + (boolean) newValue, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "自动检测更新" + (Boolean) newValue, Toast.LENGTH_SHORT).show();
             }
             return true;
         }

@@ -35,4 +35,8 @@
     <string name="d_about_title">关于</string>
     <string name="d_about_msg">作者：卢俊\n源码：https://github.com/whilu/HnistBook</string>
     <string name="d_about_p_button">懂了</string>
+
+    <string name="tv_book_info">书本信息</string>
+    <string name="tv_book_intro">简介</string>
+    <string name="tv_f_page">封面\n图片</string>
 </resources>

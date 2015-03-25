@@ -72,11 +72,28 @@
                             android:gravity="left"
                             android:layout_weight="1">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/book" />
+                                android:background="@drawable/rectangle_white_border_bg"
+                                android:padding="1dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:textSize="16sp"
+                                    android:textColor="@color/gray_text"
+                                    android:text="@string/tv_f_page" />
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/book"/>
+
+                            </RelativeLayout>
+
                         </LinearLayout>
 
                         <LinearLayout
