@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.gc.materialdesign.widgets.Dialog;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
@@ -16,13 +18,10 @@ import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 /**
  * Created by lujun on 2015/3/4.
  */
-public class SettingsActivity extends SlidingActivity
-        implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+public class SettingsActivity extends SlidingActivity {
 
     private Toolbar mToolBar;
     private SettingsFragment mSettingsFragment;
-    private CheckBoxPreference cbpPushService, cbpNightModel, cbpAutoUpdate;
-    private Preference pClearCache;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,12 +46,59 @@ public class SettingsActivity extends SlidingActivity
     /**
      * A placeholder fragment containing a settings view.
      */
-    public static class SettingsFragment extends PreferenceFragment{
+    public static class SettingsFragment extends PreferenceFragment
+            implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+
+        private CheckBoxPreference cbpPushService, cbpNightModel, cbpAutoUpdate;
+        private Preference pClearCache, pAbout;
+        private Dialog aboutDialog;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+            cbpPushService = (CheckBoxPreference)
+                    findPreference(getString(R.string.pkey_push_service));
+            cbpNightModel = (CheckBoxPreference)
+                    findPreference(getString(R.string.pkey_night_model));
+            cbpAutoUpdate = (CheckBoxPreference)
+                    findPreference(getString(R.string.pkey_auto_check_update));
+            pClearCache = (Preference) findPreference(getString(R.string.pkey_clear_cache));
+            pAbout = (Preference) findPreference(getString(R.string.pkey_about));
+            cbpPushService.setOnPreferenceChangeListener(this);
+            cbpNightModel.setOnPreferenceChangeListener(this);
+            cbpAutoUpdate.setOnPreferenceChangeListener(this);
+            pClearCache.setOnPreferenceClickListener(this);
+            pAbout.setOnPreferenceClickListener(this);
+            aboutDialog = new Dialog(getActivity(), getString(R.string.d_about_title),
+                    getString(R.string.d_about_msg));
+        }
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            if (preference.getKey().equals(getString(R.string.pkey_push_service))){
+                // TODO 推送开关，是否需要持久化处理
+                Toast.makeText(getActivity(), "推送" + (boolean) newValue, Toast.LENGTH_SHORT).show();
+            }else if (preference.getKey().equals(getString(R.string.pkey_night_model))){
+                // TODO 夜间模式开关
+                Toast.makeText(getActivity(), "夜间" + (boolean) newValue, Toast.LENGTH_SHORT).show();
+            }else if (preference.getKey().equals(getString(R.string.pkey_auto_check_update))){
+                // TODO 自动检测更新开关
+                Toast.makeText(getActivity(), "自动检测更新" + (boolean) newValue, Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            if (preference.getKey().equals(getString(R.string.pkey_clear_cache))){
+                // TODO 清空缓存
+                Toast.makeText(getActivity(), "clear cache", Toast.LENGTH_SHORT).show();
+            }else if (preference.getKey().equals(getString(R.string.pkey_about))){
+                // TODO 关于
+                aboutDialog.show();
+            }
+            return false;
         }
     }
 
@@ -63,15 +109,5 @@ public class SettingsActivity extends SlidingActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-        return false;
-    }
-
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-        return false;
     }
 }

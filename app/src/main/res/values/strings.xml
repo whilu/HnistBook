@@ -17,12 +17,22 @@
     <string name="msg_find_error">查找失败，请刷新重试</string>
     <!-- end message-->
 
+    <!-- slide drawer hint-->
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
 
-    <string name="push_service">push_service</string>
-    <string name="night_model">night_model</string>
-    <string name="auto_check_update">auto_check_update</string>
-    <string name="clear_cache">clear_cache</string>
+    <!-- preference key-->
+    <string name="pkey_push_service">pkey_push_service</string>
+    <string name="pkey_night_model">pkey_night_model</string>
+    <string name="pkey_auto_check_update">pkey_auto_check_update</string>
+    <string name="pkey_clear_cache">pkey_clear_cache</string>
+    <string name="pkey_about">pkey_about</string>
+
+    <!-- edittext hint-->
     <string name="search_hint">请输入书名</string>
+    
+    <!-- dialog-->
+    <string name="d_about_title">关于</string>
+    <string name="d_about_msg">作者：卢俊\n源码：https://github.com/whilu/HnistBook</string>
+    <string name="d_about_p_button">懂了</string>
 </resources>

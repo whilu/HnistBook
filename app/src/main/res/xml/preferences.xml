@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout="@layout/preference_item"
     android:title="@string/action_settings">
     <PreferenceCategory
@@ -10,30 +9,30 @@
         <CheckBoxPreference
             android:layout="@layout/preference_item"
             android:title="接收每日书籍推送消息"
-            android:key="@string/push_service"
+            android:key="@string/pkey_push_service"
             android:summaryOn="当前为接收消息推送(默认)"
             android:summaryOff="当前为不接受消息推送"
-            android:defaultValue="true"/>
+            android:defaultValue="true" />
         <Preference
             android:layout="@layout/preference_item"
             android:title="清理缓存"
-            android:key="@string/clear_cache"
+            android:key="@string/pkey_clear_cache"
             android:summary="点击清空缓存文件"
-            android:defaultValue="false"/>
+            android:defaultValue="false" />
         <CheckBoxPreference
             android:layout="@layout/preference_item"
             android:title="夜间模式"
-            android:key="@string/night_model"
+            android:key="@string/pkey_night_model"
             android:summaryOff="关闭"
             android:summaryOn="已开启"
-            android:defaultValue="false"/>
+            android:defaultValue="false" />
         <CheckBoxPreference
             android:layout="@layout/preference_item"
             android:title="自动检测更新"
-            android:key="@string/auto_check_update"
+            android:key="@string/pkey_auto_check_update"
             android:summaryOff="当前为关闭状态"
             android:summaryOn="当前为开启状态"
-            android:defaultValue="true"/>
+            android:defaultValue="true" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -41,18 +40,15 @@
         android:title="帮助">
         <Preference
             android:layout="@layout/preference_item"
-            android:title="关于">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="http://lujun.sinaapp.com"/>
-        </Preference>
+            android:title="关于"
+            android:key="@string/pkey_about" />
 
         <Preference
             android:layout="@layout/preference_item"
             android:title="手动检查更新">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="http://lujun.sinaapp.com"/>
+                android:data="http://lujun.sinaapp.com" />
         </Preference>
 
         <Preference
@@ -61,7 +57,7 @@
             android:summary="若您觉得书志很赞，去应用商店给我们赏个好评吧！非常感谢！">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="market://details?id=me.drakeet.seashell"/>
+                android:data="market://details?id=me.drakeet.seashell" />
         </Preference>
 
     </PreferenceCategory>
