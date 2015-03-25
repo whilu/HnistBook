@@ -2,7 +2,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout="@layout/preference_item"
-    android:title="@string/title_activity_setting">
+    android:title="@string/action_settings">
     <PreferenceCategory
         android:layout="@layout/preference_category_widget"
         android:title="APP选择">
@@ -10,24 +10,27 @@
         <CheckBoxPreference
             android:layout="@layout/preference_item"
             android:title="接收每日书籍推送消息"
-            android:key="@string/notify_priority"
+            android:key="@string/push_service"
             android:summaryOn="当前为接收消息推送(默认)"
             android:summaryOff="当前为不接受消息推送"
             android:defaultValue="true"/>
         <Preference
             android:layout="@layout/preference_item"
             android:title="清理缓存"
+            android:key="@string/clear_cache"
             android:summary="点击清空缓存文件"
             android:defaultValue="false"/>
         <CheckBoxPreference
             android:layout="@layout/preference_item"
             android:title="夜间模式"
+            android:key="@string/night_model"
             android:summaryOff="关闭"
             android:summaryOn="已开启"
             android:defaultValue="false"/>
         <CheckBoxPreference
             android:layout="@layout/preference_item"
             android:title="自动检测更新"
+            android:key="@string/auto_check_update"
             android:summaryOff="当前为关闭状态"
             android:summaryOn="当前为开启状态"
             android:defaultValue="true"/>

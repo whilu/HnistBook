@@ -3,7 +3,10 @@ package cn.hnist.lib.android.hnistbook.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -13,10 +16,13 @@ import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 /**
  * Created by lujun on 2015/3/4.
  */
-public class SettingsActivity extends SlidingActivity {
+public class SettingsActivity extends SlidingActivity
+        implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     private Toolbar mToolBar;
     private SettingsFragment mSettingsFragment;
+    private CheckBoxPreference cbpPushService, cbpNightModel, cbpAutoUpdate;
+    private Preference pClearCache;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,5 +63,15 @@ public class SettingsActivity extends SlidingActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        return false;
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        return false;
     }
 }

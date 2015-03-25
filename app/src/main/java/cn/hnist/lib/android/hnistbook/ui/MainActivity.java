@@ -68,7 +68,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         fragmentManager = getFragmentManager();
         //
         mBundle = new Bundle();
-        testStrs = new String[]{"MainActivity0", "MainActivit1", "MainActivity2"};
+        testStrs = new String[]{"书志", "平凡的世界", "习惯"};
         //
 
         fragments = new Fragment[]{

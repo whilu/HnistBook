@@ -238,7 +238,7 @@ public class BookListFragment extends Fragment {
             String json_arr = "";
             try{
                 json_arr = jsonObject.getJSONArray("books").toString();
-                start += (int) jsonObject.get("count");
+                start += (Integer) jsonObject.get("count");
             } catch (JSONException e){
                 e.printStackTrace();
             }
@@ -247,6 +247,7 @@ public class BookListFragment extends Fragment {
             if (books.size() <= 0){
                 Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
                         Toast.LENGTH_SHORT).show();
+                onUpdateComplete();
                 return;
             }
             mBooks.addAll(books);
