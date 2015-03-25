@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.gc.materialdesign.widgets.Dialog;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
@@ -51,7 +51,7 @@ public class SettingsActivity extends SlidingActivity {
 
         private CheckBoxPreference cbpPushService, cbpNightModel, cbpAutoUpdate;
         private Preference pClearCache, pAbout;
-        private Dialog aboutDialog;
+        private MaterialDialog aboutDialog;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -70,8 +70,6 @@ public class SettingsActivity extends SlidingActivity {
             cbpAutoUpdate.setOnPreferenceChangeListener(this);
             pClearCache.setOnPreferenceClickListener(this);
             pAbout.setOnPreferenceClickListener(this);
-            aboutDialog = new Dialog(getActivity(), getString(R.string.d_about_title),
-                    getString(R.string.d_about_msg));
         }
 
         @Override
@@ -96,7 +94,11 @@ public class SettingsActivity extends SlidingActivity {
                 Toast.makeText(getActivity(), "clear cache", Toast.LENGTH_SHORT).show();
             }else if (preference.getKey().equals(getString(R.string.pkey_about))){
                 // TODO 关于
-                aboutDialog.show();
+                aboutDialog = new MaterialDialog.Builder(getActivity())
+                        .title(getString(R.string.d_about_title))
+                        .content(getString(R.string.d_about_msg))
+                        .positiveText(getString(R.string.d_about_p_button))
+                        .show();
             }
             return false;
         }

@@ -39,4 +39,5 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'com.alibaba:fastjson:1.1.43.android'
+    compile 'com.afollestad:material-dialogs:0.6.5.2'
 }
