@@ -1,6 +1,7 @@
 package cn.hnist.lib.android.hnistbook.ui;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -35,10 +36,11 @@ public class BookDetailActivity extends SlidingActivity {
     private ImageView ivBookImg;
     private TextView tvBookTitle, tvBookAuthor, tvBookPublisher, tvBookPubdate, tvBookPages,
             tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags;
-    private ScrollView svContent;
-    private LinearLayout llProgressBar;
+    private LinearLayout llProgressBar, llContent;
     private Bundle mBundle;
     private RequestQueue mQueue;
+    private SwipeRefreshLayout srlBookDetail;
+    private String isbn = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +57,23 @@ public class BookDetailActivity extends SlidingActivity {
         tvBookIsbn = (TextView) findViewById(R.id.tv_bda_book_isbn);
         tvBookSummary = (TextView) findViewById(R.id.tv_bda_book_summary);
         tvBookTags = (TextView) findViewById(R.id.tv_bda_book_tags);
-        svContent = (ScrollView) findViewById(R.id.sv_bda_content);
+        llContent = (LinearLayout) findViewById(R.id.ll_bda_content);
         llProgressBar = (LinearLayout) findViewById(R.id.ll_progressBar_bda_view);
+        srlBookDetail =(SwipeRefreshLayout) findViewById(R.id.srl_bookdetail);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        srlBookDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (TextUtils.isEmpty(isbn)){
+                    Toast.makeText(BookDetailActivity.this,
+                            getResources().getString(R.string.msg_intent_extras_null),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                searchBook(isbn);
+            }
+        });
         if ((mBundle = getIntent().getExtras()) != null){
             String title = mBundle.getString(Constant.BOOK.title.toString());
             String isbn10 = mBundle.getString(Constant.BOOK.isbn10.toString());
@@ -69,9 +84,11 @@ public class BookDetailActivity extends SlidingActivity {
                     Toast.makeText(this, getResources().getString(R.string.msg_intent_extras_null),
                             Toast.LENGTH_SHORT).show();
                 }else {
+                    isbn = isbn10;
                     searchBook(isbn10);
                 }
             }else {
+                isbn = isbn13;
                 searchBook(isbn13);
             }
         }else{
@@ -145,7 +162,8 @@ public class BookDetailActivity extends SlidingActivity {
 
     private void onLoadComplete(){
         llProgressBar.setVisibility(View.GONE);
-        svContent.setVisibility(View.VISIBLE);
+        llContent.setVisibility(View.VISIBLE);
+        srlBookDetail.setRefreshing(false);
     }
 
     @Override
