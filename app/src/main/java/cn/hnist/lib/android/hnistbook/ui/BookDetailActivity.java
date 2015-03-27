@@ -148,7 +148,7 @@ public class BookDetailActivity extends SlidingActivity {
         tvBookAuthor.setText(author);
         tvBookPublisher.setText(book.getPublisher());
         tvBookPubdate.setText(book.getPubdate());
-        tvBookPages.setText(book.getPages());
+        tvBookPages.setText(book.getPages() + getString(R.string.tv_unit_page));
         tvBookPrice.setText(book.getPrice());
         tvBookIsbn.setText(TextUtils.isEmpty(book.getIsbn13()) ? book.getIsbn10() : book.getIsbn13());
         String tags = "";
