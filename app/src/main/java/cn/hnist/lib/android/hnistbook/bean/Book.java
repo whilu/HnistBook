@@ -193,4 +193,79 @@ public class Book extends DataSupport {
     public String getEbook_price(){ return ebook_price; }
 
     public void setEbook_price(String ebook_price){ this.ebook_price = ebook_price; }
+
+    /** Book module class*/
+    public class Images {
+
+        private String small;// 小图
+
+        private String large;// 大图
+
+        private String medium;// 中图
+
+        public String getSmall(){ return small; }
+
+        public void setSmall(String small){ this.small = small; }
+
+        public String getLarge(){ return large; }
+
+        public void setLarge(String large){ this.large = large; }
+
+        public String getMedium(){ return medium; }
+
+        public void setMedium(String medium){ this.medium = medium; }
+    }
+
+    public class Rating {
+
+        private int max, min;
+
+        private long numRaters;
+
+        private String average;
+
+        public int getMax(){ return max; }
+
+        public void setMax(int max){ this.max = max; }
+
+        public int getMin(){ return min; }
+
+        public void setMin(int min){ this.min = min; };
+
+        public long getNumRaters(){ return  numRaters; }
+
+        public void setNumRaters(long numRaters){ this.numRaters = numRaters; }
+
+        public String getAverage(){ return average; }
+
+        public void setAverage(String average){ this.average = average; }
+    }
+
+    public class Series {
+
+        private String id, title;
+
+        public String getId(){ return id; }
+
+        public void setId(String id){ this.id = id; }
+
+        public String getTitle(){ return title; }
+
+        public void setTitle(String title){ this.title = title; }
+    }
+
+    public class Tag {
+
+        private long count;
+
+        private String name;
+
+        public long getCount(){ return count; }
+
+        public void setCount(long count){ this.count = count; }
+
+        public String getName(){ return name; }
+
+        public void setName(String name){ this.name = name; }
+    }
 }

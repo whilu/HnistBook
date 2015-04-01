@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +22,6 @@ import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.bean.JSONRequest;
-import cn.hnist.lib.android.hnistbook.bean.Tag;
 import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 import cn.hnist.lib.android.hnistbook.util.NetWorkUtils;
 
@@ -152,7 +150,7 @@ public class BookDetailActivity extends SlidingActivity {
         tvBookPrice.setText(book.getPrice());
         tvBookIsbn.setText(TextUtils.isEmpty(book.getIsbn13()) ? book.getIsbn10() : book.getIsbn13());
         String tags = "";
-        for (Tag tag : book.getTags()){
+        for (Book.Tag tag : book.getTags()){
             tags += tag.getName() + "、";
         }
         if (tags.length() > 0){ tags = tags.substring(0, tags.length() - 1); }
