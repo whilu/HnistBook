@@ -2,6 +2,8 @@ package cn.hnist.lib.android.hnistbook.ui.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -11,10 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.api.Api;
+import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
 import cn.hnist.lib.android.hnistbook.ui.widget.TextViewVertical;
+import cn.hnist.lib.android.hnistbook.util.TokenUtils;
 
 /**
  * Created by lujun on 2015/3/9.
@@ -28,6 +34,21 @@ public class HomeFragment extends Fragment {
     private ArrayList<View> views;
     private TextViewVertical tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
     private ScrollView svPage2Main;
+
+    private TokenUtils mTokenUtils;
+
+    private Handler mHandler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case Constant.MSG_REQUEST_FAILED:
+
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +68,7 @@ public class HomeFragment extends Fragment {
     private void init(){
         views = new ArrayList<View>();
         mPageChangeListener = new PageChangedListener();
+        mTokenUtils = new TokenUtils(getActivity());
     }
 
     private void initView() {
@@ -70,10 +92,8 @@ public class HomeFragment extends Fragment {
         tvPage2ISBN = (TextViewVertical) views.get(0).findViewById(R.id.tv_page2_isbn);
         //
         svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
-        tvPage2Author.setText("路遥著");
-        tvPage2Publisher.setText("北京十月文艺出版社");
-        tvPage2PYear.setText("2015/9");
-        tvPage2ISBN.setText("98989876545");
+        //
+        mTokenUtils.getData(mHandler, new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
     }
 
     /**

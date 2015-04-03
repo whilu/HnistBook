@@ -9,4 +9,6 @@ public class Constant {
     public final static String SEARCH_KEY = "search_key_words";
 
     public static enum BOOK{id, isbn10, isbn13, title};
+
+    public final static int MSG_REQUEST_FAILED = 101;
 }
