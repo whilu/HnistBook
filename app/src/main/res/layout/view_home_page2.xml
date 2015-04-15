@@ -32,6 +32,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_page2_which"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/gray_text"
@@ -39,7 +40,7 @@
                         android:textSize="20sp"
                         android:textStyle="italic"
                         android:gravity="left"
-                        android:text="VOL.1" />
+                        android:text="" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -51,6 +52,7 @@
                         android:text="_________________________________________________________" />
 
                     <TextView
+                        android:id="@+id/tv_page2_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/gray_text"
@@ -58,7 +60,7 @@
                         android:textSize="25sp"
                         android:gravity="left"
                         android:layout_marginTop="5dp"
-                        android:text="平凡的世界" />
+                        android:text="" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -87,10 +89,10 @@
                                     android:text="@string/tv_f_page" />
 
                                 <ImageView
+                                    android:id="@+id/iv_page2_image"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:scaleType="fitXY"
-                                    android:src="@drawable/book"/>
+                                    android:scaleType="fitXY"/>
 
                             </RelativeLayout>
 
@@ -160,6 +162,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tv_page2_sub"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
@@ -171,7 +174,6 @@
                             android:paddingLeft="@dimen/activity_horizontal_margin"
                             android:paddingRight="@dimen/activity_horizontal_margin"
                             android:background="@color/theme_primary"
-                            android:text="但凡有点思想的人，他的体内必定有一股力量撕扯着他的灵魂，他的欲望超越温饱..."
                             android:layout_weight="1" />
 
                         <LinearLayout
@@ -183,21 +185,21 @@
                             android:layout_weight="4">
 
                             <TextView
+                                android:id="@+id/tv_page2_day"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/theme_primary"
                                 android:textStyle="bold"
                                 android:gravity="center"
-                                android:text="15"
                                 android:textSize="30sp" />
 
                             <TextView
+                                android:id="@+id/tv_page2_ym"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/gray_text"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="Mar,2015"
                                 android:textSize="14sp" />
                         </LinearLayout>
                     </LinearLayout>

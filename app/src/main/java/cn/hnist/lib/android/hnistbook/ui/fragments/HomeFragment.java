@@ -7,16 +7,25 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.api.Api;
+import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
 import cn.hnist.lib.android.hnistbook.ui.widget.TextViewVertical;
@@ -33,6 +42,8 @@ public class HomeFragment extends Fragment {
     private PageChangedListener mPageChangeListener;
     private ArrayList<View> views;
     private TextViewVertical tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
+    private TextView tvPage2Which, tvPage2Title, tvPage2Sub, tvPage2Day, tvPage2YM;
+    private ImageView ivPage2Image;
     private ScrollView svPage2Main;
 
     private TokenUtils mTokenUtils;
@@ -45,6 +56,10 @@ public class HomeFragment extends Fragment {
             switch (msg.what){
                 case Constant.MSG_REQUEST_FAILED:
 
+                    break;
+
+                case Constant.MSG_REQUEST_SUCCESS:
+                    onUpdateData(msg.obj.toString());
                     break;
             }
         }
@@ -68,7 +83,7 @@ public class HomeFragment extends Fragment {
     private void init(){
         views = new ArrayList<View>();
         mPageChangeListener = new PageChangedListener();
-        mTokenUtils = new TokenUtils(getActivity());
+        mTokenUtils = new TokenUtils(getActivity(), mHandler);
     }
 
     private void initView() {
@@ -90,10 +105,42 @@ public class HomeFragment extends Fragment {
         tvPage2PYear = (TextViewVertical) views.get(0).findViewById(R.id.tv_page2_pyear);
         tvPage2Publisher = (TextViewVertical) views.get(0).findViewById(R.id.tv_page2_publisher);
         tvPage2ISBN = (TextViewVertical) views.get(0).findViewById(R.id.tv_page2_isbn);
+
+        tvPage2Which = (TextView) views.get(0).findViewById(R.id.tv_page2_which);
+        tvPage2Title = (TextView) views.get(0).findViewById(R.id.tv_page2_title);
+        tvPage2Sub = (TextView) views.get(0).findViewById(R.id.tv_page2_sub);
+        tvPage2Day = (TextView) views.get(0).findViewById(R.id.tv_page2_day);
+        tvPage2YM = (TextView) views.get(0).findViewById(R.id.tv_page2_ym);
+        ivPage2Image = (ImageView) views.get(0).findViewById(R.id.iv_page2_image);
         //
         svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
         //
-        mTokenUtils.getData(mHandler, new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+        mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+    }
+
+    private void onUpdateData(String data){
+        Log.d("debug", "111---" + data);
+        /*Book book = JSON.parseObject(data, Book.class);
+        if (book != null){
+            if (!TextUtils.isEmpty(book.getImages().getSmall())){
+                Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
+                        .into(ivPage2Image);
+            }
+            tvPage2Which.setText("VOL.1");
+            tvPage2Title.setText(book.getTitle());
+            tvPage2Sub.setText("xxxxxxxxxxxxxxxx");
+            tvPage2YM.setText("Mar.2015");
+            tvPage2Day.setText("15");
+            String author = "";
+            for (int j = 0; j < book.getAuthor().length; j++){
+                author += book.getAuthor()[j] + "、";
+            }
+            if (author.length() > 0){ author = author.substring(0, author.length() - 1); }
+            tvPage2Author.setText(author);
+            tvPage2Publisher.setText(book.getPublisher());
+            tvPage2PYear.setText(book.getPubdate());
+            tvPage2ISBN.setText(book.getIsbn13());
+        }*/
     }
 
     /**

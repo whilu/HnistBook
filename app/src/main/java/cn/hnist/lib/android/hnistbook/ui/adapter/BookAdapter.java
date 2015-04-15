@@ -43,8 +43,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         if (!TextUtils.isEmpty(book.getImages().getSmall())){
             Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
                     .into(viewHolder.ivBookImg);
-        }else {
-            viewHolder.ivBookImg.setImageResource(R.drawable.ic_launcher);
         }
         viewHolder.tvBookTitle.setText(book.getTitle());
         String author = "";

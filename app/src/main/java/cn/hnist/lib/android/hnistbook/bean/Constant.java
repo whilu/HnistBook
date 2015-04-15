@@ -11,4 +11,5 @@ public class Constant {
     public static enum BOOK{id, isbn10, isbn13, title};
 
     public final static int MSG_REQUEST_FAILED = 101;
+    public final static int MSG_REQUEST_SUCCESS = 102;
 }
