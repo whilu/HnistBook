@@ -29,6 +29,7 @@ import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.bean.JsonData;
+import cn.hnist.lib.android.hnistbook.ui.MainActivity;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
 import cn.hnist.lib.android.hnistbook.ui.widget.TextViewVertical;
 import cn.hnist.lib.android.hnistbook.util.TokenUtils;
@@ -152,7 +153,7 @@ public class HomeFragment extends Fragment {
                 tvPage1Summary.setText(book.getSummary());
             }
         }else {
-            Toast.makeText(this.getActivity(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(GlApplication.getContext(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
         }
     }
 
