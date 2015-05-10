@@ -48,7 +48,7 @@
             android:title="手动检查更新">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="http://lujun.sinaapp.com" />
+                android:data="http://lujun.co/app/shuzhi" />
         </Preference>
 
         <Preference
@@ -57,7 +57,7 @@
             android:summary="若您觉得书志很赞，去应用商店给我们赏个好评吧！非常感谢！">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="market://details?id=me.drakeet.seashell" />
+                android:data="market://details?id=cn.hnist.lib.android.hnistbook" />
         </Preference>
 
     </PreferenceCategory>
