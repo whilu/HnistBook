@@ -54,6 +54,8 @@ public class BookListFragment extends Fragment {
     private Bundle mBundle;
     private RequestQueue mQueue;
     private String keyword = "";
+    private String mUrl = "";
+    private int mType = -1;// mType = 1,获取搜索list, mType = 2, 获取七天内的list, mType = 3, 获取一月之内的list
     private int start = 0;
 
     @Override
@@ -133,7 +135,20 @@ public class BookListFragment extends Fragment {
             if (getActivity().getIntent() != null){
                 Bundle bundle = getActivity().getIntent().getExtras();
                 if (bundle != null){
+                    mType = bundle.getInt(Constant.BOOK_LST_SEARCH_TYPE);
                     keyword = bundle.getString(Constant.BOOK_LST_SEARCH_KEY);
+                    if (mType == -1){
+                        Toast.makeText(getActivity(),
+                                getResources().getString(R.string.msg_intent_extras_null),
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }else if (mType == 1){// 搜索list
+                        mUrl = Api.BOOK_SEARCH_URL;
+                    }else if (mType == 2){// 七天list
+                        mUrl = Api.BOOK_SEARCH_URL;
+                    }else if (mType == 3){// 一月list
+                        mUrl = Api.BOOK_SEARCH_URL;
+                    }
                     if (!TextUtils.isEmpty(keyword)){
                         try{
                             keyword = URLEncoder.encode(keyword, "UTF-8");// 若关键字是中文，编码
@@ -182,7 +197,7 @@ public class BookListFragment extends Fragment {
 //        Log.d("debug", "" + mSwipeRefreshLayout.isRefreshing());
         if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=0",
+                    mUrl + "?q=" + keyword + "&start=0",
                     null,
                     new Response.Listener<JSONObject>(){
 
@@ -209,7 +224,7 @@ public class BookListFragment extends Fragment {
 
     private void onLoadMore(){
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=" + start,
+                mUrl + "?q=" + keyword + "&start=" + start,
                 null,
                 new Response.Listener<JSONObject>(){
 

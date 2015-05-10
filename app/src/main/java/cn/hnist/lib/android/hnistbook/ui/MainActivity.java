@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
 import cn.hnist.lib.android.hnistbook.ui.fragments.BookListFragment;
@@ -39,7 +40,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private FragmentManager fragmentManager;
     private Fragment[] fragments;
     private Bundle mBundle;
-    private String[] testStrs;
+    private String[] menuStrs;
     private static int[] mPlanetIcons;
 
     @Override
@@ -65,7 +66,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         fragmentManager = getFragmentManager();
         //
         mBundle = new Bundle();
-        testStrs = new String[]{"书志", "平凡的世界", "习惯"};
+//        menuStrs = new String[]{"today", "aweek", "amonth"};
+        menuStrs = new String[]{"today", "平凡的世界", "习惯的力量"};
         //
 
         fragments = new Fragment[]{
@@ -186,7 +188,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
             Intent intent = new Intent();
             mBundle.clear();
-            mBundle.putString(Constant.BOOK_LST_SEARCH_KEY, testStrs[position]);
+            mBundle.putString(Constant.BOOK_LST_SEARCH_KEY, menuStrs[position]);
+            mBundle.putInt(Constant.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[position]);
             intent.putExtras(mBundle);
             setIntent(intent);
             replaceFragment(fragments[position]);

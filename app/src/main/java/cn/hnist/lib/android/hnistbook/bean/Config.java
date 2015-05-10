@@ -5,5 +5,6 @@ package cn.hnist.lib.android.hnistbook.bean;
  */
 public class Config {
 
-
+    //BookListFragment book type
+    public static int[] BOOK_LIST_TYPE = new int[]{1, 2, 3};// search type, aweek type, amonth type
 }

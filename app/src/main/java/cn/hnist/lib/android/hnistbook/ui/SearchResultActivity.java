@@ -39,6 +39,7 @@ public class SearchResultActivity extends SlidingActivity {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putString(Constant.BOOK_LST_SEARCH_KEY, searchKeyWords);
+            bundle.putInt(Constant.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[0]);
             intent.putExtras(bundle);
             setIntent(intent);
             mFragment = new BookListFragment();
