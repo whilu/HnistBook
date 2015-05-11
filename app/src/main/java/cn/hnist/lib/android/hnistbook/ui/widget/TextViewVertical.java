@@ -78,7 +78,7 @@ public class TextViewVertical extends View {
         this.text = text;
         this.TextLength = text.length();
         if (mTextHeight > 0) GetTextInfo();
-        //by lujun
+        //by lujun,2015-5-11
         invalidate();
     }
 

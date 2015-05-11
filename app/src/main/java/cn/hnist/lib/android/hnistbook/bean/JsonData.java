@@ -1,15 +1,19 @@
 package cn.hnist.lib.android.hnistbook.bean;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by lujun on 2015/5/10.
  */
-public class JsonData {
+public class JsonData extends DataSupport {
 
     private String data;
 
     private String info;
 
     private int status;
+
+    private Extra extra;
 
     public void setData(String data){
         this.data = data;
@@ -33,5 +37,55 @@ public class JsonData {
 
     public int getStatus(){
         return status;
+    }
+
+    public void setExtra(Extra extra){
+        this.extra = extra;
+    }
+
+    public Extra getExtra(){
+        return extra;
+    }
+
+    public class Extra{
+
+        private String date;
+
+        private String brief;
+
+        private String vol;
+
+        public void setDate(String date){
+            this.date = date;
+        }
+
+        public String getDate(){
+            return date;
+        }
+
+        public void setBrief(String brief){
+            this.brief = brief;
+        }
+
+        public String getBrief(){
+            return brief;
+        }
+
+        public void setVol(String vol){
+            this.vol = vol;
+        }
+
+        public String getVol(){
+            return vol;
+        }
+
+        /**
+         * get year, month, day
+         * @return String[] year,month. day
+         */
+        public String[] getYMD(){
+            String[] ymd = this.getDate().split("-");
+            return ymd;
+        }
     }
 }

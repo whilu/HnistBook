@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
@@ -43,6 +45,7 @@ public class HomeFragment extends Fragment {
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
     private PageChangedListener mPageChangeListener;
+    private SwipeRefreshLayout mRefreshLayout;
     private ArrayList<View> views;
     private TextViewVertical tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
     private TextView tvPage2Which, tvPage2Title, tvPage2Sub, tvPage2Day, tvPage2YM, tvPage1Summary;
@@ -115,12 +118,24 @@ public class HomeFragment extends Fragment {
         tvPage2Day = (TextView) views.get(0).findViewById(R.id.tv_page2_day);
         tvPage2YM = (TextView) views.get(0).findViewById(R.id.tv_page2_ym);
         ivPage2Image = (ImageView) views.get(0).findViewById(R.id.iv_page2_image);
-        //
+
+        mRefreshLayout = (SwipeRefreshLayout) views.get(0).findViewById(R.id.srl_home2);
+
         tvPage1Summary = (TextView) views.get(1).findViewById(R.id.tv_page1_summary);
         //
         svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
         //
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mRefreshLayout.isRefreshing()){
+                    mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+                }
+            }
+        });
+        //
         mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+
         //设置默认显示信息
         tvPage2Author.setText(getString(R.string.tv_book_author));
         tvPage2Publisher.setText(getString(R.string.tv_book_publisher));
@@ -137,16 +152,19 @@ public class HomeFragment extends Fragment {
         int status = jsonData.getStatus();
         if (status == 1){
             Book book = JSON.parseObject(jsonData.getData(), Book.class);
+            JsonData.Extra extra = jsonData.getExtra();
             if (book != null){
                 if (!TextUtils.isEmpty(book.getImages().getSmall())){
                     Glide.with(GlApplication.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
                 }
-                tvPage2Which.setText("VOL.1");
+                if (extra != null){
+                    tvPage2Which.setText(extra.getVol());
+                    tvPage2Sub.setText(extra.getBrief());
+                    tvPage2YM.setText(extra.getYMD()[1] + "" + extra.getYMD()[2]);
+                    tvPage2Day.setText(extra.getYMD()[0]);
+                }
                 tvPage2Title.setText(book.getTitle());
-                tvPage2Sub.setText("xxxxxxxxxxxxxxxx");
-                tvPage2YM.setText("Mar.2015");
-                tvPage2Day.setText("15");
                 String author = "";
                 for (int j = 0; j < book.getAuthor().length; j++){
                     author += book.getAuthor()[j] + "、";
@@ -155,12 +173,13 @@ public class HomeFragment extends Fragment {
                 tvPage2Author.setText(author);
                 tvPage2Publisher.setText(book.getPublisher());
                 tvPage2PYear.setText(book.getPubdate());
-                tvPage2ISBN.setText(book.getIsbn13());
+                tvPage2ISBN.setText(TextUtils.isEmpty(book.getIsbn13()) ? book.getIsbn10() : book.getIsbn13());
                 tvPage1Summary.setText(book.getSummary());
             }
         }else {
             Toast.makeText(GlApplication.getContext(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
         }
+        mRefreshLayout.setRefreshing(false);
     }
 
     /**
