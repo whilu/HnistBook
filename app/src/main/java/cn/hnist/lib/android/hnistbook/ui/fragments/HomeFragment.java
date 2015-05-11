@@ -159,10 +159,10 @@ public class HomeFragment extends Fragment {
                             .into(ivPage2Image);
                 }
                 if (extra != null){
-                    tvPage2Which.setText(extra.getVol());
+                    tvPage2Which.setText("VOL." + extra.getVol());
                     tvPage2Sub.setText(extra.getBrief());
-                    tvPage2YM.setText(extra.getYMD()[1] + "" + extra.getYMD()[2]);
-                    tvPage2Day.setText(extra.getYMD()[0]);
+                    tvPage2YM.setText(extra.getYMD()[1] + "." + extra.getYMD()[0]);
+                    tvPage2Day.setText(extra.getYMD()[2]);
                 }
                 tvPage2Title.setText(book.getTitle());
                 String author = "";
