@@ -121,6 +121,12 @@ public class HomeFragment extends Fragment {
         svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
         //
         mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+        //设置默认显示信息
+        tvPage2Author.setText(getString(R.string.tv_book_author));
+        tvPage2Publisher.setText(getString(R.string.tv_book_publisher));
+        tvPage2PYear.setText(getString(R.string.tv_book_pubdate));
+        tvPage2ISBN.setText(getString(R.string.tv_book_isbn));
+        tvPage1Summary.setText(getString(R.string.tv_book_intro));
     }
 
     private void onUpdateData(String data){
@@ -130,10 +136,10 @@ public class HomeFragment extends Fragment {
         }
         int status = jsonData.getStatus();
         if (status == 1){
-            Book book = JSON.parseObject(jsonData.getInfo(), Book.class);
+            Book book = JSON.parseObject(jsonData.getData(), Book.class);
             if (book != null){
                 if (!TextUtils.isEmpty(book.getImages().getSmall())){
-                    Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
+                    Glide.with(GlApplication.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
                 }
                 tvPage2Which.setText("VOL.1");

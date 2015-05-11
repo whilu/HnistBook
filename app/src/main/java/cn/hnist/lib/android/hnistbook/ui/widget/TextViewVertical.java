@@ -78,6 +78,8 @@ public class TextViewVertical extends View {
         this.text = text;
         this.TextLength = text.length();
         if (mTextHeight > 0) GetTextInfo();
+        //by lujun
+        invalidate();
     }
 
     //设置字体大小

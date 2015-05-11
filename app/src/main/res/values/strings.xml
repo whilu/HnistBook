@@ -39,6 +39,10 @@
     <!-- texxtview hint-->
     <string name="tv_book_info">书本信息</string>
     <string name="tv_book_intro">简介</string>
+    <string name="tv_book_author">作者</string>
+    <string name="tv_book_publisher">出版社</string>
+    <string name="tv_book_pubdate">出版日期</string>
+    <string name="tv_book_isbn">ISBN</string>
     <string name="tv_f_page">封面\n图片</string>
     <string name="tv_unit_page">页</string>
 </resources>
