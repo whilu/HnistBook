@@ -141,7 +141,7 @@ public class HomeFragment extends Fragment {
         tvPage2Publisher.setText(getString(R.string.tv_book_publisher));
         tvPage2PYear.setText(getString(R.string.tv_book_pubdate));
         tvPage2ISBN.setText(getString(R.string.tv_book_isbn));
-        tvPage1Summary.setText(getString(R.string.tv_book_intro));
+//        tvPage1Summary.setText(getString(R.string.tv_book_intro));
     }
 
     private void onUpdateData(String data){

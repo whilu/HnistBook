@@ -166,14 +166,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:gravity="left"
+                            android:textSize="14sp"
+                            android:gravity="left|center_vertical"
                             android:maxLines="3"
-                            android:paddingBottom="@dimen/activity_vertical_margin"
-                            android:paddingTop="@dimen/activity_vertical_margin"
-                            android:paddingLeft="@dimen/activity_horizontal_margin"
-                            android:paddingRight="@dimen/activity_horizontal_margin"
-                            android:background="@color/theme_primary"
+                            android:minLines="3"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:background="@drawable/bg_tv_summary"
                             android:layout_weight="1" />
 
                         <LinearLayout
