@@ -58,8 +58,18 @@ public class TextViewVertical extends View {
         paint.setColor(Color.BLACK);//默认文字颜色
         try {
             mFontSize = Float.parseFloat(attrs.getAttributeValue(null, "textSize"));//获取字体大小属性
+            mFontSize = sp2px(mFontSize);
         } catch (Exception e) {
         }
+    }
+
+    public float dp2px(float dp) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return dp * scale + 0.5f;
+    }
+    public float sp2px(float sp) {
+        final float scale = getResources().getDisplayMetrics().scaledDensity;
+        return sp * scale;
     }
 
     /*
@@ -79,6 +89,7 @@ public class TextViewVertical extends View {
         this.TextLength = text.length();
         if (mTextHeight > 0) GetTextInfo();
         //by lujun,2015-5-11
+        Log.i("setText", text);
         invalidate();
     }
 
