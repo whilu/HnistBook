@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,12 +46,13 @@ public class HomeFragment extends Fragment {
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
     private PageChangedListener mPageChangeListener;
-    private SwipeRefreshLayout mRefreshLayout;
+    private SwipeRefreshLayout mRefreshLayout, mRefreshLayout3;
     private ArrayList<View> views;
     private TextViewVertical tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
     private TextView tvPage2Which, tvPage2Title, tvPage2Sub, tvPage2Day, tvPage2YM, tvPage1Summary;
     private ImageView ivPage2Image;
     private ScrollView svPage2Main;
+    private RecyclerView mAnnRecycleView;
 
     private TokenUtils mTokenUtils;
 
@@ -99,7 +101,7 @@ public class HomeFragment extends Fragment {
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page2, null));
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page1, null));
-//        views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page3, null));
+        views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page3, null));
         mViewPagerAdapter = new ViewPagerAdapter(views, null);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.setOnPageChangeListener(mPageChangeListener);
@@ -120,16 +122,29 @@ public class HomeFragment extends Fragment {
         ivPage2Image = (ImageView) views.get(0).findViewById(R.id.iv_page2_image);
 
         mRefreshLayout = (SwipeRefreshLayout) views.get(0).findViewById(R.id.srl_home2);
-
+        //
         tvPage1Summary = (TextView) views.get(1).findViewById(R.id.tv_page1_summary);
         //
+        mRefreshLayout3 = (SwipeRefreshLayout) views.get(2).findViewById(R.id.srl_home3);
+
+        mAnnRecycleView = (RecyclerView) views.get(2).findViewById(R.id.rv_annlist);
+        //
         svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
+
         //
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (mRefreshLayout.isRefreshing()){
                     mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+                }
+            }
+        });
+        mRefreshLayout3.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mRefreshLayout.isRefreshing()){
+
                 }
             }
         });
