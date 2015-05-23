@@ -29,7 +29,7 @@ public class Annotation extends DataSupport {
 
     private String abstract_photo;
 
-//    private Photo ohotos;
+    private Photo ohotos;
 
     private int last_photo;
 
@@ -119,13 +119,13 @@ public class Annotation extends DataSupport {
         this.abstract_photo = abstract_photo;
     }
 
-    /*public Photo getOhotos() {
+    public Photo getOhotos() {
         return ohotos;
-    }*/
+    }
 
-    /*public void setOhotos(Photo ohotos) {
+    public void setOhotos(Photo ohotos) {
         this.ohotos = ohotos;
-    }*/
+    }
 
     public int getLast_photo() {
         return last_photo;
