@@ -40,4 +40,5 @@ dependencies {
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'com.alibaba:fastjson:1.1.43.android'
     compile 'com.afollestad:material-dialogs:0.6.5.2'
+    compile 'se.emilsjolander:android-flipview:1.1.0'
 }

@@ -23,7 +23,7 @@ public class Annotation extends DataSupport {
 
     private int privacy;
 
-//    private String abstract;
+    private String Abstract;
 
     private String content;
 
@@ -101,6 +101,14 @@ public class Annotation extends DataSupport {
 
     public void setPrivacy(int privacy) {
         this.privacy = privacy;
+    }
+
+    public String getAbstract() {
+        return Abstract;
+    }
+
+    public void setAbstract(String anAbstract) {
+        Abstract = anAbstract;
     }
 
     public String getContent() {
