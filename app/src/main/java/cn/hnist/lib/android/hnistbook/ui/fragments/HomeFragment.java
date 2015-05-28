@@ -56,6 +56,8 @@ public class HomeFragment extends Fragment {
 
     private TokenUtils mTokenUtils;
 
+    private String id = "";
+
     private Handler mHandler = new Handler(){
 
         @Override
@@ -143,8 +145,8 @@ public class HomeFragment extends Fragment {
         mRefreshLayout3.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mRefreshLayout.isRefreshing()){
-
+                if (mRefreshLayout3.isRefreshing()){
+                    onUpdateAnnotation(id);
                 }
             }
         });
@@ -190,11 +192,26 @@ public class HomeFragment extends Fragment {
                 tvPage2PYear.setText(book.getPubdate());
                 tvPage2ISBN.setText(TextUtils.isEmpty(book.getIsbn13()) ? book.getIsbn10() : book.getIsbn13());
                 tvPage1Summary.setText(book.getSummary());
+                id = book.getId();
+                onUpdateAnnotation(id);
             }
         }else {
             Toast.makeText(GlApplication.getContext(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
         }
         mRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * update book annotation with book id
+     */
+    private void onUpdateAnnotation(String id){
+        if (TextUtils.isEmpty(id)){
+            Toast.makeText(GlApplication.getContext(),
+                    getResources().getString(R.string.msg_book_id_null), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //TODO update annotation
+
     }
 
     /**
