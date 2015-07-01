@@ -30,6 +30,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Book;
@@ -211,7 +212,7 @@ public class BookListFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
                             onUpdateComplete();
-                            Toast .makeText(getActivity(), volleyError.getMessage(),
+                            Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
                                     Toast.LENGTH_SHORT).show();
                             /*Toast .makeText(getActivity(),
                                     getResources().getString(R.string.msg_find_error),

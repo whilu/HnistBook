@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 按照顺序叠加效果-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"> 
+    <!-- 第一层颜色填充 -->
+    <item> 
+          <shape> 
+                <solid android:color="@color/gray" />
+          </shape> 
+    </item> 
+
+    <!-- 第二层颜色填充 -->
+    <!-- android:bottom，层的下坐标（距离底部的长度）同理有其他三个：上、左、右-->
+    <!-- padding是内容距离该层边的边距-->
+    <item android:bottom="1dp">
+         <shape> 
+               <solid android:color="@color/white" />
+         </shape>     
+    </item>
+</layer-list>
