@@ -1,6 +1,7 @@
 package cn.hnist.lib.android.hnistbook.ui.fragments;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,9 +12,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -25,7 +28,18 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,6 +51,7 @@ import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.bean.JsonData;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
+import cn.hnist.lib.android.hnistbook.util.BlurUtils;
 import cn.hnist.lib.android.hnistbook.util.TokenUtils;
 
 /**
@@ -53,6 +68,7 @@ public class HomeFragment extends Fragment {
     private TextView tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
     private TextView tvPage2Which, tvPage2Title, tvPage2Sub, tvPage2Day, tvPage2YM, tvPage2Summary;
     private ImageView ivPage2Image;
+    private View ivPage2BookBlur;
     private ScrollView svPage2Main;
     private RecyclerView mAnnRecycleView;
 
@@ -70,6 +86,8 @@ public class HomeFragment extends Fragment {
 
     private String id = "";
 
+    private int countIndex;
+
     private Handler mHandler = new Handler(){
 
         @Override
@@ -77,11 +95,15 @@ public class HomeFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what){
                 case Constant.MSG_REQUEST_FAILED:
-
+                    countIndex = 0;
                     break;
 
                 case Constant.MSG_REQUEST_SUCCESS:
-                    onUpdateData(msg.obj.toString());
+                    if (countIndex == 0) {
+                        onUpdateData(msg.obj.toString());
+                    }else {
+                        Log.d("debug", msg.obj.toString());
+                    }
                     break;
             }
         }
@@ -117,6 +139,7 @@ public class HomeFragment extends Fragment {
         if (mView == null) {
             return;
         }
+        countIndex = 0;
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page2, null));
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page3, null));
@@ -138,6 +161,7 @@ public class HomeFragment extends Fragment {
         tvPage2Day = (TextView) views.get(0).findViewById(R.id.tv_page2_day);
         tvPage2YM = (TextView) views.get(0).findViewById(R.id.tv_page2_ym);
         ivPage2Image = (ImageView) views.get(0).findViewById(R.id.iv_page2_image);
+        ivPage2BookBlur = (View) views.get(0).findViewById(R.id.iv_book_blur_bg);
         tvPage2Summary = (TextView) views.get(0).findViewById(R.id.tv_page2_summary);
 
         //
@@ -163,9 +187,9 @@ public class HomeFragment extends Fragment {
                 mCenterX = mContainer.getWidth() / 2;
                 mCenterY = mContainer.getHeight() / 2;
 
-                if (0 == mIndex % 2){
+                if (0 == mIndex % 2) {
                     applyRotation(mStartCardView, 0, 90);
-                }else {
+                } else {
                     applyRotation(mStartCardView, 0, -90);
                 }
             }
@@ -212,6 +236,28 @@ public class HomeFragment extends Fragment {
                 if (!TextUtils.isEmpty(book.getImages().getSmall())){
                     Glide.with(GlApplication.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
+
+                    //book blur
+                    /*ivPage2BookBlur.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            ivPage2BookBlur.getViewTreeObserver().removeOnPreDrawListener(this);
+                            ivPage2BookBlur.buildDrawingCache();
+
+                            Bitmap bitmap = ivPage2BookBlur.getDrawingCache();
+                            BlurUtils.blur(bitmap, ivPage2BookBlurView);
+                            return true;
+                        }
+                    });*/
+                    ImageLoader.getInstance().loadImage(book.getImages().getLarge(),
+                            new SimpleImageLoadingListener() {
+
+                                @Override
+                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                    super.onLoadingComplete(imageUri, view, loadedImage);
+                                    BlurUtils.blur(loadedImage, ivPage2BookBlur);
+                                }
+                            });
                 }
                 if (extra != null){
                     tvPage2Which.setText("VOL." + extra.getVol());
@@ -231,6 +277,7 @@ public class HomeFragment extends Fragment {
                 tvPage2ISBN.setText(TextUtils.isEmpty(book.getIsbn13()) ? book.getIsbn10() : book.getIsbn13());
                 tvPage2Summary.setText(book.getSummary());
                 id = book.getId();
+                countIndex ++;
                 onUpdateAnnotation(id);
             }
         }else {
@@ -249,7 +296,9 @@ public class HomeFragment extends Fragment {
             return;
         }
         //TODO update annotation
-
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("id", id);
+        mTokenUtils.getData(map, Api.GET_BOOK_ANN_URL);
     }
 
     /**

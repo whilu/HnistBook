@@ -1,5 +1,6 @@
 package cn.hnist.lib.android.hnistbook.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.api.Api;
@@ -23,6 +26,7 @@ import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.bean.JSONRequest;
 import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
+import cn.hnist.lib.android.hnistbook.util.BlurUtils;
 import cn.hnist.lib.android.hnistbook.util.NetWorkUtils;
 
 /**
@@ -135,6 +139,15 @@ public class BookDetailActivity extends SlidingActivity {
         }
         if (!TextUtils.isEmpty(book.getImages().getMedium())){
             Glide.with(this).load(book.getImages().getMedium()).into(ivBookImg);
+            /*ImageLoader.getInstance().loadImage(book.getImages().getLarge(),
+                    new SimpleImageLoadingListener() {
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                            super.onLoadingComplete(imageUri, view, loadedImage);
+                            BlurUtils.blur(loadedImage, ivBookImg);
+                        }
+                    });*/
         }
         if (TextUtils.isEmpty(getTitle())){ setTitle(book.getTitle()); }
         tvBookTitle.setText(book.getTitle());

@@ -9,6 +9,8 @@ public class Api {
     public final static String BOOK_SEARCH_URL = DOUBAN_HOST + "search";
     public final static String GET_ISBNBOOK_URL = DOUBAN_HOST + "isbn/";
 
-    public final static String GET_TOKEN_URL = "http://bookz.sinaapp.com/v1/Index/getToken";
-    public final static String GET_TODAY_BOOK_URL = "http://bookz.sinaapp.com/v1/Book/today";
+    private final static String SZ_HOST = "http://bookz.sinaapp.com/v1/";
+    public final static String GET_TOKEN_URL = SZ_HOST + "Index/getToken";
+    public final static String GET_TODAY_BOOK_URL = SZ_HOST + "Book/today";
+    public final static String GET_BOOK_ANN_URL = SZ_HOST + "book/annotations";
 }
