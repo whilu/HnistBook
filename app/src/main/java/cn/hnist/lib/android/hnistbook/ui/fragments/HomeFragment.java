@@ -298,6 +298,7 @@ public class HomeFragment extends Fragment {
         //TODO update annotation
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("id", id);
+        map.put("p", "1");
         mTokenUtils.getData(map, Api.GET_BOOK_ANN_URL);
     }
 
