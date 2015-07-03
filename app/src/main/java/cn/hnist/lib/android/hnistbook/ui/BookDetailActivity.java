@@ -145,7 +145,7 @@ public class BookDetailActivity extends SlidingActivity {
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                             super.onLoadingComplete(imageUri, view, loadedImage);
-                            BlurUtils.blur(loadedImage, ivBookImg);
+                            BlurUtils.blur(loadedImage, ivBookImg, 1.5f,1.1f);
                         }
                     });*/
         }

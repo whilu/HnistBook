@@ -55,7 +55,6 @@ public class SlidingActivity extends ActionBarActivity {//TODO 修改FragmengAct
 
         SlidingLayout slideLayout = (SlidingLayout) findViewById(R.id.slide_layout);
         slideLayout.setShadowResource(R.drawable.activity_sliding_back_shadow);
-        slideLayout.setSliderFadeColor(0x00000000);
         slideLayout.setPanelSlideListener(new SlidingLayout.SimpleSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {

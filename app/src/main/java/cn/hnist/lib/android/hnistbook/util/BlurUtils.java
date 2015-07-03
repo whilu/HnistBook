@@ -15,13 +15,13 @@ import cn.hnist.lib.android.hnistbook.GlApplication;
  */
 public class BlurUtils {
 
-    public static void blur(Bitmap bkg, View view) {
+    public static void blur(Bitmap bkg, View view, float sx, float sy) {
         long startMs = System.currentTimeMillis();
         float scaleFactor = 8;
         float radius = 2;
 
         Matrix matrix = new Matrix();
-        matrix.postScale(1.5f,1.1f); //x和y放大缩小的比例
+        matrix.postScale(sx,sy); //x和y放大缩小的比例
         bkg = Bitmap.createBitmap(bkg, 0, 0, bkg.getWidth(), bkg.getHeight(), matrix, true);
 
         Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() / scaleFactor),
