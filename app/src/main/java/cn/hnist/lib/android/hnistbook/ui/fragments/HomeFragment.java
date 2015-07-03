@@ -16,10 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -28,24 +24,14 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.nostra13.universalimageloader.utils.StorageUtils;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
-import cn.hnist.lib.android.hnistbook.anim.Rotate3dAnimation;
+import cn.hnist.lib.android.hnistbook.anim.SwipViewAnimation;
 import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
@@ -75,11 +61,8 @@ public class HomeFragment extends Fragment {
     private View mContainer;
     private CardView mCardView1, mCardView2, mStartCardView;
     private Button btnFlip;
-    private int mIndex;
-    private int mDuration;
-    private float mCenterX;
-    private float mCenterY;
-    float mDepthZ  = 500.0f;
+
+    private SwipViewAnimation mSwipViewAnimation;
 
 
     private TokenUtils mTokenUtils;
@@ -125,11 +108,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void init(){
-        mIndex = 0;
-        mDuration = 300;
-        mCenterX = 0.0f;
-        mCenterY = 0.0f;
-
         views = new ArrayList<View>();
         mPageChangeListener = new PageChangedListener();
         mTokenUtils = new TokenUtils(getActivity(), mHandler);
@@ -179,18 +157,17 @@ public class HomeFragment extends Fragment {
         mAnnRecycleView = (RecyclerView) views.get(1).findViewById(R.id.rv_annlist);
         //
         svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
-
         //
         btnFlip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCenterX = mContainer.getWidth() / 2;
-                mCenterY = mContainer.getHeight() / 2;
-
-                if (0 == mIndex % 2) {
-                    applyRotation(mStartCardView, 0, 90);
+                if (mSwipViewAnimation == null) {
+                    mSwipViewAnimation = new SwipViewAnimation(mContainer, mCardView1, mCardView2);
+                }
+                if (0 == mSwipViewAnimation.getIndex() % 2) {
+                    mSwipViewAnimation.applyRotation(0, 90);
                 } else {
-                    applyRotation(mStartCardView, 0, -90);
+                    mSwipViewAnimation.applyRotation(0, -90);
                 }
             }
         });
@@ -320,74 +297,6 @@ public class HomeFragment extends Fragment {
         @Override
         public void onPageScrollStateChanged(int arg0) {
 
-        }
-    }
-
-    private void applyRotation(View animView, float startAngle, float toAngle) {
-        float centerX = mCenterX;
-        float centerY = mCenterY;
-        Rotate3dAnimation rotation = new Rotate3dAnimation(
-                startAngle, toAngle, centerX, centerY, mDepthZ, true);
-        rotation.setDuration(mDuration);
-        rotation.setFillAfter(true);
-        rotation.setInterpolator(new AccelerateInterpolator());
-        rotation.setAnimationListener(new DisplayNextView());
-
-        animView.startAnimation(rotation);
-    }
-
-    /**
-     * This class listens for the end of the first half of the animation.
-     * It then posts a new action that effectively swaps the views when the container
-     * is rotated 90 degrees and thus invisible.
-     */
-    private final class DisplayNextView implements Animation.AnimationListener {
-
-        public void onAnimationStart(Animation animation) {
-        }
-
-        public void onAnimationEnd(Animation animation) {
-
-            mContainer.post(new SwapViews());
-        }
-
-        public void onAnimationRepeat(Animation animation) {
-        }
-    }
-
-    private final class SwapViews implements Runnable {
-        @Override
-        public void run()
-        {
-            Rotate3dAnimation rotation;
-
-            mCardView1.setVisibility(View.GONE);
-            mCardView2.setVisibility(View.GONE);
-
-            mIndex++;
-            if (0 == mIndex % 2){
-                mStartCardView = mCardView1;
-                rotation = new Rotate3dAnimation(
-                        90,
-                        0,
-                        mCenterX,
-                        mCenterY, mDepthZ, false);
-            }else{
-                mStartCardView = mCardView2;
-                rotation = new Rotate3dAnimation(
-                        -90,
-                        0,
-                        mCenterX,
-                        mCenterY, mDepthZ, false);
-            }
-
-            mStartCardView.setVisibility(View.VISIBLE);
-            mStartCardView.requestFocus();
-
-            rotation.setDuration(mDuration);
-            rotation.setFillAfter(true);
-            rotation.setInterpolator(new DecelerateInterpolator());
-            mStartCardView.startAnimation(rotation);
         }
     }
 }

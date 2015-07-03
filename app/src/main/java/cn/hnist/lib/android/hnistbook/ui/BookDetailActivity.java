@@ -3,10 +3,12 @@ package cn.hnist.lib.android.hnistbook.ui;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import cn.hnist.lib.android.hnistbook.R;
+import cn.hnist.lib.android.hnistbook.anim.SwipViewAnimation;
 import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
@@ -35,14 +38,20 @@ import cn.hnist.lib.android.hnistbook.util.NetWorkUtils;
 public class BookDetailActivity extends SlidingActivity {
 
     private Toolbar mToolBar;
-    private ImageView ivBookImg;
+    private ImageView ivBookImgBlur, ivBookImg;
     private TextView tvBookTitle, tvBookAuthor, tvBookPublisher, tvBookPubdate, tvBookPages,
-            tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags;
+            tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags, tvCatalog;
     private LinearLayout llProgressBar, llContent;
     private Bundle mBundle;
     private RequestQueue mQueue;
     private SwipeRefreshLayout srlBookDetail;
     private String isbn = "";
+
+    private CardView mCardView1, mCardView2;
+    private View mContainer;
+    private Button btnFlip;
+
+    private SwipViewAnimation mSwipViewAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +59,7 @@ public class BookDetailActivity extends SlidingActivity {
         setContentView(R.layout.activity_book_view);
         mToolBar = (Toolbar) findViewById(R.id.book_detail_toolbar);
         ivBookImg = (ImageView) findViewById(R.id.iv_bda_book_img);
+        ivBookImgBlur = (ImageView) findViewById(R.id.iv_bda_book_img_blur);
         tvBookTitle = (TextView) findViewById(R.id.tv_bda_book_title);
         tvBookAuthor = (TextView) findViewById(R.id.tv_bda_book_author);
         tvBookPublisher = (TextView) findViewById(R.id.tv_bda_book_publisher);
@@ -62,18 +72,36 @@ public class BookDetailActivity extends SlidingActivity {
         llContent = (LinearLayout) findViewById(R.id.ll_bda_content);
         llProgressBar = (LinearLayout) findViewById(R.id.ll_progressBar_bda_view);
         srlBookDetail =(SwipeRefreshLayout) findViewById(R.id.srl_bookdetail);
+        mContainer = findViewById(R.id.fl_book_detail_container);
+        mCardView1 = (CardView) findViewById(R.id.cv_book_detail_1);
+        mCardView2 = (CardView) findViewById(R.id.cv_book_detail_2);
+        tvCatalog = (TextView) findViewById(R.id.tv_bda_book_catalog);
+        btnFlip = (Button) findViewById(R.id.btn_book_detail_flip);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         srlBookDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (TextUtils.isEmpty(isbn)){
+                if (TextUtils.isEmpty(isbn)) {
                     Toast.makeText(BookDetailActivity.this,
                             getResources().getString(R.string.msg_intent_extras_null),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
                 searchBook(isbn);
+            }
+        });
+        btnFlip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSwipViewAnimation == null){
+                    mSwipViewAnimation = new SwipViewAnimation(mContainer, mCardView1, mCardView2);
+                }
+                if (0 == mSwipViewAnimation.getIndex() % 2) {
+                    mSwipViewAnimation.applyRotation(0, 90);
+                } else {
+                    mSwipViewAnimation.applyRotation(0, -90);
+                }
             }
         });
         if ((mBundle = getIntent().getExtras()) != null){
@@ -138,16 +166,17 @@ public class BookDetailActivity extends SlidingActivity {
             return;
         }
         if (!TextUtils.isEmpty(book.getImages().getMedium())){
-            Glide.with(this).load(book.getImages().getMedium()).into(ivBookImg);
-            /*ImageLoader.getInstance().loadImage(book.getImages().getLarge(),
+//            Glide.with(this).load(book.getImages().getLarge()).into(ivBookImg);
+            ImageLoader.getInstance().loadImage(book.getImages().getLarge(),
                     new SimpleImageLoadingListener() {
 
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                             super.onLoadingComplete(imageUri, view, loadedImage);
-                            BlurUtils.blur(loadedImage, ivBookImg, 1.5f,1.1f);
+                            BlurUtils.blur(loadedImage, ivBookImgBlur, 2.0f, 1.4f);
+                            ivBookImg.setImageBitmap(loadedImage);
                         }
-                    });*/
+                    });
         }
         if (TextUtils.isEmpty(getTitle())){ setTitle(book.getTitle()); }
         tvBookTitle.setText(book.getTitle());
@@ -168,6 +197,7 @@ public class BookDetailActivity extends SlidingActivity {
         }
         if (tags.length() > 0){ tags = tags.substring(0, tags.length() - 1); }
         tvBookTags.setText(tags);
+        tvCatalog.setText(book.getCatalog());
         tvBookSummary.setText(book.getSummary());
     }
 

@@ -316,8 +316,7 @@
             android:id="@+id/btn_flip"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@null"
-            android:onClick="onFlipClick" />
+            android:background="@null" />
     </FrameLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
