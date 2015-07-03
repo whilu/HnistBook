@@ -18,7 +18,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -40,7 +39,7 @@ public class BookDetailActivity extends SlidingActivity {
     private Toolbar mToolBar;
     private ImageView ivBookImgBlur, ivBookImg;
     private TextView tvBookTitle, tvBookAuthor, tvBookPublisher, tvBookPubdate, tvBookPages,
-            tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags, tvCatalog;
+            tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags, tvAp;
     private LinearLayout llProgressBar, llContent;
     private Bundle mBundle;
     private RequestQueue mQueue;
@@ -75,7 +74,7 @@ public class BookDetailActivity extends SlidingActivity {
         mContainer = findViewById(R.id.fl_book_detail_container);
         mCardView1 = (CardView) findViewById(R.id.cv_book_detail_1);
         mCardView2 = (CardView) findViewById(R.id.cv_book_detail_2);
-        tvCatalog = (TextView) findViewById(R.id.tv_bda_book_catalog);
+        tvAp = (TextView) findViewById(R.id.tv_bda_book_ap);
         btnFlip = (Button) findViewById(R.id.btn_book_detail_flip);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -166,7 +165,6 @@ public class BookDetailActivity extends SlidingActivity {
             return;
         }
         if (!TextUtils.isEmpty(book.getImages().getMedium())){
-//            Glide.with(this).load(book.getImages().getLarge()).into(ivBookImg);
             ImageLoader.getInstance().loadImage(book.getImages().getLarge(),
                     new SimpleImageLoadingListener() {
 
@@ -197,7 +195,7 @@ public class BookDetailActivity extends SlidingActivity {
         }
         if (tags.length() > 0){ tags = tags.substring(0, tags.length() - 1); }
         tvBookTags.setText(tags);
-        tvCatalog.setText(book.getCatalog());
+        tvAp.setText(author + " / " + book.getPublisher());
         tvBookSummary.setText(book.getSummary());
     }
 
