@@ -16,11 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +51,6 @@ public class BookListFragment extends Fragment {
     private List<Book> mBooks;
     private Intent mBookDetailIntent;
     private Bundle mBundle;
-    private RequestQueue mQueue;
     private String keyword = "";
     private String mUrl = "";
     private int mType = -1;// mType = 1,获取搜索list, mType = 2, 获取七天内的list, mType = 3, 获取一月之内的list
@@ -78,9 +75,9 @@ public class BookListFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mBooks = new ArrayList<Book>();
+        mAdapter = new BookAdapter(mBooks);
         mBundle = new Bundle();
         mBookDetailIntent = new Intent(getActivity(), BookDetailActivity.class);
-        mQueue = Volley.newRequestQueue(getActivity());
     }
 
     private void initView(){
@@ -90,7 +87,6 @@ public class BookListFragment extends Fragment {
             mRecycleView.setLayoutManager(mLayoutManager);
             mRecycleView.setHasFixedSize(true);// 若每个item的高度固定，设置此项可以提高性能
             mRecycleView.setItemAnimator(new DefaultItemAnimator());// item 动画效果
-            mAdapter = new BookAdapter(mBooks);
             mAdapter.setOnItemClickListener(new BookAdapter.ViewHolder.ItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
@@ -219,7 +215,7 @@ public class BookListFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();*/
                         }
                     });
-            mQueue.add(jsonObjectRequest);
+            GlApplication.getRequestQueue().add(jsonObjectRequest);
         }
     }
 
@@ -243,7 +239,7 @@ public class BookListFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-        mQueue.add(jsonObjectRequest);
+        GlApplication.getRequestQueue().add(jsonObjectRequest);
     }
 
     private void setData(JSONObject jsonObject, boolean isUpdate){

@@ -14,13 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.anim.SwipViewAnimation;
 import cn.hnist.lib.android.hnistbook.api.Api;
@@ -42,7 +42,6 @@ public class BookDetailActivity extends SlidingActivity {
             tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags, tvAp;
     private LinearLayout llProgressBar, llContent;
     private Bundle mBundle;
-    private RequestQueue mQueue;
     private SwipeRefreshLayout srlBookDetail;
     private String isbn = "";
 
@@ -133,7 +132,6 @@ public class BookDetailActivity extends SlidingActivity {
             onLoadComplete();
             return;
         }
-        mQueue = Volley.newRequestQueue(this);
         JSONRequest<Book> jsonRequest = new JSONRequest<Book>(
                 Api.GET_ISBNBOOK_URL + isbn,
                 Book.class,
@@ -155,7 +153,7 @@ public class BookDetailActivity extends SlidingActivity {
                                     Toast.LENGTH_SHORT).show();*/
                     }
                 });
-        mQueue.add(jsonRequest);
+        GlApplication.getRequestQueue().add(jsonRequest);
     }
 
     private void setData(Book book){

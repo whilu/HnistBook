@@ -10,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,21 +25,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.anim.SwipViewAnimation;
 import cn.hnist.lib.android.hnistbook.api.Api;
+import cn.hnist.lib.android.hnistbook.bean.Annotation;
 import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Constant;
 import cn.hnist.lib.android.hnistbook.bean.JsonData;
+import cn.hnist.lib.android.hnistbook.ui.adapter.AnnotationAdapter;
+import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
 import cn.hnist.lib.android.hnistbook.util.BlurUtils;
+import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 import cn.hnist.lib.android.hnistbook.util.TokenUtils;
 
 /**
@@ -49,7 +63,7 @@ public class HomeFragment extends Fragment {
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
     private PageChangedListener mPageChangeListener;
-    private SwipeRefreshLayout mRefreshLayout, mRefreshLayout3;
+    private SwipeRefreshLayout mRefreshLayout;
     private ArrayList<View> views;
     private TextView tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
     private TextView tvPage2Which, tvPage2Title, tvPage2Sub, tvPage2Day, tvPage2YM, tvPage2Summary;
@@ -57,6 +71,9 @@ public class HomeFragment extends Fragment {
     private View ivPage2BookBlur;
     private ScrollView svPage2Main;
     private RecyclerView mAnnRecycleView;
+    private List<Annotation> mAnns;
+    private AnnotationAdapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
 
     private View mContainer;
     private CardView mCardView1, mCardView2, mStartCardView;
@@ -64,12 +81,10 @@ public class HomeFragment extends Fragment {
 
     private SwipViewAnimation mSwipViewAnimation;
 
-
     private TokenUtils mTokenUtils;
 
     private String id = "";
-
-    private int countIndex;
+    private int start = 0;
 
     private Handler mHandler = new Handler(){
 
@@ -78,15 +93,11 @@ public class HomeFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what){
                 case Constant.MSG_REQUEST_FAILED:
-                    countIndex = 0;
+
                     break;
 
                 case Constant.MSG_REQUEST_SUCCESS:
-                    if (countIndex == 0) {
-                        onUpdateData(msg.obj.toString());
-                    }else {
-                        Log.d("debug", msg.obj.toString());
-                    }
+                    onSetBookData(msg.obj.toString());
                     break;
             }
         }
@@ -108,7 +119,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void init(){
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         views = new ArrayList<View>();
+        mAnns = new ArrayList<Annotation>();
+        mAdapter = new AnnotationAdapter(mAnns);
         mPageChangeListener = new PageChangedListener();
         mTokenUtils = new TokenUtils(getActivity(), mHandler);
     }
@@ -117,7 +132,6 @@ public class HomeFragment extends Fragment {
         if (mView == null) {
             return;
         }
-        countIndex = 0;
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page2, null));
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page3, null));
@@ -151,10 +165,33 @@ public class HomeFragment extends Fragment {
         //
 
         mRefreshLayout = (SwipeRefreshLayout) views.get(0).findViewById(R.id.srl_home2);
-        //
-        mRefreshLayout3 = (SwipeRefreshLayout) views.get(1).findViewById(R.id.srl_home3);
 
         mAnnRecycleView = (RecyclerView) views.get(1).findViewById(R.id.rv_annlist);
+
+        mAnnRecycleView.setLayoutManager(mLayoutManager);
+        mAnnRecycleView.setHasFixedSize(true);// 若每个item的高度固定，设置此项可以提高性能
+        mAnnRecycleView.setItemAnimator(new DefaultItemAnimator());// item 动画效果
+        mAdapter.setOnItemClickListener(new AnnotationAdapter.ViewHolder.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+        });
+        mAnnRecycleView.setAdapter(mAdapter);
+        mAnnRecycleView.setOnScrollListener(
+                new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+
+                    }
+
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                    }
+                }
+        );
         //
         svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
         //
@@ -181,14 +218,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        mRefreshLayout3.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (mRefreshLayout3.isRefreshing()) {
-                    onUpdateAnnotation(id);
-                }
-            }
-        });
         //
         mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
 
@@ -200,7 +229,11 @@ public class HomeFragment extends Fragment {
         tvPage2Summary.setText(getString(R.string.test_intro));
     }
 
-    private void onUpdateData(String data){
+    /**
+     * set book data
+     * @param data
+     */
+    private void onSetBookData(String data){
         JsonData jsonData = JSON.parseObject(data, JsonData.class);
         if (jsonData == null){
             return;
@@ -254,13 +287,13 @@ public class HomeFragment extends Fragment {
                 tvPage2ISBN.setText(TextUtils.isEmpty(book.getIsbn13()) ? book.getIsbn10() : book.getIsbn13());
                 tvPage2Summary.setText(book.getSummary());
                 id = book.getId();
-                countIndex ++;
                 onUpdateAnnotation(id);
             }
         }else {
             Toast.makeText(GlApplication.getContext(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
         }
-        mRefreshLayout.setRefreshing(false);
+        //TODO test , need to delete
+        onUpdateAnnotation("4238362");
     }
 
     /**
@@ -270,13 +303,63 @@ public class HomeFragment extends Fragment {
         if (TextUtils.isEmpty(id)){
             Toast.makeText(GlApplication.getContext(),
                     getResources().getString(R.string.msg_book_id_null), Toast.LENGTH_SHORT).show();
+            mRefreshLayout.setRefreshing(false);
             return;
         }
-        //TODO update annotation
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("id", id);
-        map.put("p", "1");
-        mTokenUtils.getData(map, Api.GET_BOOK_ANN_URL);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Api.DOUBAN_HOST + id + "/annotations",
+                null,
+                new Response.Listener<JSONObject>(){
+
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        onSetAnnData(jsonObject, false);
+                    }
+                },
+                new Response.ErrorListener(){
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                            /*Toast .makeText(GlApplication.getContext(),,
+                                    getResources().getString(R.string.msg_find_error),
+                                    Toast.LENGTH_SHORT).show();*/
+                    }
+                });
+        GlApplication.getRequestQueue().add(jsonObjectRequest);
+    }
+
+    /**
+     * set Annotation list data
+     * @param jsonObject
+     * @param isUpdate
+     */
+    private void onSetAnnData(JSONObject jsonObject, boolean isUpdate){
+        if (jsonObject != null){
+            if (isUpdate){// update
+                mAnns.clear();
+            }
+            String json_arr = "";
+            try{
+                json_arr = jsonObject.getJSONArray("annotations").toString();
+                start += (Integer) jsonObject.get("count");
+            } catch (JSONException e){
+                e.printStackTrace();
+            }
+
+            List<Annotation> anns = JSON.parseArray(json_arr, Annotation.class);
+            if (anns.size() <= 0){
+                Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
+                        Toast.LENGTH_SHORT).show();
+                mRefreshLayout.setRefreshing(false);
+                return;
+            }
+            mAnns.addAll(anns);
+            Log.d("debugss", mAnns.get(0).getAuthor_user().getAvatar() + "");
+            mAdapter.notifyDataSetChanged();
+        }
+        mRefreshLayout.setRefreshing(false);
     }
 
     /**

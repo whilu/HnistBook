@@ -2,6 +2,8 @@ package cn.hnist.lib.android.hnistbook;
 
 import android.content.Context;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -21,6 +23,7 @@ import org.litepal.LitePalApplication;
 public class GlApplication extends LitePalApplication {
 
     private static Context sContext;
+    private static RequestQueue mRequestQueue;
 
     @Override
     public void onCreate() {
@@ -47,10 +50,12 @@ public class GlApplication extends LitePalApplication {
                 .writeDebugLogs()
                 .build();
         ImageLoader.getInstance().init(mImageLoaderConfig);
-
+        mRequestQueue = Volley.newRequestQueue(this);
     }
 
     public static Context getContext(){
         return sContext;
     }
+
+    public static RequestQueue getRequestQueue(){ return mRequestQueue; }
 }
