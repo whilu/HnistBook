@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment {
     private TokenUtils mTokenUtils;
 
     private String id = "";
-    private int start = 0;
+    private int page = 0;
 
     private Handler mHandler = new Handler(){
 
@@ -169,7 +169,7 @@ public class HomeFragment extends Fragment {
         mAnnRecycleView = (RecyclerView) views.get(1).findViewById(R.id.rv_annlist);
 
         mAnnRecycleView.setLayoutManager(mLayoutManager);
-        mAnnRecycleView.setHasFixedSize(true);// 若每个item的高度固定，设置此项可以提高性能
+        mAnnRecycleView.setHasFixedSize(false);// 若每个item的高度固定，设置此项可以提高性能
         mAnnRecycleView.setItemAnimator(new DefaultItemAnimator());// item 动画效果
         mAdapter.setOnItemClickListener(new AnnotationAdapter.ViewHolder.ItemClickListener() {
             @Override
@@ -183,7 +183,15 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                            int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
+                            int totalItemCount = mLayoutManager.getItemCount();
 
+                            if (lastVisibleItem == totalItemCount - 1){
+//                                onUpdateAnnotation(id);
+                                onUpdateAnnotation("4238362");
+                            }
+                        }
                     }
 
                     @Override
@@ -215,6 +223,7 @@ public class HomeFragment extends Fragment {
             public void onRefresh() {
                 if (mRefreshLayout.isRefreshing()){
                     mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+                    page = 0;
                 }
             }
         });
@@ -307,13 +316,17 @@ public class HomeFragment extends Fragment {
             return;
         }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Api.DOUBAN_HOST + id + "/annotations",
+                Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page,
                 null,
                 new Response.Listener<JSONObject>(){
 
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        onSetAnnData(jsonObject, false);
+                        if (page == 0){
+                            onSetAnnData(jsonObject, true);
+                        }else {
+                            onSetAnnData(jsonObject, false);
+                        }
                     }
                 },
                 new Response.ErrorListener(){
@@ -343,7 +356,7 @@ public class HomeFragment extends Fragment {
             String json_arr = "";
             try{
                 json_arr = jsonObject.getJSONArray("annotations").toString();
-                start += (Integer) jsonObject.get("count");
+                page++;
             } catch (JSONException e){
                 e.printStackTrace();
             }
@@ -356,7 +369,6 @@ public class HomeFragment extends Fragment {
                 return;
             }
             mAnns.addAll(anns);
-            Log.d("debugss", mAnns.get(0).getAuthor_user().getAvatar() + "");
             mAdapter.notifyDataSetChanged();
         }
         mRefreshLayout.setRefreshing(false);

@@ -2,7 +2,6 @@ package cn.hnist.lib.android.hnistbook.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
     // 创建View，被LayoutManager调用
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        Log.d("debugss", "" + mAnns.size());
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ann_list_item, parent, false);
         view.setTag(mAnns.get(i));
         return new ViewHolder(view, mItemClickListener);

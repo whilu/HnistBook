@@ -98,7 +98,7 @@ public class BookListFragment extends Fragment {
                     mBundle.putString(Constant.BOOK.isbn10.toString(),
                             (((Book) view.getTag()).getIsbn10()));
                     mBookDetailIntent.putExtras(mBundle);
-                    IntentUtils.startPreviewActivity(getActivity(), mBookDetailIntent);
+                        IntentUtils.startPreviewActivity(getActivity(), mBookDetailIntent);
                 }
             });
             mRecycleView.setAdapter(mAdapter);
