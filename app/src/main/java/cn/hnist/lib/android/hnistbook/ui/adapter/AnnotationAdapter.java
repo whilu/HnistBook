@@ -45,10 +45,10 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
                     .into(viewHolder.ivAvatar);
         }
         viewHolder.tvName.setText(annotation.getAuthor_user().getName());
-        viewHolder.tvTime.setText(annotation.getTime());
+        viewHolder.tvTime.setText(annotation.getTime().substring(0, 10));
         viewHolder.tvAbstract.setText(annotation.getAbstract());
-        viewHolder.tvChapter.setText(annotation.getAbstract());
-        viewHolder.tvPageNo.setText(annotation.getPage_no() + "");
+        viewHolder.tvBookTitle.setText("《" +annotation.getBook().getTitle() + "》");
+        viewHolder.tvChapter.setText(annotation.getChapter());
         viewHolder.itemView.setTag(mAnns.get(i));
     }
 
@@ -68,7 +68,7 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
         final TextView tvTime;
         final TextView tvAbstract;
         final TextView tvChapter;
-        final TextView tvPageNo;
+        final TextView tvBookTitle;
         private ItemClickListener mItemClickListener;
 
         public ViewHolder(View view, ItemClickListener listener){
@@ -78,7 +78,7 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
             tvTime = (TextView) view.findViewById(R.id.tv_ann_time);
             tvAbstract = (TextView) view.findViewById(R.id.tv_ann_abstract);
             tvChapter = (TextView) view.findViewById(R.id.tv_ann_chapter);
-            tvPageNo = (TextView) view.findViewById(R.id.tv_ann_page_no);
+            tvBookTitle = (TextView) view.findViewById(R.id.tv_ann_book_title);
             mItemClickListener = listener;
             view.setOnClickListener(this);
         }

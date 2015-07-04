@@ -93,7 +93,9 @@ public class HomeFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what){
                 case Constant.MSG_REQUEST_FAILED:
-
+                    Toast .makeText(GlApplication.getContext(),
+                            getResources().getString(R.string.msg_find_error),
+                            Toast.LENGTH_SHORT).show();
                     break;
 
                 case Constant.MSG_REQUEST_SUCCESS:
