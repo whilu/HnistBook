@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ import cn.hnist.lib.android.hnistbook.bean.JsonData;
 import cn.hnist.lib.android.hnistbook.ui.adapter.AnnotationAdapter;
 import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
+import cn.hnist.lib.android.hnistbook.ui.widget.AnnDetailView;
 import cn.hnist.lib.android.hnistbook.util.BlurUtils;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 import cn.hnist.lib.android.hnistbook.util.TokenUtils;
@@ -176,7 +178,13 @@ public class HomeFragment extends Fragment {
         mAdapter.setOnItemClickListener(new AnnotationAdapter.ViewHolder.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                AnnDetailView.setTitle("《" + mAnns.get(position).getBook().getTitle() + "》"
+                        + getResources().getString(R.string.tv_annotation));
+                AnnDetailView.setWriteInfo(mAnns.get(position).getAuthor_user().getName()
+                        + getResources().getString(R.string.tv_write)
+                        + mAnns.get(position).getTime().substring(0, 10));
+                AnnDetailView.setContent(mAnns.get(position).getContent());
+                AnnDetailView.show(view, Gravity.CENTER, 0, 0);
             }
         });
         mAnnRecycleView.setAdapter(mAdapter);

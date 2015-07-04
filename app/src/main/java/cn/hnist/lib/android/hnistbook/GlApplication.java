@@ -17,6 +17,8 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import org.litepal.LitePalApplication;
 
+import cn.hnist.lib.android.hnistbook.ui.widget.AnnDetailView;
+
 /**
  * Created by lujun on 2015/3/1.
  */
@@ -50,6 +52,7 @@ public class GlApplication extends LitePalApplication {
                 .writeDebugLogs()
                 .build();
         ImageLoader.getInstance().init(mImageLoaderConfig);
+        AnnDetailView.init(this);
         mRequestQueue = Volley.newRequestQueue(this);
     }
 

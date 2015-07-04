@@ -48,7 +48,9 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
         viewHolder.tvTime.setText(annotation.getTime().substring(0, 10));
         viewHolder.tvAbstract.setText(annotation.getAbstract());
         viewHolder.tvBookTitle.setText("《" +annotation.getBook().getTitle() + "》");
-        viewHolder.tvChapter.setText(annotation.getChapter());
+        viewHolder.tvChapter.setText(
+                GlApplication.getContext().getResources().getString(R.string.tv_chapter)
+                        + annotation.getChapter());
         viewHolder.itemView.setTag(mAnns.get(i));
     }
 

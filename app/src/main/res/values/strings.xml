@@ -46,7 +46,11 @@
     <string name="tv_book_isbn">ISBN</string>
     <string name="tv_f_page">封面\n图片</string>
     <string name="tv_unit_page">页</string>
+    <string name="tv_chapter">章节：</string>
+    <string name="tv_annotation">读书笔记</string>
+    <string name="tv_write">写于</string>
 
+    <!--button text-->
     <string name="btn_see_detail">查看详细</string>
 
     <string name="test_intro">《霍乱时期的爱情》是加西亚·马尔克斯获得诺贝尔文学奖之后完成的第一部小说。讲述了一段跨越半个多世纪的爱情史诗，穷尽了所有爱情的可能性：忠贞的、隐秘的、粗暴的、羞怯的、柏拉图式的、放荡的、转瞬即逝的、生死相依的……马尔克斯曾说：“这一部是我最 好的作品，是我发自内心的创作。”是20世纪最重要的经典文学巨著之一，被誉为“人类有史以来最伟大的爱情小说”。期的爱情》是加西亚·马尔克斯获得诺贝尔文学奖之后完成的第一部小说。讲述了一段跨越半个多世纪的爱情史诗，穷尽了所有爱情的可能性：忠贞的、隐秘的、粗暴的、羞怯的、柏拉图式的、放荡的、转瞬即逝的、生死相依的……马尔克斯曾说：“这一部是我最 好的作品，是我发自内心的创作。”是20世纪最重要的经典文学巨著之一，被誉为“人类有史以来最伟大的爱情小说”。</string>
