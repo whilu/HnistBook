@@ -6,6 +6,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -47,7 +48,9 @@ public class AnnDetailView extends PopupWindow {
         this.setFocusable(true);
         //设置PopupWindow弹出窗体动画效果
         showAnim = AnimationUtils.loadAnimation(context, R.anim.anim_in);
+        showAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         hideAnim = AnimationUtils.loadAnimation(context, R.anim.anim_out);
+        hideAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         //实例化一个ColorDrawable颜色为半透明
         ColorDrawable bgColor = new ColorDrawable(0x60000000);
         //设置PopupWindow弹出窗体的背景
