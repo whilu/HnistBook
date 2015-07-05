@@ -2,13 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'lujun'
-            keyPassword 'doneibtp'
-            storeFile file('E:/Code/Android/Keystore/lujun.keystore')
-            storePassword 'doneibtp'
-//            storeFile file('F:/code/android/keystore/lujun.keystore')
-        }
     }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -23,10 +16,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+//            signingConfig signingConfigs.config
         }
         debug {
-            signingConfig signingConfigs.config
+//            signingConfig signingConfigs.config
         }
     }
 }
@@ -38,9 +31,9 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.github.traex.rippleeffect:library:1.2.3'
     compile 'com.github.bumptech.glide:glide:3.5.2'
-    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'com.alibaba:fastjson:1.1.43.android'
     compile 'com.afollestad:material-dialogs:0.7.6.0'
-    compile 'se.emilsjolander:android-flipview:1.1.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile 'com.android.support:design:22.2.0'
+    compile 'me.zhanghai.android.materialprogressbar:library:1.0.2'
 }

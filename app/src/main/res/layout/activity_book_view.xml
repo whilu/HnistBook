@@ -276,10 +276,9 @@
                     android:layout_marginTop="260dp"
                     android:gravity="center">
 
-                    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:background="@color/theme_primary" />
+                    <ProgressBar
+                        android:layout_width="60dp"
+                        android:layout_height="60dp" />
                 </LinearLayout>
             </LinearLayout>
 
