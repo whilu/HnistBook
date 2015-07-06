@@ -21,7 +21,7 @@ import android.widget.ListView;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Config;
-import cn.hnist.lib.android.hnistbook.bean.Constant;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.ui.adapter.SliderMenuAdapter;
 import cn.hnist.lib.android.hnistbook.ui.fragments.BookListFragment;
 import cn.hnist.lib.android.hnistbook.ui.fragments.HomeFragment;
@@ -139,7 +139,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     public boolean onQueryTextSubmit(String query) {
         if (!TextUtils.isEmpty(query)){
             Intent searchIntent = new Intent(this, SearchResultActivity.class);
-            searchIntent.putExtra(Constant.SEARCH_KEY, query);
+            searchIntent.putExtra(Config.SEARCH_KEY, query);
             IntentUtils.startPreviewActivity(this, searchIntent);
             mSearchView.onActionViewCollapsed();
         }
@@ -188,8 +188,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
             Intent intent = new Intent();
             mBundle.clear();
-            mBundle.putString(Constant.BOOK_LST_SEARCH_KEY, menuStrs[position]);
-            mBundle.putInt(Constant.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[position]);
+            mBundle.putString(Config.BOOK_LST_SEARCH_KEY, menuStrs[position]);
+            mBundle.putInt(Config.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[position]);
             intent.putExtras(mBundle);
             setIntent(intent);
             replaceFragment(fragments[position]);

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Config;
-import cn.hnist.lib.android.hnistbook.bean.Constant;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 import cn.hnist.lib.android.hnistbook.ui.fragments.BookListFragment;
 
@@ -32,14 +32,14 @@ public class SearchResultActivity extends SlidingActivity {
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fragmentManager = getFragmentManager();
-        if (getIntent().getStringExtra(Constant.SEARCH_KEY) != null
-                && !TextUtils.isEmpty(getIntent().getStringExtra(Constant.SEARCH_KEY))){
-            searchKeyWords = getIntent().getStringExtra(Constant.SEARCH_KEY);
+        if (getIntent().getStringExtra(Config.SEARCH_KEY) != null
+                && !TextUtils.isEmpty(getIntent().getStringExtra(Config.SEARCH_KEY))){
+            searchKeyWords = getIntent().getStringExtra(Config.SEARCH_KEY);
             setTitle(searchKeyWords);
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putString(Constant.BOOK_LST_SEARCH_KEY, searchKeyWords);
-            bundle.putInt(Constant.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[0]);
+            bundle.putString(Config.BOOK_LST_SEARCH_KEY, searchKeyWords);
+            bundle.putInt(Config.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[0]);
             intent.putExtras(bundle);
             setIntent(intent);
             mFragment = new BookListFragment();

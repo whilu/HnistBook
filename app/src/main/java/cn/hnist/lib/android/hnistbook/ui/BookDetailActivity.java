@@ -25,7 +25,8 @@ import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.anim.SwipViewAnimation;
 import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Book;
-import cn.hnist.lib.android.hnistbook.bean.Constant;
+import cn.hnist.lib.android.hnistbook.bean.Config;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.bean.JSONRequest;
 import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 import cn.hnist.lib.android.hnistbook.util.BlurUtils;
@@ -103,9 +104,9 @@ public class BookDetailActivity extends SlidingActivity {
             }
         });
         if ((mBundle = getIntent().getExtras()) != null){
-            String title = mBundle.getString(Constant.BOOK.title.toString());
-            String isbn10 = mBundle.getString(Constant.BOOK.isbn10.toString());
-            String isbn13 = mBundle.getString(Constant.BOOK.isbn13.toString());
+            String title = mBundle.getString(Config.BOOK.title.toString());
+            String isbn10 = mBundle.getString(Config.BOOK.isbn10.toString());
+            String isbn13 = mBundle.getString(Config.BOOK.isbn13.toString());
             setTitle((title == null || title.equals("")) ? "" : "《" + title + "》");
             if (isbn13 == null || isbn13.equals("")){
                 if (isbn10 == null || isbn10.equals("")){

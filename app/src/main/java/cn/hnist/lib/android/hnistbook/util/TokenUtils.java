@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.api.Api;
-import cn.hnist.lib.android.hnistbook.bean.Constant;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.bean.Token;
 
 /**
@@ -65,7 +65,7 @@ public class TokenUtils {
                             map.put("sign", signature);
                             getContent(map, url);
                         }else {
-                            mHandler.sendEmptyMessage(Constant.MSG_REQUEST_FAILED);
+                            mHandler.sendEmptyMessage(Config.MSG_REQUEST_FAILED);
                         }
                     }
                 }, new Response.ErrorListener(){
@@ -127,7 +127,7 @@ public class TokenUtils {
                     public void onResponse(String s) {
                         Message msg = mHandler.obtainMessage();
                         msg.obj = s;
-                        msg.what = Constant.MSG_REQUEST_SUCCESS;
+                        msg.what = Config.MSG_REQUEST_SUCCESS;
                         mHandler.sendMessage(msg);
                     }
                 }, new Response.ErrorListener(){

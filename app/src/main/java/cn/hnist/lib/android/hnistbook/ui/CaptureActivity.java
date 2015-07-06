@@ -27,7 +27,7 @@ import com.google.zxing.view.ViewfinderView;
 
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.bean.Book;
-import cn.hnist.lib.android.hnistbook.bean.Constant;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.ui.widget.SlidingActivity;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 
@@ -126,9 +126,9 @@ public class CaptureActivity extends SlidingActivity implements Callback {
 		String resultString = result.getText();
 		//TODO 扫码成功回调
         mBundle.clear();
-        mBundle.putString(Constant.BOOK.title.toString(), "");
-        mBundle.putString(Constant.BOOK.isbn13.toString(), "" + resultString);
-        mBundle.putString(Constant.BOOK.isbn10.toString(), "" + resultString);
+        mBundle.putString(Config.BOOK.title.toString(), "");
+        mBundle.putString(Config.BOOK.isbn13.toString(), "" + resultString);
+        mBundle.putString(Config.BOOK.isbn10.toString(), "" + resultString);
         mIntent.putExtras(mBundle);
         IntentUtils.startPreviewActivity(this, mIntent);
 	}

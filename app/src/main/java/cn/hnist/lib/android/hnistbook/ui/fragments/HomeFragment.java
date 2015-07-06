@@ -14,7 +14,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,13 +45,14 @@ import cn.hnist.lib.android.hnistbook.anim.SwipViewAnimation;
 import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Annotation;
 import cn.hnist.lib.android.hnistbook.bean.Book;
-import cn.hnist.lib.android.hnistbook.bean.Constant;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.bean.JsonData;
 import cn.hnist.lib.android.hnistbook.ui.adapter.AnnotationAdapter;
 import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
 import cn.hnist.lib.android.hnistbook.ui.widget.AnnDetailView;
 import cn.hnist.lib.android.hnistbook.util.BlurUtils;
+import cn.hnist.lib.android.hnistbook.util.CacheFileUtils;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
 import cn.hnist.lib.android.hnistbook.util.TokenUtils;
 
@@ -94,14 +94,14 @@ public class HomeFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case Constant.MSG_REQUEST_FAILED:
+                case Config.MSG_REQUEST_FAILED:
                     Toast .makeText(GlApplication.getContext(),
                             getResources().getString(R.string.msg_find_error),
                             Toast.LENGTH_SHORT).show();
                     break;
 
-                case Constant.MSG_REQUEST_SUCCESS:
-                    onSetBookData(msg.obj.toString());
+                case Config.MSG_REQUEST_SUCCESS:
+                    onSetBookData(msg.obj.toString(), false);
                     break;
             }
         }
@@ -193,11 +193,11 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
-                        if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                             int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
                             int totalItemCount = mLayoutManager.getItemCount();
 
-                            if (lastVisibleItem == totalItemCount - 1){
+                            if (lastVisibleItem == totalItemCount - 1) {
 //                                onUpdateAnnotation(id);
                                 onUpdateAnnotation("4238362");
                             }
@@ -231,7 +231,7 @@ public class HomeFragment extends Fragment {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mRefreshLayout.isRefreshing()){
+                if (mRefreshLayout.isRefreshing()) {
                     mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
                     page = 0;
                 }
@@ -246,13 +246,17 @@ public class HomeFragment extends Fragment {
         tvPage2PYear.setText(getString(R.string.tv_book_pubdate));
         tvPage2ISBN.setText(getString(R.string.tv_book_isbn));
         tvPage2Summary.setText(getString(R.string.test_intro));
+
+        onSetBookData((String) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH), true);
+        onSetAnnData(null, true, true);
+        //(String) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH)
     }
 
     /**
      * set book data
      * @param data
      */
-    private void onSetBookData(String data){
+    private void onSetBookData(String data, boolean isCache){
         JsonData jsonData = JSON.parseObject(data, JsonData.class);
         if (jsonData == null){
             return;
@@ -262,6 +266,15 @@ public class HomeFragment extends Fragment {
             Book book = JSON.parseObject(jsonData.getData(), Book.class);
             JsonData.Extra extra = jsonData.getExtra();
             if (book != null){
+                //write cache
+                if (!isCache) {
+                    if (!CacheFileUtils.saveObject(data, Config.SZ_CACHE_FILE_PATH)){
+                        Toast .makeText(GlApplication.getContext(),
+                                getResources().getString(R.string.msg_cache_error),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+                //set data
                 if (!TextUtils.isEmpty(book.getImages().getSmall())){
                     Glide.with(GlApplication.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
@@ -333,9 +346,9 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         if (page == 0){
-                            onSetAnnData(jsonObject, true);
+                            onSetAnnData(jsonObject, true, false);
                         }else {
-                            onSetAnnData(jsonObject, false);
+                            onSetAnnData(jsonObject, false, false);
                         }
                     }
                 },
@@ -358,22 +371,30 @@ public class HomeFragment extends Fragment {
      * @param jsonObject
      * @param isUpdate
      */
-    private void onSetAnnData(JSONObject jsonObject, boolean isUpdate){
+    private void onSetAnnData(JSONObject jsonObject, boolean isUpdate, boolean isCache){
         if (jsonObject != null){
             if (isUpdate){// update
+                if (!isCache){
+                    if (!CacheFileUtils.saveObject(jsonObject.toString(),
+                            Config.ANN_CACHE_FILE_PATH)){
+                        Toast .makeText(GlApplication.getContext(),
+                                getResources().getString(R.string.msg_cache_error),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
                 mAnns.clear();
             }
             String json_arr = "";
             try{
                 json_arr = jsonObject.getJSONArray("annotations").toString();
-                page++;
+                if(!isCache) page++;
             } catch (JSONException e){
                 e.printStackTrace();
             }
 
             List<Annotation> anns = JSON.parseArray(json_arr, Annotation.class);
             if (anns.size() <= 0){
-                Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
+                Toast .makeText(GlApplication.getContext(), getResources().getString(R.string.msg_no_find),
                         Toast.LENGTH_SHORT).show();
                 mRefreshLayout.setRefreshing(false);
                 return;

@@ -32,7 +32,7 @@ import cn.hnist.lib.android.hnistbook.GlApplication;
 import cn.hnist.lib.android.hnistbook.R;
 import cn.hnist.lib.android.hnistbook.api.Api;
 import cn.hnist.lib.android.hnistbook.bean.Book;
-import cn.hnist.lib.android.hnistbook.bean.Constant;
+import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.ui.BookDetailActivity;
 import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
 import cn.hnist.lib.android.hnistbook.util.IntentUtils;
@@ -91,11 +91,11 @@ public class BookListFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     mBundle.clear();
-                    mBundle.putString(Constant.BOOK.title.toString(),
+                    mBundle.putString(Config.BOOK.title.toString(),
                             ((Book) view.getTag()).getTitle());
-                    mBundle.putString(Constant.BOOK.isbn13.toString(),
+                    mBundle.putString(Config.BOOK.isbn13.toString(),
                             (((Book) view.getTag()).getIsbn13()));
-                    mBundle.putString(Constant.BOOK.isbn10.toString(),
+                    mBundle.putString(Config.BOOK.isbn10.toString(),
                             (((Book) view.getTag()).getIsbn10()));
                     mBookDetailIntent.putExtras(mBundle);
                         IntentUtils.startPreviewActivity(getActivity(), mBookDetailIntent);
@@ -132,8 +132,8 @@ public class BookListFragment extends Fragment {
             if (getActivity().getIntent() != null){
                 Bundle bundle = getActivity().getIntent().getExtras();
                 if (bundle != null){
-                    mType = bundle.getInt(Constant.BOOK_LST_SEARCH_TYPE);
-                    keyword = bundle.getString(Constant.BOOK_LST_SEARCH_KEY);
+                    mType = bundle.getInt(Config.BOOK_LST_SEARCH_TYPE);
+                    keyword = bundle.getString(Config.BOOK_LST_SEARCH_KEY);
                     if (mType == -1){
                         Toast.makeText(getActivity(),
                                 getResources().getString(R.string.msg_intent_extras_null),
