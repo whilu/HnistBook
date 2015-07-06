@@ -48,12 +48,11 @@ import cn.hnist.lib.android.hnistbook.bean.Book;
 import cn.hnist.lib.android.hnistbook.bean.Config;
 import cn.hnist.lib.android.hnistbook.bean.JsonData;
 import cn.hnist.lib.android.hnistbook.ui.adapter.AnnotationAdapter;
-import cn.hnist.lib.android.hnistbook.ui.adapter.BookAdapter;
 import cn.hnist.lib.android.hnistbook.ui.adapter.ViewPagerAdapter;
 import cn.hnist.lib.android.hnistbook.ui.widget.AnnDetailView;
 import cn.hnist.lib.android.hnistbook.util.BlurUtils;
 import cn.hnist.lib.android.hnistbook.util.CacheFileUtils;
-import cn.hnist.lib.android.hnistbook.util.IntentUtils;
+import cn.hnist.lib.android.hnistbook.util.NetWorkUtils;
 import cn.hnist.lib.android.hnistbook.util.TokenUtils;
 
 /**
@@ -231,25 +230,43 @@ public class HomeFragment extends Fragment {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (NetWorkUtils.getNetWorkType(GlApplication.getContext())
+                        == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+                    Toast.makeText(GlApplication.getContext(),
+                            getResources().getString(R.string.msg_no_internet),
+                            Toast.LENGTH_SHORT).show();
+                    mRefreshLayout.setRefreshing(false);
+                    return;
+                }
                 if (mRefreshLayout.isRefreshing()) {
                     mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
                     page = 0;
                 }
             }
         });
-        //
-        mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
 
         //设置默认显示信息
         tvPage2Author.setText(getString(R.string.tv_book_author));
         tvPage2Publisher.setText(getString(R.string.tv_book_publisher));
         tvPage2PYear.setText(getString(R.string.tv_book_pubdate));
         tvPage2ISBN.setText(getString(R.string.tv_book_isbn));
-        tvPage2Summary.setText(getString(R.string.test_intro));
+//        tvPage2Summary.setText("");
 
-        onSetBookData((String) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH), true);
-        onSetAnnData(null, true, true);
-        //(String) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH)
+        //set cache
+        try{
+            String tmpCache = (String) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
+            if (tmpCache != null){
+                onSetBookData(tmpCache, true);
+            }
+            tmpCache = (String) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
+            if (tmpCache != null){
+                onSetAnnData(new JSONObject(tmpCache), true, true);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        //
+        mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
     }
 
     /**
@@ -278,19 +295,7 @@ public class HomeFragment extends Fragment {
                 if (!TextUtils.isEmpty(book.getImages().getSmall())){
                     Glide.with(GlApplication.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
-
-                    //book blur
-                    /*ivPage2BookBlur.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                        @Override
-                        public boolean onPreDraw() {
-                            ivPage2BookBlur.getViewTreeObserver().removeOnPreDrawListener(this);
-                            ivPage2BookBlur.buildDrawingCache();
-
-                            Bitmap bitmap = ivPage2BookBlur.getDrawingCache();
-                            BlurUtils.blur(bitmap, ivPage2BookBlurView);
-                            return true;
-                        }
-                    });*/
+                    //book background blur
                     ImageLoader.getInstance().loadImage(book.getImages().getLarge(),
                             new SimpleImageLoadingListener() {
 
@@ -387,7 +392,9 @@ public class HomeFragment extends Fragment {
             String json_arr = "";
             try{
                 json_arr = jsonObject.getJSONArray("annotations").toString();
-                if(!isCache) page++;
+                if(!isCache) {
+                    page++;
+                }
             } catch (JSONException e){
                 e.printStackTrace();
             }
