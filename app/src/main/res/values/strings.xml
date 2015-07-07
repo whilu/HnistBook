@@ -17,6 +17,7 @@
     <string name="msg_find_error">查找失败，请刷新重试</string>
     <string name="msg_book_id_null">书籍ID为空，请重试</string>
     <string name="msg_cache_error">数据缓存失败</string>
+    <string name="msg_cache_cleared">缓存已清理</string>
     <!-- end message-->
 
     <!-- slide drawer hint-->
@@ -36,7 +37,7 @@
     <!-- dialog-->
     <string name="d_about_title">关于</string>
     <string name="d_about_msg">作者：卢俊\n源码：https://github.com/whilu/HnistBook</string>
-    <string name="d_about_p_button">OK</string>
+    <string name="d_about_p_button">确定</string>
 
     <!-- texxtview hint-->
     <string name="tv_book_info">书本信息</string>

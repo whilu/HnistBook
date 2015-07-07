@@ -4,7 +4,7 @@
     android:title="@string/action_settings">
     <PreferenceCategory
         android:layout="@layout/preference_category_widget"
-        android:title="APP选择">
+        android:title="APP选项">
 
         <CheckBoxPreference
             android:layout="@layout/preference_item"
@@ -19,13 +19,13 @@
             android:key="@string/pkey_clear_cache"
             android:summary="点击清空缓存文件"
             android:defaultValue="false" />
-        <CheckBoxPreference
-            android:layout="@layout/preference_item"
-            android:title="夜间模式"
-            android:key="@string/pkey_night_model"
-            android:summaryOff="关闭"
-            android:summaryOn="已开启"
-            android:defaultValue="false" />
+        <!--<CheckBoxPreference-->
+            <!--android:layout="@layout/preference_item"-->
+            <!--android:title="夜间模式"-->
+            <!--android:key="@string/pkey_night_model"-->
+            <!--android:summaryOff="关闭"-->
+            <!--android:summaryOn="已开启"-->
+            <!--android:defaultValue="false" />-->
         <CheckBoxPreference
             android:layout="@layout/preference_item"
             android:title="自动检测更新"
