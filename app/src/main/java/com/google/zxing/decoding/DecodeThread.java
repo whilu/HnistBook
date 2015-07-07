@@ -27,7 +27,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
 
-import cn.hnist.lib.android.hnistbook.ui.CaptureActivity;
+import co.lujun.shuzhi.ui.CaptureActivity;
 
 /**
  * This thread does all the heavy lifting of decoding the images.

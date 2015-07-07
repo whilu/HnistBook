@@ -32,8 +32,8 @@ import com.google.zxing.Result;
 import com.google.zxing.camera.CameraManager;
 import com.google.zxing.view.ViewfinderResultPointCallback;
 
-import cn.hnist.lib.android.hnistbook.R;
-import cn.hnist.lib.android.hnistbook.ui.CaptureActivity;
+import co.lujun.shuzhi.R;
+import co.lujun.shuzhi.ui.CaptureActivity;
 
 /**
  * This class handles all the messaging which comprises the state machine for capture.

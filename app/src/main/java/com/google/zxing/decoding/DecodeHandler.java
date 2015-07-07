@@ -32,8 +32,8 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.camera.CameraManager;
 import com.google.zxing.camera.PlanarYUVLuminanceSource;
 
-import cn.hnist.lib.android.hnistbook.R;
-import cn.hnist.lib.android.hnistbook.ui.CaptureActivity;
+import co.lujun.shuzhi.R;
+import co.lujun.shuzhi.ui.CaptureActivity;
 
 final class DecodeHandler extends Handler {
 
