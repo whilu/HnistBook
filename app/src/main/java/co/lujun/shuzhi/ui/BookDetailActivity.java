@@ -1,13 +1,17 @@
 package co.lujun.shuzhi.ui;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +33,7 @@ import co.lujun.shuzhi.bean.JSONRequest;
 import co.lujun.shuzhi.ui.widget.SlidingActivity;
 import co.lujun.shuzhi.util.BlurUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
+import co.lujun.shuzhi.util.ScreenUtils;
 
 /**
  * Created by lujun on 2015/3/18.
@@ -168,7 +173,12 @@ public class BookDetailActivity extends SlidingActivity {
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                             super.onLoadingComplete(imageUri, view, loadedImage);
-                            BlurUtils.blur(loadedImage, ivBookImgBlur, 2.0f, 1.4f);
+                            int[] wah = ScreenUtils.getScreenWidthXHeight_Px();
+                            if (wah[0] <= 720){
+                                BlurUtils.blur(loadedImage, ivBookImgBlur, 2.0f, 1.4f);
+                            }else {
+                                BlurUtils.blur(loadedImage, ivBookImgBlur, 3.2f, 2.0f);
+                            }
                             ivBookImg.setImageBitmap(loadedImage);
                         }
                     });

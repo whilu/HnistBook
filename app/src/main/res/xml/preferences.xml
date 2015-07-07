@@ -4,7 +4,7 @@
     android:title="@string/action_settings">
     <PreferenceCategory
         android:layout="@layout/preference_category_widget"
-        android:title="APP选项">
+        android:title="选项">
 
         <CheckBoxPreference
             android:layout="@layout/preference_item"
