@@ -25,10 +25,11 @@ public class SplashActivity extends Activity {
             PushAgent.getInstance(this).enable();
             PreferencesUtils.putBoolean(this, Config.CONFIG_PUSH_MSG_KEY, true);
         }
-        /*if (!PreferencesUtils.getBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, false)){
-
+        if (PreferencesUtils.getBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true)){
+            // TODO 开启自动更新
+            //update();
             PreferencesUtils.putBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true);
-        }*/
+        }
         //delay some time
         new Handler().postDelayed(new Runnable() {
             @Override

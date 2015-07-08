@@ -20,6 +20,7 @@ import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.widget.SlidingActivity;
 import co.lujun.shuzhi.util.CacheFileUtils;
+import co.lujun.shuzhi.util.PreferencesUtils;
 
 /**
  * Created by lujun on 2015/3/4.
@@ -91,8 +92,14 @@ public class SettingsActivity extends SlidingActivity {
                 // TODO 夜间模式开关
                 Toast.makeText(getActivity(), "夜间" + (Boolean) newValue, Toast.LENGTH_SHORT).show();
             }*/else if (preference.getKey().equals(getString(R.string.pkey_auto_check_update))){
-                // TODO 自动检测更新开关
-                Toast.makeText(getActivity(), "自动检测更新" + (Boolean) newValue, Toast.LENGTH_SHORT).show();
+                // 自动检测更新开关
+                if ((Boolean) newValue){
+                    PreferencesUtils.putBoolean(GlApplication.getContext(),
+                            Config.CONFIG_AUTO_UPDATE_KEY, true);
+                }else{
+                    PreferencesUtils.putBoolean(GlApplication.getContext(),
+                            Config.CONFIG_AUTO_UPDATE_KEY, false);
+                }
             }
             return true;
         }
