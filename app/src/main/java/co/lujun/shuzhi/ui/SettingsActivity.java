@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
@@ -80,8 +81,12 @@ public class SettingsActivity extends SlidingActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference.getKey().equals(getString(R.string.pkey_push_service))){
-                // TODO 推送开关，是否需要持久化处理
-                Toast.makeText(getActivity(), "推送" + (Boolean) newValue, Toast.LENGTH_SHORT).show();
+                // 推送开关，是否需要持久化处理
+                if ((Boolean) newValue){
+                    PushAgent.getInstance(GlApplication.getContext()).enable();
+                }else {
+                    PushAgent.getInstance(GlApplication.getContext()).disable();
+                }
             }/*else if (preference.getKey().equals(getString(R.string.pkey_night_model))){
                 // TODO 夜间模式开关
                 Toast.makeText(getActivity(), "夜间" + (Boolean) newValue, Toast.LENGTH_SHORT).show();

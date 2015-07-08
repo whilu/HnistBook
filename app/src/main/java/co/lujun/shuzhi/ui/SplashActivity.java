@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.umeng.message.PushAgent;
+
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
+import co.lujun.shuzhi.util.PreferencesUtils;
 
 /**
  * Created by Administrator on 2015/7/8.
@@ -17,6 +20,15 @@ public class SplashActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        //init
+        if (!PreferencesUtils.getBoolean(this, Config.CONFIG_PUSH_MSG_KEY, false)){
+            PushAgent.getInstance(this).enable();
+            PreferencesUtils.putBoolean(this, Config.CONFIG_PUSH_MSG_KEY, true);
+        }
+        /*if (!PreferencesUtils.getBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, false)){
+
+            PreferencesUtils.putBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true);
+        }*/
         //delay some time
         new Handler().postDelayed(new Runnable() {
             @Override

@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,8 +58,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
      */
     private void init(Bundle savedInstanceState){
         //umeng message push
-        PushAgent mPushAgent = PushAgent.getInstance(this);
-        mPushAgent.enable();
+        Log.d("debugss", PushAgent.getInstance(this).isEnabled() + "");
         //
         mDrawerLayout = (DrawerLayout) this.findViewById(R.id.drawer);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);

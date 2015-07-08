@@ -12,6 +12,8 @@ public class Config {
     public final static String BOOK_LST_SEARCH_KEY = "BookListFragment_search_key";
     public final static String BOOK_LST_SEARCH_TYPE = "BookListFragment_search_type";
     public final static String SEARCH_KEY = "search_key_words";
+    public final static String CONFIG_PUSH_MSG_KEY = "config_push_message_key";
+    public final static String CONFIG_AUTO_UPDATE_KEY = "config_auto_update_key";
 
     //book attribute
     public enum BOOK{id, isbn10, isbn13, title};

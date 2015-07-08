@@ -8,7 +8,7 @@
 
         <CheckBoxPreference
             android:layout="@layout/preference_item"
-            android:title="接收每日书籍推送消息"
+            android:title="接收每周书籍推送消息"
             android:key="@string/pkey_push_service"
             android:summaryOn="当前为接收消息推送(默认)"
             android:summaryOff="当前为不接受消息推送"
