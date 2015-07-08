@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.umeng.analytics.MobclickAgent;
 
 import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
@@ -128,5 +129,17 @@ public class SettingsActivity extends SlidingActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

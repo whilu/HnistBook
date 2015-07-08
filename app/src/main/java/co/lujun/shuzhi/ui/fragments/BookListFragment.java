@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -269,5 +270,19 @@ public class BookListFragment extends Fragment {
 
     private void onUpdateComplete(){
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(BookListFragment.class.getName());
+        MobclickAgent.onResume(getActivity());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(BookListFragment.class.getName());
+        MobclickAgent.onPause(getActivity());
     }
 }

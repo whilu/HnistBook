@@ -19,6 +19,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
+
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.adapter.SliderMenuAdapter;
@@ -53,6 +56,10 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
      * init ui & members
      */
     private void init(Bundle savedInstanceState){
+        //umeng message push
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.enable();
+        //
         mDrawerLayout = (DrawerLayout) this.findViewById(R.id.drawer);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -236,5 +243,17 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

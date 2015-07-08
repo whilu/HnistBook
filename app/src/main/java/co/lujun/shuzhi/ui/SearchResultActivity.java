@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.umeng.analytics.MobclickAgent;
+
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.fragments.BookListFragment;
@@ -58,5 +60,17 @@ public class SearchResultActivity extends co.lujun.shuzhi.ui.widget.SlidingActiv
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

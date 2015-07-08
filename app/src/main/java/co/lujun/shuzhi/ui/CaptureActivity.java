@@ -24,6 +24,7 @@ import com.google.zxing.camera.CameraManager;
 import com.google.zxing.decoding.CaptureActivityHandler;
 import com.google.zxing.decoding.InactivityTimer;
 import com.google.zxing.view.ViewfinderView;
+import com.umeng.analytics.MobclickAgent;
 
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
@@ -77,6 +78,7 @@ public class CaptureActivity extends SlidingActivity implements Callback {
     @Override
 	protected void onResume() {
 		super.onResume();
+		MobclickAgent.onResume(this);
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 		SurfaceHolder surfaceHolder = surfaceView.getHolder();
 		if (hasSurface) {
@@ -100,6 +102,7 @@ public class CaptureActivity extends SlidingActivity implements Callback {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		MobclickAgent.onPause(this);
 		if (handler != null) {
 			handler.quitSynchronously();
 			handler = null;

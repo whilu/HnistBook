@@ -23,4 +23,7 @@ public class Config {
     //cache file config
     public final static String SZ_CACHE_FILE_PATH = "_sz_cache";
     public final static String ANN_CACHE_FILE_PATH = "_ann_cache";
+
+    //app config
+    public final static long APP_SPLASH_TIME = 1000;
 }

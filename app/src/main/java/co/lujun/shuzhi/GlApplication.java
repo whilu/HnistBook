@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import org.litepal.LitePalApplication;
 
@@ -54,6 +55,7 @@ public class GlApplication extends LitePalApplication {
         ImageLoader.getInstance().init(mImageLoaderConfig);
         AnnDetailView.init(this);
         mRequestQueue = Volley.newRequestQueue(this);
+        MobclickAgent.openActivityDurationTrack(false);
     }
 
     public static Context getContext(){
