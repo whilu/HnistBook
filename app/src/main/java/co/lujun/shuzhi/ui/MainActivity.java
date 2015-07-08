@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
+import com.umeng.update.UmengUpdateAgent;
 
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
@@ -29,6 +28,7 @@ import co.lujun.shuzhi.ui.adapter.SliderMenuAdapter;
 import co.lujun.shuzhi.ui.fragments.BookListFragment;
 import co.lujun.shuzhi.ui.fragments.HomeFragment;
 import co.lujun.shuzhi.util.IntentUtils;
+import co.lujun.shuzhi.util.PreferencesUtils;
 
 public class MainActivity extends ActionBarActivity implements SearchView.OnQueryTextListener,
         SearchView.OnCloseListener {
@@ -57,8 +57,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
      * init ui & members
      */
     private void init(Bundle savedInstanceState){
-        //umeng message push
-        Log.d("debugss", PushAgent.getInstance(this).isEnabled() + "");
+        //init umeng update
+        if (PreferencesUtils.getBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true)){
+            // 开启自动更新
+            UmengUpdateAgent.update(this);
+            PreferencesUtils.putBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true);
+        }
         //
         mDrawerLayout = (DrawerLayout) this.findViewById(R.id.drawer);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);

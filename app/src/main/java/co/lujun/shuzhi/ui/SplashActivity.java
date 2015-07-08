@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.umeng.message.PushAgent;
+import com.umeng.update.UmengUpdateAgent;
 
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
@@ -20,15 +21,10 @@ public class SplashActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        //init
+        //init push
         if (!PreferencesUtils.getBoolean(this, Config.CONFIG_PUSH_MSG_KEY, false)){
             PushAgent.getInstance(this).enable();
             PreferencesUtils.putBoolean(this, Config.CONFIG_PUSH_MSG_KEY, true);
-        }
-        if (PreferencesUtils.getBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true)){
-            // TODO 开启自动更新
-            //update();
-            PreferencesUtils.putBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true);
         }
         //delay some time
         new Handler().postDelayed(new Runnable() {
