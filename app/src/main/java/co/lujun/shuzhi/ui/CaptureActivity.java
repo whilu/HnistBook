@@ -12,6 +12,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -28,13 +29,12 @@ import com.umeng.analytics.MobclickAgent;
 
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
-import co.lujun.shuzhi.ui.widget.SlidingActivity;
 import co.lujun.shuzhi.util.IntentUtils;
 
 /**
  * Created by lujun on 2015/3/16.
  */
-public class CaptureActivity extends SlidingActivity implements Callback {
+public class CaptureActivity extends ActionBarActivity implements Callback {
 	private static final float BEEP_VOLUME = 0.10f;
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
