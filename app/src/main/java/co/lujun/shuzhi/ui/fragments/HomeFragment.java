@@ -213,6 +213,7 @@ public class HomeFragment extends Fragment {
         //
         svPage2Main.setVerticalScrollBarEnabled(false);//hide scrollbar
         //
+        mSwipViewAnimation = null;// make SwipViewAnimation null in a fragment
         btnFlip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

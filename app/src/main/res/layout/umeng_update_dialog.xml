@@ -78,7 +78,6 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:focusable="true"
-                    android:text="最新版本：1.0.0\n说明\n说明\n说明\n说明\n说明"
                     android:textColor="@color/gray_text"
                     android:textSize="17sp" />
             </LinearLayout>
