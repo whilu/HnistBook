@@ -135,8 +135,11 @@ public class BookListFragment extends Fragment {
                     mType = bundle.getInt(Config.BOOK_LST_SEARCH_TYPE);
                     keyword = bundle.getString(Config.BOOK_LST_SEARCH_KEY);
                     if (mType == -1){
-                        Toast.makeText(getActivity(),
+                        /*Toast.makeText(GlApplication.getContext(),
                                 getResources().getString(R.string.msg_intent_extras_null),
+                                Toast.LENGTH_SHORT).show();*/
+                        Toast.makeText(GlApplication.getContext(),
+                                getResources().getString(R.string.msg_param_null),
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }else if (mType == 1){// 搜索list
@@ -165,13 +168,19 @@ public class BookListFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 }else {
-                    Toast.makeText(getActivity(),
+                    /*Toast.makeText(getActivity(),
                             getResources().getString(R.string.msg_intent_extras_null),
+                            Toast.LENGTH_SHORT).show();*/
+                    Toast.makeText(GlApplication.getContext(),
+                            getResources().getString(R.string.msg_param_null),
                             Toast.LENGTH_SHORT).show();
                 }
             }else {
-                Toast.makeText(getActivity(),
+                /*Toast.makeText(getActivity(),
                         getResources().getString(R.string.msg_intent_null),
+                        Toast.LENGTH_SHORT).show();*/
+                Toast.makeText(GlApplication.getContext(),
+                        getResources().getString(R.string.msg_param_null),
                         Toast.LENGTH_SHORT).show();
             }
         }

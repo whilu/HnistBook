@@ -6,11 +6,13 @@
     <string name="action_search">搜索</string>
     <string name="action_settings">设置</string>
     <string name="action_scan">扫一扫</string>
+    <string name="tv_hint_theme">one day, one book</string>
     <!-- end menu-->
 
     <!-- message-->
-    <string name="msg_intent_extras_null">intent extras null</string>
-    <string name="msg_intent_null">intent null</string>
+    <string name="msg_intent_extras_null1">intent extras null</string>
+    <string name="msg_intent_null1">intent null</string>
+    <string name="msg_param_null">参数错误</string>
     <string name="msg_no_find">未找到相关信息</string>
     <string name="msg_no_internet">网络未连接</string>
     <string name="msg_key_word_null">关键字不能为空</string>
@@ -36,7 +38,7 @@
     
     <!-- dialog-->
     <string name="d_about_title">关于</string>
-    <string name="d_about_msg">作者：卢俊\n源码：https://github.com/whilu/HnistBook</string>
+    <string name="d_about_msg">作者：书志团队\n源码：https://github.com/whilu/HnistBook</string>
     <string name="d_about_p_button">确定</string>
 
     <!-- texxtview hint-->

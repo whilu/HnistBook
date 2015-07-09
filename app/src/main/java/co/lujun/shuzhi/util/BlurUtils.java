@@ -16,7 +16,7 @@ import co.lujun.shuzhi.GlApplication;
 public class BlurUtils {
 
     public static void blur(Bitmap bkg, View view, float sx, float sy) {
-        long startMs = System.currentTimeMillis();
+//        long startMs = System.currentTimeMillis();
         float scaleFactor = 8;
         float radius = 2;
 
@@ -35,6 +35,6 @@ public class BlurUtils {
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
         view.setBackground(new BitmapDrawable(GlApplication.getContext().getResources(), overlay));
-        Log.d("cost", "cost " + (System.currentTimeMillis() - startMs) + "ms");
+//        Log.d("cost", "cost " + (System.currentTimeMillis() - startMs) + "ms");
     }
 }

@@ -86,8 +86,11 @@ public class BookDetailActivity extends SlidingActivity {
             @Override
             public void onRefresh() {
                 if (TextUtils.isEmpty(isbn)) {
-                    Toast.makeText(BookDetailActivity.this,
+                    /*Toast.makeText(BookDetailActivity.this,
                             getResources().getString(R.string.msg_intent_extras_null),
+                            Toast.LENGTH_SHORT).show();*/
+                    Toast.makeText(GlApplication.getContext(),
+                            getResources().getString(R.string.msg_param_null),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -114,7 +117,9 @@ public class BookDetailActivity extends SlidingActivity {
             setTitle((title == null || title.equals("")) ? "" : "《" + title + "》");
             if (isbn13 == null || isbn13.equals("")){
                 if (isbn10 == null || isbn10.equals("")){
-                    Toast.makeText(this, getResources().getString(R.string.msg_intent_extras_null),
+                    /*Toast.makeText(this, getResources().getString(R.string.msg_intent_extras_null),
+                            Toast.LENGTH_SHORT).show();*/
+                    Toast.makeText(GlApplication.getContext(), getResources().getString(R.string.msg_param_null),
                             Toast.LENGTH_SHORT).show();
                 }else {
                     isbn = isbn10;
@@ -125,7 +130,10 @@ public class BookDetailActivity extends SlidingActivity {
                 searchBook(isbn13);
             }
         }else{
-            Toast.makeText(this, getResources().getString(R.string.msg_intent_extras_null) + getIntent().getExtras(),
+            /*Toast.makeText(this,
+                    getResources().getString(R.string.msg_intent_extras_null) + getIntent().getExtras(),
+                    Toast.LENGTH_SHORT).show();*/
+            Toast.makeText(GlApplication.getContext(), getResources().getString(R.string.msg_param_null),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -150,7 +158,7 @@ public class BookDetailActivity extends SlidingActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast .makeText(BookDetailActivity.this, volleyError.getMessage(),
+                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                         onLoadComplete();
                         /*Toast .makeText(getActivity(),
@@ -163,7 +171,7 @@ public class BookDetailActivity extends SlidingActivity {
 
     private void setData(Book book){
         if (book == null){
-            Toast .makeText(BookDetailActivity.this, getResources().getString(R.string.msg_no_find),
+            Toast .makeText(GlApplication.getContext(), getResources().getString(R.string.msg_no_find),
                     Toast.LENGTH_SHORT).show();
             return;
         }

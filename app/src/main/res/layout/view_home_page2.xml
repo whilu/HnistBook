@@ -154,7 +154,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:gravity="center"
-                        android:text="one day, one book"
+                        android:text="@string/tv_hint_theme"
                         android:textColor="@color/gray_text"
                         android:textSize="16sp"
                         android:textStyle="italic" />
