@@ -198,8 +198,7 @@ public class HomeFragment extends Fragment {
                             int totalItemCount = mLayoutManager.getItemCount();
 
                             if (lastVisibleItem == totalItemCount - 1) {
-//                                onUpdateAnnotation(id);
-                                onUpdateAnnotation("4238362");
+                                onUpdateAnnotation(id);
                             }
                         }
                     }
@@ -326,13 +325,13 @@ public class HomeFragment extends Fragment {
                 tvPage2ISBN.setText(TextUtils.isEmpty(book.getIsbn13()) ? book.getIsbn10() : book.getIsbn13());
                 tvPage2Summary.setText(book.getSummary());
                 id = book.getId();
-                onUpdateAnnotation(id);
+                if (!isCache) {
+                    onUpdateAnnotation(id);
+                }
             }
         }else {
             Toast.makeText(GlApplication.getContext(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
         }
-        //TODO test , need to delete
-        onUpdateAnnotation("4238362");
     }
 
     /**
@@ -377,6 +376,7 @@ public class HomeFragment extends Fragment {
      * set Annotation list data
      * @param jsonObject
      * @param isUpdate
+     * @param isCache
      */
     private void onSetAnnData(JSONObject jsonObject, boolean isUpdate, boolean isCache){
         if (jsonObject != null){
