@@ -303,7 +303,7 @@ public class HomeFragment extends Fragment {
                                 @Override
                                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                                     super.onLoadingComplete(imageUri, view, loadedImage);
-                                    BlurUtils.blur(loadedImage, ivPage2BookBlur, 1.5f,1.1f);
+                                    BlurUtils.blur(loadedImage, ivPage2BookBlur);
                                 }
                             });
                 }
