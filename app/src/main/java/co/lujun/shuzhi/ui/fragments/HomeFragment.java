@@ -98,6 +98,7 @@ public class HomeFragment extends Fragment {
                     Toast .makeText(GlApplication.getContext(),
                             getResources().getString(R.string.msg_find_error),
                             Toast.LENGTH_SHORT).show();
+                    mRefreshLayout.setRefreshing(false);
                     break;
 
                 case Config.MSG_REQUEST_SUCCESS:
@@ -394,9 +395,6 @@ public class HomeFragment extends Fragment {
             String json_arr = "";
             try{
                 json_arr = jsonObject.getJSONArray("annotations").toString();
-                if(!isCache) {
-                    page++;
-                }
             } catch (JSONException e){
                 e.printStackTrace();
             }
@@ -407,6 +405,10 @@ public class HomeFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
                 mRefreshLayout.setRefreshing(false);
                 return;
+            }else {
+                if(!isCache) {
+                    page++;
+                }
             }
             mAnns.addAll(anns);
             mAdapter.notifyDataSetChanged();
