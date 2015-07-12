@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -177,7 +178,15 @@ public class BookDetailActivity extends SlidingActivity {
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                             super.onLoadingComplete(imageUri, view, loadedImage);
-                            BlurUtils.blur(loadedImage, ivBookImgBlur);
+                            final Bitmap bmp = loadedImage;
+                            ivBookImgBlur.getViewTreeObserver().addOnPreDrawListener(
+                                    new ViewTreeObserver.OnPreDrawListener() {
+                                        @Override
+                                        public boolean onPreDraw() {
+                                            BlurUtils.blur(bmp, ivBookImgBlur);
+                                            return true;
+                                        }
+                                    });
                             ivBookImg.setImageBitmap(loadedImage);
                         }
                     });

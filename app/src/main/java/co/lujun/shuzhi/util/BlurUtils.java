@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.View;
 
 import co.lujun.shuzhi.GlApplication;
@@ -19,6 +18,10 @@ public class BlurUtils {
 //        long startMs = System.currentTimeMillis();
         float scaleFactor = 8;
         float radius = 2;
+
+        if (bkg == null){
+            return;
+        }
 
         float[] scaleNum = calScaleNum(bkg, view);
 
