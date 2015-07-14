@@ -1,8 +1,5 @@
 package co.lujun.shuzhi.util;
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -31,18 +28,17 @@ import co.lujun.shuzhi.bean.Token;
  * Created by lujun on 2015/4/3.
  */
 public class TokenUtils {
+    private OnResponseListener mResponseListener;
 
-    private Context mContext;
-    private Handler mHandler;
-
-    public TokenUtils(Context context, Handler handler){
-        mContext = context;
-        mHandler = handler;
+    public TokenUtils(){
     }
 
     public void getData(final Map<String, String> map, final String url){
-        if (NetWorkUtils.getNetWorkType(mContext) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
-            Toast.makeText(mContext, mContext.getResources().getString(R.string.msg_no_internet),
+        if (NetWorkUtils.getNetWorkType(
+                GlApplication.getContext()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            Toast.makeText(
+                    GlApplication.getContext(),
+                    GlApplication.getContext().getResources().getString(R.string.msg_no_internet),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -59,7 +55,10 @@ public class TokenUtils {
                             map.put("sign", signature);
                             getContent(map, url);
                         }else {
-                            mHandler.sendEmptyMessage(Config.MSG_REQUEST_FAILED);
+                            if (mResponseListener != null){
+                                mResponseListener.onFailure(GlApplication.getContext()
+                                        .getResources().getString(R.string.msg_get_token_err));
+                            }
                         }
                     }
                 },
@@ -67,7 +66,7 @@ public class TokenUtils {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
-                        Toast .makeText(mContext, volleyError.getMessage(),
+                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -83,17 +82,16 @@ public class TokenUtils {
 
                     @Override
                     public void onResponse(String s) {
-                        Message msg = mHandler.obtainMessage();
-                        msg.obj = s;
-                        msg.what = Config.MSG_REQUEST_SUCCESS;
-                        mHandler.sendMessage(msg);
+                        if (mResponseListener != null){
+                            mResponseListener.onSuccess(s);
+                        }
                     }
                 },
                 new Response.ErrorListener(){
 
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast .makeText(mContext, volleyError.getMessage(),
+                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -156,4 +154,13 @@ public class TokenUtils {
         }
         return i;
     }
+
+    public void setResponseListener(OnResponseListener listener){
+        this.mResponseListener = listener;
+    }
+
+    public interface OnResponseListener{
+        void onFailure(String s);
+        void onSuccess(String s);
+    };
 }

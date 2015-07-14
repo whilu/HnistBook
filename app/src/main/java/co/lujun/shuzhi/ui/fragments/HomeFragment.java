@@ -3,8 +3,6 @@ package co.lujun.shuzhi.ui.fragments;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -89,26 +87,6 @@ public class HomeFragment extends Fragment {
     private String id = "";
     private int page = 0;
 
-    private Handler mHandler = new Handler(){
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case Config.MSG_REQUEST_FAILED:
-                    Toast .makeText(GlApplication.getContext(),
-                            getResources().getString(R.string.msg_find_error),
-                            Toast.LENGTH_SHORT).show();
-                    mRefreshLayout.setRefreshing(false);
-                    break;
-
-                case Config.MSG_REQUEST_SUCCESS:
-                    onSetBookData(msg.obj.toString(), false);
-                    break;
-            }
-        }
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +109,7 @@ public class HomeFragment extends Fragment {
         mAnns = new ArrayList<Annotation>();
         mAdapter = new AnnotationAdapter(mAnns);
         mPageChangeListener = new PageChangedListener();
-        mTokenUtils = new TokenUtils(getActivity(), mHandler);
+        mTokenUtils = new TokenUtils();
     }
 
     private void initView() {
@@ -270,6 +248,18 @@ public class HomeFragment extends Fragment {
         }
         //
         mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+        mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
+            @Override
+            public void onFailure(String s) {
+                Toast .makeText(GlApplication.getContext(), s, Toast.LENGTH_SHORT).show();
+                mRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                onSetBookData(s, false);
+            }
+        });
     }
 
     /**
@@ -379,6 +369,22 @@ public class HomeFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();*/
                     }
                 });
+        /*JSONRequest<DbBookData<Annotation>> jsonRequest = new JSONRequest<DbBookData<Annotation>>(
+                Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page,
+                DbBookData<Annotation>,
+                new Response.Listener<DbBookData<Annotation>>() {
+                    @Override
+                    public void onResponse(DbBookData<Annotation> annotationDbBookData) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                }
+        );*/
         GlApplication.getRequestQueue().add(jsonObjectRequest);
     }
 

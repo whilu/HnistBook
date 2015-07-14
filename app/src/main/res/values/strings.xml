@@ -20,6 +20,7 @@
     <string name="msg_book_id_null">书籍ID为空，请重试</string>
     <string name="msg_cache_error">数据缓存失败</string>
     <string name="msg_cache_cleared">缓存已清理</string>
+    <string name="msg_get_token_err">Get token failed!</string>
     <!-- end message-->
 
     <!-- slide drawer hint-->
