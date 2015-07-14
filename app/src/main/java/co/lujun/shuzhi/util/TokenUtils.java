@@ -5,17 +5,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
@@ -26,9 +20,11 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Config;
+import co.lujun.shuzhi.bean.JSONRequest;
 import co.lujun.shuzhi.bean.Token;
 
 /**
@@ -37,13 +33,11 @@ import co.lujun.shuzhi.bean.Token;
 public class TokenUtils {
 
     private Context mContext;
-    private RequestQueue mQueen;
     private Handler mHandler;
 
     public TokenUtils(Context context, Handler handler){
         mContext = context;
         mHandler = handler;
-        mQueen = Volley.newRequestQueue(context);
     }
 
     public void getData(final Map<String, String> map, final String url){
@@ -53,12 +47,12 @@ public class TokenUtils {
             return;
         }
         // 获取TOKEN
-        JsonObjectRequest tokenRequest = new JsonObjectRequest(Api.GET_TOKEN_URL, null,
-                new Response.Listener<JSONObject>(){
-
+        JSONRequest<Token> jsonRequest = new JSONRequest<Token>(
+                Api.GET_TOKEN_URL,
+                Token.class,
+                new Response.Listener<Token>() {
                     @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        Token token = JSON.parseObject(jsonObject.toString(), Token.class);
+                    public void onResponse(Token token) {
                         if (token.getStatus() == 1 && map != null){
                             map.put("timestamp", System.currentTimeMillis() + "");
                             String signature = makeSignature(token.getData(), map);
@@ -68,16 +62,48 @@ public class TokenUtils {
                             mHandler.sendEmptyMessage(Config.MSG_REQUEST_FAILED);
                         }
                     }
-                }, new Response.ErrorListener(){
-
+                },
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
                         Toast .makeText(mContext, volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
+                    }
+                });
+        GlApplication.getRequestQueue().add(jsonRequest);
+    }
+
+    /** 获取URL请求的内容POST*/
+    private void getContent(final Map<String, String> map, String url){
+        StringRequest contentReqest = new StringRequest(
+                Request.Method.POST,
+                url,
+                new Response.Listener<String>(){
+
+                    @Override
+                    public void onResponse(String s) {
+                        Message msg = mHandler.obtainMessage();
+                        msg.obj = s;
+                        msg.what = Config.MSG_REQUEST_SUCCESS;
+                        mHandler.sendMessage(msg);
+                    }
+                },
+                new Response.ErrorListener(){
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast .makeText(mContext, volleyError.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return map;
             }
-        });
-        mQueen.add(tokenRequest);
+        };
+        GlApplication.getRequestQueue().add(contentReqest);
     }
 
     /** 签名*/
@@ -114,36 +140,6 @@ public class TokenUtils {
             e.printStackTrace();
             return "";
         }
-    }
-
-    /** 获取URL请求的内容POST*/
-    private void getContent(final Map<String, String> map, String url){
-        StringRequest contentReqest = new StringRequest(
-                Request.Method.POST,
-                url,
-                new Response.Listener<String>(){
-
-                    @Override
-                    public void onResponse(String s) {
-                        Message msg = mHandler.obtainMessage();
-                        msg.obj = s;
-                        msg.what = Config.MSG_REQUEST_SUCCESS;
-                        mHandler.sendMessage(msg);
-                    }
-                }, new Response.ErrorListener(){
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Toast .makeText(mContext, volleyError.getMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return map;
-            }
-        };
-        mQueen.add(contentReqest);
     }
 
     /** */
