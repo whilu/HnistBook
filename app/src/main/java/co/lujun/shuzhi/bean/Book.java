@@ -2,12 +2,15 @@ package co.lujun.shuzhi.bean;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by lujun on 2015/3/18.
  */
-public class Book extends DataSupport {
+public class Book extends DataSupport implements Serializable {
+
+    private static final long serialVersionUID = 3L; // 序列化ID
 
     private String id;//ID
 
@@ -195,7 +198,9 @@ public class Book extends DataSupport {
     public void setEbook_price(String ebook_price){ this.ebook_price = ebook_price; }
 
     /** Book module class*/
-    public class Images {
+    public class Images implements Serializable {
+
+        private static final long serialVersionUID = 4L; // 序列化ID
 
         private String small;// 小图
 
@@ -216,7 +221,9 @@ public class Book extends DataSupport {
         public void setMedium(String medium){ this.medium = medium; }
     }
 
-    public class Rating {
+    public class Rating implements Serializable {
+
+        private static final long serialVersionUID = 5L; // 序列化ID
 
         private int max, min;
 
@@ -241,7 +248,9 @@ public class Book extends DataSupport {
         public void setAverage(String average){ this.average = average; }
     }
 
-    public class Series {
+    public class Series implements Serializable {
+
+        private static final long serialVersionUID = 6L; // 序列化ID
 
         private String id, title;
 
@@ -254,7 +263,9 @@ public class Book extends DataSupport {
         public void setTitle(String title){ this.title = title; }
     }
 
-    public class Tag {
+    public class Tag implements Serializable {
+
+        private static final long serialVersionUID = 7L; // 序列化ID
 
         private long count;
 

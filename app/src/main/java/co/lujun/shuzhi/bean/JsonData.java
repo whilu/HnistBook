@@ -2,10 +2,14 @@ package co.lujun.shuzhi.bean;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by lujun on 2015/5/10.
  */
-public class JsonData extends DataSupport {
+public class JsonData extends DataSupport implements Serializable {
+
+    private static final long serialVersionUID = 10L; // 序列化ID
 
     private String data;
 
@@ -47,7 +51,9 @@ public class JsonData extends DataSupport {
         return extra;
     }
 
-    public class Extra{
+    public class Extra implements Serializable{
+
+        private static final long serialVersionUID = 11L; // 序列化ID
 
         private String date;
 

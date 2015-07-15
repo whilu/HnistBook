@@ -14,14 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.umeng.analytics.MobclickAgent;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,6 +28,8 @@ import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Config;
+import co.lujun.shuzhi.bean.DbBookData;
+import co.lujun.shuzhi.bean.JSONRequest;
 import co.lujun.shuzhi.ui.BookDetailActivity;
 import co.lujun.shuzhi.ui.adapter.BookAdapter;
 import co.lujun.shuzhi.util.IntentUtils;
@@ -200,20 +197,16 @@ public class BookListFragment extends Fragment {
             onUpdateComplete();
             return;
         }
-//        Log.d("debug", "" + mSwipeRefreshLayout.isRefreshing());
         if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+            JSONRequest<DbBookData> jsonRequest = new JSONRequest<DbBookData>(
                     mUrl + "?q=" + keyword + "&start=0",
-                    null,
-                    new Response.Listener<JSONObject>(){
-
+                    DbBookData.class,
+                    new Response.Listener<DbBookData>() {
                         @Override
-                        public void onResponse(JSONObject jsonObject) {
-                            setData(jsonObject, true);
+                        public void onResponse(DbBookData dbBookData) {
+                            setData(dbBookData, true);
                         }
-                    },
-                    new Response.ErrorListener(){
-
+                    }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
                             onUpdateComplete();
@@ -223,55 +216,48 @@ public class BookListFragment extends Fragment {
                                     getResources().getString(R.string.msg_find_error),
                                     Toast.LENGTH_SHORT).show();*/
                         }
-                    });
-            GlApplication.getRequestQueue().add(jsonObjectRequest);
+                    }
+            );
+            GlApplication.getRequestQueue().add(jsonRequest);
         }
     }
 
     private void onLoadMore(){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+        JSONRequest<DbBookData> jsonRequest = new JSONRequest<DbBookData>(
                 mUrl + "?q=" + keyword + "&start=" + start,
-                null,
-                new Response.Listener<JSONObject>(){
-
+                DbBookData.class,
+                new Response.Listener<DbBookData>() {
                     @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        setData(jsonObject, false);
+                    public void onResponse(DbBookData dbBookData) {
+                        setData(dbBookData, false);
                     }
                 },
-                new Response.ErrorListener(){
-
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         onUpdateComplete();
                         Toast .makeText(getActivity(), volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
-                });
-        GlApplication.getRequestQueue().add(jsonObjectRequest);
+                }
+        );
+        GlApplication.getRequestQueue().add(jsonRequest);
     }
 
-    private void setData(JSONObject jsonObject, boolean isUpdate){
-        if (jsonObject != null){
+    private void setData(DbBookData dbBookData, boolean isUpdate){
+        if (dbBookData != null){
             if (isUpdate){// update
                 mBooks.clear();
             }
-            String json_arr = "";
-            try{
-                json_arr = jsonObject.getJSONArray("books").toString();
-                start += (Integer) jsonObject.get("count");
-            } catch (JSONException e){
-                e.printStackTrace();
-            }
+            start += dbBookData.getCount();
 
-            List<Book> books = JSON.parseArray(json_arr, Book.class);
-            if (books.size() <= 0){
+            if (dbBookData.getBooks().size() <= 0){
                 Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
                         Toast.LENGTH_SHORT).show();
                 onUpdateComplete();
                 return;
             }
-            mBooks.addAll(books);
+            mBooks.addAll(dbBookData.getBooks());
             mAdapter.notifyDataSetChanged();
         }
         onUpdateComplete();

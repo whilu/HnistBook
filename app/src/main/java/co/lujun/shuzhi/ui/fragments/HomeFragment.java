@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,8 @@ import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Annotation;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Config;
+import co.lujun.shuzhi.bean.DbBookData;
+import co.lujun.shuzhi.bean.JSONRequest;
 import co.lujun.shuzhi.bean.JsonData;
 import co.lujun.shuzhi.ui.adapter.AnnotationAdapter;
 import co.lujun.shuzhi.ui.adapter.ViewPagerAdapter;
@@ -234,17 +237,13 @@ public class HomeFragment extends Fragment {
 //        tvPage2Summary.setText("");
 
         //set cache
-        try{
-            String tmpCache = (String) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
-            if (tmpCache != null){
-                onSetBookData(tmpCache, true);
-            }
-            tmpCache = (String) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
-            if (tmpCache != null){
-                onSetAnnData(new JSONObject(tmpCache), true, true);
-            }
-        }catch (JSONException e){
-            e.printStackTrace();
+        String tmpCache = (String) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
+        if (tmpCache != null){
+            onSetBookData(tmpCache, true);
+        }
+        DbBookData tmpAnn = (DbBookData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
+        if (tmpAnn != null){
+            onSetAnnData(tmpAnn, true, true);
         }
         //
         mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
@@ -332,6 +331,7 @@ public class HomeFragment extends Fragment {
         }else {
             Toast.makeText(GlApplication.getContext(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
         }
+        onUpdateAnnotation("1003078");
     }
 
     /**
@@ -344,7 +344,7 @@ public class HomeFragment extends Fragment {
             mRefreshLayout.setRefreshing(false);
             return;
         }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+        /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page,
                 null,
                 new Response.Listener<JSONObject>(){
@@ -364,41 +364,49 @@ public class HomeFragment extends Fragment {
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
-                            /*Toast .makeText(GlApplication.getContext(),,
+                            *//*Toast .makeText(GlApplication.getContext(),,
                                     getResources().getString(R.string.msg_find_error),
-                                    Toast.LENGTH_SHORT).show();*/
+                                    Toast.LENGTH_SHORT).show();*//*
                     }
-                });
-        /*JSONRequest<DbBookData<Annotation>> jsonRequest = new JSONRequest<DbBookData<Annotation>>(
+                });*/
+        JSONRequest<DbBookData> jsonRequest = new JSONRequest<DbBookData>(
                 Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page,
-                DbBookData<Annotation>,
-                new Response.Listener<DbBookData<Annotation>>() {
+                DbBookData.class,
+                new Response.Listener<DbBookData>() {
                     @Override
-                    public void onResponse(DbBookData<Annotation> annotationDbBookData) {
-
+                    public void onResponse(DbBookData dbBookData) {
+                        if (page == 0){
+                            onSetAnnData(dbBookData, true, false);
+                        }else {
+                            onSetAnnData(dbBookData, false, false);
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-
+                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                            /*Toast .makeText(GlApplication.getContext(),,
+                                    getResources().getString(R.string.msg_find_error),
+                                    Toast.LENGTH_SHORT).show();*/
                     }
                 }
-        );*/
-        GlApplication.getRequestQueue().add(jsonObjectRequest);
+        );
+        GlApplication.getRequestQueue().add(jsonRequest);
     }
 
     /**
      * set Annotation list data
-     * @param jsonObject
+     * @param dbBookData
      * @param isUpdate
      * @param isCache
      */
-    private void onSetAnnData(JSONObject jsonObject, boolean isUpdate, boolean isCache){
-        if (jsonObject != null){
+    private void onSetAnnData(DbBookData dbBookData, boolean isUpdate, boolean isCache){
+        if (dbBookData != null){
             if (isUpdate){// update
                 if (!isCache){
-                    if (!CacheFileUtils.saveObject(jsonObject.toString(),
+                    if (!CacheFileUtils.saveObject(dbBookData,
                             Config.ANN_CACHE_FILE_PATH)){
                         Toast .makeText(GlApplication.getContext(),
                                 getResources().getString(R.string.msg_cache_error),
@@ -407,26 +415,20 @@ public class HomeFragment extends Fragment {
                 }
                 mAnns.clear();
             }
-            String json_arr = "";
-            try{
-                json_arr = jsonObject.getJSONArray("annotations").toString();
-            } catch (JSONException e){
-                e.printStackTrace();
-            }
-
-            List<Annotation> anns = JSON.parseArray(json_arr, Annotation.class);
-            if (anns.size() <= 0){
-                Toast .makeText(GlApplication.getContext(), getResources().getString(R.string.msg_no_find),
-                        Toast.LENGTH_SHORT).show();
-                mRefreshLayout.setRefreshing(false);
-                return;
-            }else {
-                if(!isCache) {
-                    page++;
+            if (dbBookData.getAnnotations() != null){
+                if (dbBookData.getAnnotations().size() <= 0){
+                    Toast .makeText(GlApplication.getContext(), getResources().getString(R.string.msg_no_find),
+                            Toast.LENGTH_SHORT).show();
+                    mRefreshLayout.setRefreshing(false);
+                    return;
+                }else {
+                    if(!isCache) {
+                        page++;
+                    }
                 }
+                mAnns.addAll(dbBookData.getAnnotations());
+                mAdapter.notifyDataSetChanged();
             }
-            mAnns.addAll(anns);
-            mAdapter.notifyDataSetChanged();
         }
         mRefreshLayout.setRefreshing(false);
     }

@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
-import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.bean.JSONRequest;
 import co.lujun.shuzhi.bean.Token;
 
@@ -28,11 +27,19 @@ import co.lujun.shuzhi.bean.Token;
  * Created by lujun on 2015/4/3.
  */
 public class TokenUtils {
+    /**
+     * 回调接口
+     */
     private OnResponseListener mResponseListener;
 
     public TokenUtils(){
     }
 
+    /**
+     * 获取内容
+     * @param map
+     * @param url
+     */
     public void getData(final Map<String, String> map, final String url){
         if (NetWorkUtils.getNetWorkType(
                 GlApplication.getContext()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
@@ -73,7 +80,11 @@ public class TokenUtils {
         GlApplication.getRequestQueue().add(jsonRequest);
     }
 
-    /** 获取URL请求的内容POST*/
+    /**
+     * 获取URL请求的内容，POST方式
+     * @param map
+     * @param url
+     */
     private void getContent(final Map<String, String> map, String url){
         StringRequest contentReqest = new StringRequest(
                 Request.Method.POST,
@@ -91,8 +102,9 @@ public class TokenUtils {
 
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                        if (mResponseListener != null){
+                            mResponseListener.onFailure(volleyError.getMessage());
+                        }
                     }
                 }
         ){
@@ -104,7 +116,12 @@ public class TokenUtils {
         GlApplication.getRequestQueue().add(contentReqest);
     }
 
-    /** 签名*/
+    /**
+     * 签名
+     * @param token
+     * @param map
+     * @return
+     */
     private String makeSignature(String token, Map<String, String> map){
         if (map == null || map.isEmpty()){
             return "";
@@ -155,10 +172,17 @@ public class TokenUtils {
         return i;
     }
 
+    /**
+     * set response listener
+     * @param listener
+     */
     public void setResponseListener(OnResponseListener listener){
         this.mResponseListener = listener;
     }
 
+    /**
+     * response listener
+     */
     public interface OnResponseListener{
         void onFailure(String s);
         void onSuccess(String s);

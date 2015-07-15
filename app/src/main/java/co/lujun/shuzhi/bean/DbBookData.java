@@ -2,12 +2,15 @@ package co.lujun.shuzhi.bean;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by lujun on 2015/7/14.
  */
-public class DbBookData<T> extends DataSupport {
+public class DbBookData extends DataSupport implements Serializable {
+
+    private static final long serialVersionUID = 1L; // 序列化ID
 
     private int count;
 
@@ -15,7 +18,9 @@ public class DbBookData<T> extends DataSupport {
 
     private long total;
 
-    private List<T> mList;
+    private List<Annotation> annotations;
+
+    private List<Book> books;
 
     public int getCount() {
         return count;
@@ -41,12 +46,20 @@ public class DbBookData<T> extends DataSupport {
         this.start = start;
     }
 
-    public List<T> getList() {
-        return mList;
+    public List<Annotation> getAnnotations() {
+        return annotations;
     }
 
-    public void setList(List<T> mList) {
-        this.mList = mList;
+    public void setAnnotations(List<Annotation> annotations) {
+        this.annotations = annotations;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
 }

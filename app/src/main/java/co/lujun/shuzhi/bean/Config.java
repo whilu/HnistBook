@@ -5,6 +5,22 @@ package co.lujun.shuzhi.bean;
  */
 public class Config {
 
+    /**
+     * serialVersionUID
+     *
+     * DbBookData.class 1L
+     * Annotation.class 2L
+     * Book.class 3L
+     * Images.class 4L
+     * Rating.class 5L
+     * Series.class 6L
+     * Tag.class 7L
+     * User.class 8L
+     * Photo.class 9L
+     * JsonData.class 10L
+     * Extra.class 11L
+     */
+
     //BookListFragment book type
     public static int[] BOOK_LIST_TYPE = new int[]{1, 2, 3};// search type, aweek type, amonth type
 
@@ -17,10 +33,6 @@ public class Config {
 
     //book attribute
     public enum BOOK{id, isbn10, isbn13, title};
-
-    //Message id
-    public final static int MSG_REQUEST_FAILED = 101;
-    public final static int MSG_REQUEST_SUCCESS = 102;
 
     //cache file config
     public final static String SZ_CACHE_FILE_PATH = "_sz_cache";
