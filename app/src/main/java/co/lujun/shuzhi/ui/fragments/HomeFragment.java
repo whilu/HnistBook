@@ -23,7 +23,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
@@ -67,7 +66,7 @@ public class HomeFragment extends Fragment {
     private TextView tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
     private TextView tvPage2Which, tvPage2Title, tvPage2Sub, tvPage2Day, tvPage2YM, tvPage2Summary;
     private ImageView ivPage2Image;
-    private View ivPage2BookBlur;
+    private View vPage2BookBlur;
     private ScrollView svPage2Main;
     private RecyclerView mAnnRecycleView;
     private List<Annotation> mAnns;
@@ -135,7 +134,7 @@ public class HomeFragment extends Fragment {
         tvPage2Day = (TextView) views.get(0).findViewById(R.id.tv_page2_day);
         tvPage2YM = (TextView) views.get(0).findViewById(R.id.tv_page2_ym);
         ivPage2Image = (ImageView) views.get(0).findViewById(R.id.iv_page2_image);
-        ivPage2BookBlur = (View) views.get(0).findViewById(R.id.iv_book_blur_bg);
+        vPage2BookBlur = (View) views.get(0).findViewById(R.id.v_book_blur_bg);
         tvPage2Summary = (TextView) views.get(0).findViewById(R.id.tv_page2_summary);
 
         //
@@ -210,7 +209,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onRefresh() {
                 if (NetWorkUtils.getNetWorkType(GlApplication.getContext())
-                        == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+                        == NetWorkUtils.NETWORK_TYPE_DISCONNECT) {
                     Toast.makeText(GlApplication.getContext(),
                             getResources().getString(R.string.msg_no_internet),
                             Toast.LENGTH_SHORT).show();
@@ -223,7 +222,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-
         //设置默认显示信息
         tvPage2Author.setText(getString(R.string.tv_book_author));
         tvPage2Publisher.setText(getString(R.string.tv_book_publisher));
@@ -232,16 +230,16 @@ public class HomeFragment extends Fragment {
 //        tvPage2Summary.setText("");
 
         //set cache
-        /*JsonData tmpData = (JsonData) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
+        JsonData tmpData = (JsonData) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
         if (tmpData != null){
             onSetBookData(tmpData, true);
         }
         DbBookData tmpAnn = (DbBookData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
         if (tmpAnn != null){
             onSetAnnData(tmpAnn, true, true);
-        }*/
+        }
         //
-        /*mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+        mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
         mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
             @Override
             public void onFailure(String s) {
@@ -253,7 +251,7 @@ public class HomeFragment extends Fragment {
             public void onSuccess(JsonData jsonData) {
                 onSetBookData(jsonData, false);
             }
-        });*/
+        });
     }
 
     /**
@@ -266,7 +264,7 @@ public class HomeFragment extends Fragment {
         }
         int status = jsonData.getStatus();
         if (status == 1){
-            Book book = JSON.parseObject(jsonData.getData(), Book.class);
+            Book book = jsonData.getBook();
             JsonData.Extra extra = jsonData.getExtra();
             if (book != null){
                 //write cache
@@ -289,14 +287,24 @@ public class HomeFragment extends Fragment {
                                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                                     super.onLoadingComplete(imageUri, view, loadedImage);
                                     final Bitmap bmp = loadedImage;
-                                    ivPage2BookBlur.getViewTreeObserver().addOnPreDrawListener(
-                                            new ViewTreeObserver.OnPreDrawListener() {
-                                                @Override
-                                                public boolean onPreDraw() {
-                                                    BlurUtils.blur(bmp, ivPage2BookBlur);
-                                                    return true;
+//                                    vPage2BookBlur.getViewTreeObserver().addOnPreDrawListener(
+//                                            new ViewTreeObserver.OnPreDrawListener() {
+//                                                @Override
+//                                                public boolean onPreDraw() {
+//                                                    BlurUtils.blur(bmp, vPage2BookBlur);
+//                                                    return true;
+//                                                }
+//                                    });
+                                    vPage2BookBlur.getViewTreeObserver().addOnGlobalLayoutListener(
+                                            new ViewTreeObserver.OnGlobalLayoutListener() {
+                                            @Override
+                                            public void onGlobalLayout() {
+                                                if (vPage2BookBlur.getBackground() == null) {
+                                                    BlurUtils.blur(bmp, vPage2BookBlur);
                                                 }
-                                            });
+                                            }
+                                        }
+                                    );
                                 }
                             });
                 }
@@ -337,31 +345,6 @@ public class HomeFragment extends Fragment {
             mRefreshLayout.setRefreshing(false);
             return;
         }
-        /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page,
-                null,
-                new Response.Listener<JSONObject>(){
-
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        if (page == 0){
-                            onSetAnnData(jsonObject, true, false);
-                        }else {
-                            onSetAnnData(jsonObject, false, false);
-                        }
-                    }
-                },
-                new Response.ErrorListener(){
-
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                            *//*Toast .makeText(GlApplication.getContext(),,
-                                    getResources().getString(R.string.msg_find_error),
-                                    Toast.LENGTH_SHORT).show();*//*
-                    }
-                });*/
         JSONRequest<DbBookData> jsonRequest = new JSONRequest<DbBookData>(
                 Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page,
                 DbBookData.class,

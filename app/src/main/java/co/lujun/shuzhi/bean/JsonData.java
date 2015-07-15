@@ -11,7 +11,7 @@ public class JsonData extends DataSupport implements Serializable {
 
     private static final long serialVersionUID = 10L; // 序列化ID
 
-    private String data;
+    private Book book;
 
     private String info;
 
@@ -19,12 +19,12 @@ public class JsonData extends DataSupport implements Serializable {
 
     private Extra extra;
 
-    public void setData(String data){
-        this.data = data;
+    public Book getBook() {
+        return book;
     }
 
-    public String getData(){
-        return data;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     public void setInfo(String info){

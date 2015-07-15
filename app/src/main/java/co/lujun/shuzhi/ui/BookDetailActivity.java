@@ -38,7 +38,8 @@ import co.lujun.shuzhi.util.NetWorkUtils;
 public class BookDetailActivity extends SlidingActivity {
 
     private Toolbar mToolBar;
-    private ImageView ivBookImgBlur, ivBookImg;
+    private ImageView ivBookImg;
+    private View vBookImgBlur;
     private TextView tvBookTitle, tvBookAuthor, tvBookPublisher, tvBookPubdate, tvBookPages,
             tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags, tvAp;
     private LinearLayout llProgressBar, llContent;
@@ -58,7 +59,7 @@ public class BookDetailActivity extends SlidingActivity {
         setContentView(R.layout.activity_book_view);
         mToolBar = (Toolbar) findViewById(R.id.book_detail_toolbar);
         ivBookImg = (ImageView) findViewById(R.id.iv_bda_book_img);
-        ivBookImgBlur = (ImageView) findViewById(R.id.iv_bda_book_img_blur);
+        vBookImgBlur = (View) findViewById(R.id.v_bda_book_img_blur);
         tvBookTitle = (TextView) findViewById(R.id.tv_bda_book_title);
         tvBookAuthor = (TextView) findViewById(R.id.tv_bda_book_author);
         tvBookPublisher = (TextView) findViewById(R.id.tv_bda_book_publisher);
@@ -179,14 +180,16 @@ public class BookDetailActivity extends SlidingActivity {
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                             super.onLoadingComplete(imageUri, view, loadedImage);
                             final Bitmap bmp = loadedImage;
-                            ivBookImgBlur.getViewTreeObserver().addOnPreDrawListener(
-                                    new ViewTreeObserver.OnPreDrawListener() {
-                                        @Override
-                                        public boolean onPreDraw() {
-                                            BlurUtils.blur(bmp, ivBookImgBlur);
-                                            return true;
+                            vBookImgBlur.getViewTreeObserver().addOnGlobalLayoutListener(
+                                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                                    @Override
+                                    public void onGlobalLayout() {
+                                        if (vBookImgBlur.getBackground() == null) {
+                                            BlurUtils.blur(bmp, vBookImgBlur);
                                         }
-                                    });
+                                    }
+                                }
+                            );
                             ivBookImg.setImageBitmap(loadedImage);
                         }
                     });
