@@ -1,12 +1,12 @@
 package co.lujun.shuzhi.ui;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,6 +42,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private String[] mPlanetTitles;
     private FragmentManager fragmentManager;
     private Fragment[] fragments;
+    private Fragment curFragment;
     private Bundle mBundle;
     private String[] menuStrs;
     private static int[] mPlanetIcons;
@@ -73,7 +74,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
                 R.drawable.ic_view_week_grey600_48dp,
                 R.drawable.ic_view_day_grey600_48dp
         };
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         //
         mBundle = new Bundle();
 //        menuStrs = new String[]{"today", "aweek", "amonth"};
@@ -112,12 +113,23 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
         if (savedInstanceState == null){
             selectItem(0);
-            replaceFragment(fragments[0]);
+            fragmentManager.beginTransaction().add(R.id.content_frame, fragments[0]).commit();
+            curFragment = fragments[0];
         }
     }
 
-    private void replaceFragment(Fragment fragment){
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+    private void replaceFragment(Fragment from, Fragment to){
+        if (from == null || to == null){
+            return;
+        }
+        if (curFragment != to) {
+            if (!to.isAdded()) {
+                fragmentManager.beginTransaction().hide(from).add(R.id.content_frame, to).commit();
+            } else {
+                fragmentManager.beginTransaction().hide(from).show(to).commit();
+            }
+            curFragment = to;
+        }
     }
 
     @Override
@@ -202,7 +214,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
             mBundle.putInt(Config.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[position]);
             intent.putExtras(mBundle);
             setIntent(intent);
-            replaceFragment(fragments[position]);
+            replaceFragment(curFragment, fragments[position]);
         }
     }
 

@@ -1,9 +1,9 @@
 package co.lujun.shuzhi.ui;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -31,7 +31,7 @@ public class SearchResultActivity extends co.lujun.shuzhi.ui.widget.SlidingActiv
         mToolBar = (Toolbar) findViewById(R.id.search_result_toolbar);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         if (getIntent().getStringExtra(Config.SEARCH_KEY) != null
                 && !TextUtils.isEmpty(getIntent().getStringExtra(Config.SEARCH_KEY))){
             searchKeyWords = getIntent().getStringExtra(Config.SEARCH_KEY);

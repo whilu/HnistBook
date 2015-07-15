@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class Photo extends DataSupport implements Serializable {
 
-    private static final long serialVersionUID = 9L; // –Ú¡–ªØID
+    private static final long serialVersionUID = 9L; // Serializable ID
 
     private String id;
 

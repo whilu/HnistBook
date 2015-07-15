@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class User extends DataSupport implements Serializable {
 
-    private static final long serialVersionUID = 8L; // –Ú¡–ªØID
+    private static final long serialVersionUID = 8L; // Serializable ID
 
     private String id;
 

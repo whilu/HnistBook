@@ -1,9 +1,9 @@
 package co.lujun.shuzhi.ui.fragments;
 
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -232,16 +232,16 @@ public class HomeFragment extends Fragment {
 //        tvPage2Summary.setText("");
 
         //set cache
-        JsonData tmpData = (JsonData) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
+        /*JsonData tmpData = (JsonData) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
         if (tmpData != null){
             onSetBookData(tmpData, true);
         }
         DbBookData tmpAnn = (DbBookData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
         if (tmpAnn != null){
             onSetAnnData(tmpAnn, true, true);
-        }
+        }*/
         //
-        mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+        /*mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
         mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
             @Override
             public void onFailure(String s) {
@@ -253,7 +253,7 @@ public class HomeFragment extends Fragment {
             public void onSuccess(JsonData jsonData) {
                 onSetBookData(jsonData, false);
             }
-        });
+        });*/
     }
 
     /**

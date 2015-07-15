@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class Annotation extends DataSupport implements Serializable {
 
-    private static final long serialVersionUID = 2L; // –Ú¡–ªØID
+    private static final long serialVersionUID = 2L; //Serializable ID
 
     private String id;
 
