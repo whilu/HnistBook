@@ -6,7 +6,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
@@ -21,6 +20,7 @@ import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.JSONRequest;
+import co.lujun.shuzhi.bean.JsonData;
 import co.lujun.shuzhi.bean.Token;
 
 /**
@@ -86,20 +86,18 @@ public class TokenUtils {
      * @param url
      */
     private void getContent(final Map<String, String> map, String url){
-        StringRequest contentReqest = new StringRequest(
+        JSONRequest<JsonData> jsonRequest = new JSONRequest<JsonData>(
                 Request.Method.POST,
-                url,
-                new Response.Listener<String>(){
-
+                url, JsonData.class,
+                new Response.Listener<JsonData>() {
                     @Override
-                    public void onResponse(String s) {
+                    public void onResponse(JsonData jsonData) {
                         if (mResponseListener != null){
-                            mResponseListener.onSuccess(s);
+                            mResponseListener.onSuccess(jsonData);
                         }
                     }
                 },
-                new Response.ErrorListener(){
-
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         if (mResponseListener != null){
@@ -113,7 +111,7 @@ public class TokenUtils {
                 return map;
             }
         };
-        GlApplication.getRequestQueue().add(contentReqest);
+        GlApplication.getRequestQueue().add(jsonRequest);
     }
 
     /**
@@ -185,6 +183,6 @@ public class TokenUtils {
      */
     public interface OnResponseListener{
         void onFailure(String s);
-        void onSuccess(String s);
+        void onSuccess(JsonData jsonData);
     };
 }

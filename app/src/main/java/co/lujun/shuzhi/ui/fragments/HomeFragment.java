@@ -12,7 +12,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,14 +26,10 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -237,9 +232,9 @@ public class HomeFragment extends Fragment {
 //        tvPage2Summary.setText("");
 
         //set cache
-        String tmpCache = (String) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
-        if (tmpCache != null){
-            onSetBookData(tmpCache, true);
+        JsonData tmpData = (JsonData) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
+        if (tmpData != null){
+            onSetBookData(tmpData, true);
         }
         DbBookData tmpAnn = (DbBookData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
         if (tmpAnn != null){
@@ -255,18 +250,17 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onSuccess(String s) {
-                onSetBookData(s, false);
+            public void onSuccess(JsonData jsonData) {
+                onSetBookData(jsonData, false);
             }
         });
     }
 
     /**
      * set book data
-     * @param data
+     * @param jsonData
      */
-    private void onSetBookData(String data, boolean isCache){
-        JsonData jsonData = JSON.parseObject(data, JsonData.class);
+    private void onSetBookData(JsonData jsonData, boolean isCache){
         if (jsonData == null){
             return;
         }
@@ -277,7 +271,7 @@ public class HomeFragment extends Fragment {
             if (book != null){
                 //write cache
                 if (!isCache) {
-                    if (!CacheFileUtils.saveObject(data, Config.SZ_CACHE_FILE_PATH)){
+                    if (!CacheFileUtils.saveObject(jsonData, Config.SZ_CACHE_FILE_PATH)){
                         Toast .makeText(GlApplication.getContext(),
                                 getResources().getString(R.string.msg_cache_error),
                                 Toast.LENGTH_SHORT).show();
@@ -331,7 +325,6 @@ public class HomeFragment extends Fragment {
         }else {
             Toast.makeText(GlApplication.getContext(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
         }
-        onUpdateAnnotation("1003078");
     }
 
     /**
