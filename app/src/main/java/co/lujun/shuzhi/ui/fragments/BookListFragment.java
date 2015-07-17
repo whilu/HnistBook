@@ -28,8 +28,8 @@ import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Config;
-import co.lujun.shuzhi.bean.DbBookData;
 import co.lujun.shuzhi.bean.JSONRequest;
+import co.lujun.shuzhi.bean.ListData;
 import co.lujun.shuzhi.ui.BookDetailActivity;
 import co.lujun.shuzhi.ui.adapter.BookAdapter;
 import co.lujun.shuzhi.util.IntentUtils;
@@ -49,8 +49,6 @@ public class BookListFragment extends Fragment {
     private Intent mBookDetailIntent;
     private Bundle mBundle;
     private String keyword = "";
-    private String mUrl = "";
-    private int mType = -1;// mType = 1,获取搜索list, mType = 2, 获取七天内的list, mType = 3, 获取一月之内的list
     private int start = 0;
 
     @Override
@@ -129,23 +127,7 @@ public class BookListFragment extends Fragment {
             if (getActivity().getIntent() != null){
                 Bundle bundle = getActivity().getIntent().getExtras();
                 if (bundle != null){
-                    mType = bundle.getInt(Config.BOOK_LST_SEARCH_TYPE);
                     keyword = bundle.getString(Config.BOOK_LST_SEARCH_KEY);
-                    if (mType == -1){
-                        /*Toast.makeText(GlApplication.getContext(),
-                                getResources().getString(R.string.msg_intent_extras_null),
-                                Toast.LENGTH_SHORT).show();*/
-                        Toast.makeText(GlApplication.getContext(),
-                                getResources().getString(R.string.msg_param_null),
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }else if (mType == 1){// 搜索list
-                        mUrl = Api.BOOK_SEARCH_URL;
-                    }else if (mType == 2){// 七天list
-                        mUrl = Api.BOOK_SEARCH_URL;
-                    }else if (mType == 3){// 一月list
-                        mUrl = Api.BOOK_SEARCH_URL;
-                    }
                     if (!TextUtils.isEmpty(keyword)){
                         try{
                             keyword = URLEncoder.encode(keyword, "UTF-8");// 若关键字是中文，编码
@@ -198,13 +180,13 @@ public class BookListFragment extends Fragment {
             return;
         }
         if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
-            JSONRequest<DbBookData> jsonRequest = new JSONRequest<DbBookData>(
-                    mUrl + "?q=" + keyword + "&start=0",
-                    DbBookData.class,
-                    new Response.Listener<DbBookData>() {
+            JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
+                    Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=0",
+                    ListData.class,
+                    new Response.Listener<ListData>() {
                         @Override
-                        public void onResponse(DbBookData dbBookData) {
-                            setData(dbBookData, true);
+                        public void onResponse(ListData listData) {
+                            setData(listData, true);
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -223,13 +205,13 @@ public class BookListFragment extends Fragment {
     }
 
     private void onLoadMore(){
-        JSONRequest<DbBookData> jsonRequest = new JSONRequest<DbBookData>(
-                mUrl + "?q=" + keyword + "&start=" + start,
-                DbBookData.class,
-                new Response.Listener<DbBookData>() {
+        JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
+                Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=" + start,
+                ListData.class,
+                new Response.Listener<ListData>() {
                     @Override
-                    public void onResponse(DbBookData dbBookData) {
-                        setData(dbBookData, false);
+                    public void onResponse(ListData listData) {
+                        setData(listData, false);
                     }
                 },
                 new Response.ErrorListener() {
@@ -244,21 +226,24 @@ public class BookListFragment extends Fragment {
         GlApplication.getRequestQueue().add(jsonRequest);
     }
 
-    private void setData(DbBookData dbBookData, boolean isUpdate){
-        if (dbBookData != null){
+    private void setData(ListData listData, boolean isUpdate){
+        if (listData != null && listData.getBooks() != null){
             if (isUpdate){// update
                 mBooks.clear();
             }
-            start += dbBookData.getCount();
+            start += listData.getCount();
 
-            if (dbBookData.getBooks().size() <= 0){
+            if (listData.getBooks().size() <= 0){
                 Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
                         Toast.LENGTH_SHORT).show();
                 onUpdateComplete();
                 return;
             }
-            mBooks.addAll(dbBookData.getBooks());
+            mBooks.addAll(listData.getBooks());
             mAdapter.notifyDataSetChanged();
+        }else {
+            Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
+                    Toast.LENGTH_SHORT).show();
         }
         onUpdateComplete();
     }

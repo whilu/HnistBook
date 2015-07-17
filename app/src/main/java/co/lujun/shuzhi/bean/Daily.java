@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by lujun on 2015/5/10.
  */
-public class JsonData extends DataSupport implements Serializable {
+public class Daily extends DataSupport implements Serializable {
 
     private static final long serialVersionUID = 10L; // 序列化ID
 

@@ -23,9 +23,11 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import co.lujun.shuzhi.R;
+import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.adapter.SliderMenuAdapter;
 import co.lujun.shuzhi.ui.fragments.BookListFragment;
+import co.lujun.shuzhi.ui.fragments.DailyListFragment;
 import co.lujun.shuzhi.ui.fragments.HomeFragment;
 import co.lujun.shuzhi.util.IntentUtils;
 import co.lujun.shuzhi.util.PreferencesUtils;
@@ -77,14 +79,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         fragmentManager = getSupportFragmentManager();
         //
         mBundle = new Bundle();
-//        menuStrs = new String[]{"today", "aweek", "amonth"};
-        menuStrs = new String[]{"today", "平凡的世界", "习惯的力量"};
+        menuStrs = new String[]{"", Api.GET_7DAY_BOOK_URL, Api.GET_30DAY_BOOK_URL};
         //
 
         fragments = new Fragment[]{
                 new HomeFragment(),
-                new BookListFragment(),
-                new BookListFragment()
+                new DailyListFragment(),
+                new DailyListFragment()
         };
 
         mDrawerList.setAdapter(new SliderMenuAdapter(mPlanetTitles, mPlanetIcons));
@@ -210,8 +211,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
             Intent intent = new Intent();
             mBundle.clear();
-            mBundle.putString(Config.BOOK_LST_SEARCH_KEY, menuStrs[position]);
-            mBundle.putInt(Config.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[position]);
+            mBundle.putString(Config.DAILY_LST_TYPE, menuStrs[position]);
             intent.putExtras(mBundle);
             setIntent(intent);
             replaceFragment(curFragment, fragments[position]);

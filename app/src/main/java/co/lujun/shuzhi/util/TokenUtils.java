@@ -2,13 +2,12 @@ package co.lujun.shuzhi.util;
 
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +19,6 @@ import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.JSONRequest;
-import co.lujun.shuzhi.bean.JsonData;
 import co.lujun.shuzhi.bean.Token;
 
 /**
@@ -36,11 +34,10 @@ public class TokenUtils {
     }
 
     /**
-     * 获取内容
-     * @param map
-     * @param url
+     * 获取POST请求附加信息
      */
-    public void getData(final Map<String, String> map, final String url){
+    public void getRequestParam(){
+        // 网络未连接
         if (NetWorkUtils.getNetWorkType(
                 GlApplication.getContext()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             Toast.makeText(
@@ -56,11 +53,14 @@ public class TokenUtils {
                 new Response.Listener<Token>() {
                     @Override
                     public void onResponse(Token token) {
-                        if (token.getStatus() == 1 && map != null){
+                        if (token.getStatus() == 1){
+                            Map<String, String> map = new HashMap<String, String>();
                             map.put("timestamp", System.currentTimeMillis() + "");
                             String signature = makeSignature(token.getData(), map);
                             map.put("sign", signature);
-                            getContent(map, url);
+                            if (mResponseListener != null){
+                                mResponseListener.onSuccess(map);
+                            }
                         }else {
                             if (mResponseListener != null){
                                 mResponseListener.onFailure(GlApplication.getContext()
@@ -73,44 +73,11 @@ public class TokenUtils {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
-                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-        GlApplication.getRequestQueue().add(jsonRequest);
-    }
-
-    /**
-     * 获取URL请求的内容，POST方式
-     * @param map
-     * @param url
-     */
-    private void getContent(final Map<String, String> map, String url){
-        JSONRequest<JsonData> jsonRequest = new JSONRequest<JsonData>(
-                Request.Method.POST,
-                url, JsonData.class,
-                new Response.Listener<JsonData>() {
-                    @Override
-                    public void onResponse(JsonData jsonData) {
-                        if (mResponseListener != null){
-                            mResponseListener.onSuccess(jsonData);
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
                         if (mResponseListener != null){
                             mResponseListener.onFailure(volleyError.getMessage());
                         }
                     }
-                }
-        ){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return map;
-            }
-        };
+                });
         GlApplication.getRequestQueue().add(jsonRequest);
     }
 
@@ -183,6 +150,6 @@ public class TokenUtils {
      */
     public interface OnResponseListener{
         void onFailure(String s);
-        void onSuccess(JsonData jsonData);
+        void onSuccess(Map<String, String> map);
     };
 }

@@ -39,7 +39,6 @@ public class SearchResultActivity extends co.lujun.shuzhi.ui.widget.SlidingActiv
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putString(Config.BOOK_LST_SEARCH_KEY, searchKeyWords);
-            bundle.putInt(Config.BOOK_LST_SEARCH_TYPE, Config.BOOK_LIST_TYPE[0]);
             intent.putExtras(bundle);
             setIntent(intent);
             mFragment = new BookListFragment();

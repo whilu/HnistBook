@@ -15,31 +15,33 @@ import java.util.List;
 import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Book;
+import co.lujun.shuzhi.bean.Daily;
 
 /**
  * Created by lujun on 2015/7/17.
  */
 public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> {
 
-    private List<Book> mBooks;
+    private List<Daily> mDailies;
     private ViewHolder.ItemClickListener mItemClickListener;
 
-    public DailyAdapter(List<Book> books) {
-        this.mBooks = books;
+    public DailyAdapter(List<Daily> dailies) {
+        this.mDailies = dailies;
     }
 
     // 创建View，被LayoutManager调用
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_item, parent, false);
-        view.setTag(mBooks.get(i));
+        view.setTag(mDailies.get(i));
         return new ViewHolder(view, mItemClickListener);
     }
 
     // 将数据与界面进行绑定
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i){
-        Book book = mBooks.get(i);
+        Daily daily = mDailies.get(i);
+        Book book = daily.getBook();
         if (!TextUtils.isEmpty(book.getImages().getSmall())){
             Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
                     .into(viewHolder.ivBookImg);
@@ -51,14 +53,14 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
         }
         if (author.length() > 0){ author = author.substring(0, author.length() - 1); }
         viewHolder.tvBookAuthor.setText(author);
-//        viewHolder.tvBookVol.setText(book.getPublisher() + "/" + book.getPubdate());
-//        viewHolder.tvBookSub.setText(book.getSummary());
-        viewHolder.itemView.setTag(mBooks.get(i));
+        viewHolder.tvBookVol.setText(daily.getExtra().getVol());
+        viewHolder.tvBookSub.setText(daily.getExtra().getBrief());
+        viewHolder.itemView.setTag(mDailies.get(i));
     }
 
     @Override
     public int getItemCount(){
-        return mBooks == null ? 0 : mBooks.size();
+        return mDailies == null ? 0 : mDailies.size();
     }
 
     public void setOnItemClickListener(ViewHolder.ItemClickListener listener){

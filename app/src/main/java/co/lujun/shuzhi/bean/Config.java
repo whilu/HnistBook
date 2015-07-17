@@ -21,12 +21,9 @@ public class Config {
      * Extra.class 11L
      */
 
-    //BookListFragment book type
-    public static int[] BOOK_LIST_TYPE = new int[]{1, 2, 3};// search type, aweek type, amonth type
-
     //key
     public final static String BOOK_LST_SEARCH_KEY = "BookListFragment_search_key";
-    public final static String BOOK_LST_SEARCH_TYPE = "BookListFragment_search_type";
+    public final static String DAILY_LST_TYPE = "DailyListFragment_url";
     public final static String SEARCH_KEY = "search_key_words";
     public final static String CONFIG_PUSH_MSG_KEY = "config_push_message_key";
     public final static String CONFIG_AUTO_UPDATE_KEY = "config_auto_update_key";

@@ -23,6 +23,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
@@ -31,8 +33,8 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
@@ -41,9 +43,9 @@ import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Annotation;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Config;
-import co.lujun.shuzhi.bean.DbBookData;
+import co.lujun.shuzhi.bean.Daily;
 import co.lujun.shuzhi.bean.JSONRequest;
-import co.lujun.shuzhi.bean.JsonData;
+import co.lujun.shuzhi.bean.ListData;
 import co.lujun.shuzhi.ui.adapter.AnnotationAdapter;
 import co.lujun.shuzhi.ui.adapter.ViewPagerAdapter;
 import co.lujun.shuzhi.ui.widget.AnnDetailView;
@@ -217,7 +219,7 @@ public class HomeFragment extends Fragment {
                     return;
                 }
                 if (mRefreshLayout.isRefreshing()) {
-                    mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+                    onUpdateTodayDaily();
                     page = 0;
                 }
             }
@@ -230,46 +232,79 @@ public class HomeFragment extends Fragment {
 //        tvPage2Summary.setText("");
 
         //set cache
-        JsonData tmpData = (JsonData) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
-        if (tmpData != null){
-            onSetBookData(tmpData, true);
+        Daily daily = (Daily) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
+        if (daily != null){
+            onSetBookData(daily, true);
         }
-        DbBookData tmpAnn = (DbBookData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
+        ListData tmpAnn = (ListData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
         if (tmpAnn != null){
             onSetAnnData(tmpAnn, true, true);
         }
-        //
-        mTokenUtils.getData(new HashMap<String, String>(), Api.GET_TODAY_BOOK_URL);
+        //请求TOKEN设置回调监听
         mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
             @Override
             public void onFailure(String s) {
-                Toast .makeText(GlApplication.getContext(), s, Toast.LENGTH_SHORT).show();
+                Toast.makeText(GlApplication.getContext(), s, Toast.LENGTH_SHORT).show();
                 mRefreshLayout.setRefreshing(false);
             }
 
             @Override
-            public void onSuccess(JsonData jsonData) {
-                onSetBookData(jsonData, false);
+            public void onSuccess(Map<String, String> map) {
+                final Map<String, String> tmpMap = map;
+                JSONRequest<Daily> jsonRequest = new JSONRequest<Daily>(
+                        Request.Method.POST,
+                        Api.GET_TODAY_BOOK_URL,
+                        Daily.class,
+                        new Response.Listener<Daily>() {
+                            @Override
+                            public void onResponse(Daily daily) {
+                                onSetBookData(daily, false);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                Toast.makeText(GlApplication.getContext(),
+                                        volleyError.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                                mRefreshLayout.setRefreshing(false);
+                            }
+                        }
+                ) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        return tmpMap;
+                    }
+                };
+                GlApplication.getRequestQueue().add(jsonRequest);
             }
         });
+        onUpdateTodayDaily();
+    }
+
+    /**
+     * 请求更新今日书志，首先获取OKEN，成功后回调请求书志信息
+     */
+    private void onUpdateTodayDaily(){
+        mTokenUtils.getRequestParam();
     }
 
     /**
      * set book data
-     * @param jsonData
+     * @param daily
      */
-    private void onSetBookData(JsonData jsonData, boolean isCache){
-        if (jsonData == null){
+    private void onSetBookData(Daily daily, boolean isCache){
+        if (daily == null){
             return;
         }
-        int status = jsonData.getStatus();
+        int status = daily.getStatus();
         if (status == 1){
-            Book book = jsonData.getBook();
-            JsonData.Extra extra = jsonData.getExtra();
+            Book book = daily.getBook();
+            Daily.Extra extra = daily.getExtra();
             if (book != null){
                 //write cache
                 if (!isCache) {
-                    if (!CacheFileUtils.saveObject(jsonData, Config.SZ_CACHE_FILE_PATH)){
+                    if (!CacheFileUtils.saveObject(daily, Config.SZ_CACHE_FILE_PATH)){
                         Toast .makeText(GlApplication.getContext(),
                                 getResources().getString(R.string.msg_cache_error),
                                 Toast.LENGTH_SHORT).show();
@@ -287,14 +322,6 @@ public class HomeFragment extends Fragment {
                                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                                     super.onLoadingComplete(imageUri, view, loadedImage);
                                     final Bitmap bmp = loadedImage;
-//                                    vPage2BookBlur.getViewTreeObserver().addOnPreDrawListener(
-//                                            new ViewTreeObserver.OnPreDrawListener() {
-//                                                @Override
-//                                                public boolean onPreDraw() {
-//                                                    BlurUtils.blur(bmp, vPage2BookBlur);
-//                                                    return true;
-//                                                }
-//                                    });
                                     vPage2BookBlur.getViewTreeObserver().addOnGlobalLayoutListener(
                                             new ViewTreeObserver.OnGlobalLayoutListener() {
                                             @Override
@@ -331,7 +358,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         }else {
-            Toast.makeText(GlApplication.getContext(), jsonData.getInfo(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(GlApplication.getContext(), daily.getInfo(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -345,16 +372,16 @@ public class HomeFragment extends Fragment {
             mRefreshLayout.setRefreshing(false);
             return;
         }
-        JSONRequest<DbBookData> jsonRequest = new JSONRequest<DbBookData>(
+        JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
                 Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page,
-                DbBookData.class,
-                new Response.Listener<DbBookData>() {
+                ListData.class,
+                new Response.Listener<ListData>() {
                     @Override
-                    public void onResponse(DbBookData dbBookData) {
+                    public void onResponse(ListData listData) {
                         if (page == 0){
-                            onSetAnnData(dbBookData, true, false);
+                            onSetAnnData(listData, true, false);
                         }else {
-                            onSetAnnData(dbBookData, false, false);
+                            onSetAnnData(listData, false, false);
                         }
                     }
                 },
@@ -374,15 +401,15 @@ public class HomeFragment extends Fragment {
 
     /**
      * set Annotation list data
-     * @param dbBookData
+     * @param listData
      * @param isUpdate
      * @param isCache
      */
-    private void onSetAnnData(DbBookData dbBookData, boolean isUpdate, boolean isCache){
-        if (dbBookData != null){
+    private void onSetAnnData(ListData listData, boolean isUpdate, boolean isCache){
+        if (listData != null){
             if (isUpdate){// update
                 if (!isCache){
-                    if (!CacheFileUtils.saveObject(dbBookData,
+                    if (!CacheFileUtils.saveObject(listData,
                             Config.ANN_CACHE_FILE_PATH)){
                         Toast .makeText(GlApplication.getContext(),
                                 getResources().getString(R.string.msg_cache_error),
@@ -391,8 +418,8 @@ public class HomeFragment extends Fragment {
                 }
                 mAnns.clear();
             }
-            if (dbBookData.getAnnotations() != null){
-                if (dbBookData.getAnnotations().size() <= 0){
+            if (listData.getAnnotations() != null){
+                if (listData.getAnnotations().size() <= 0){
                     Toast .makeText(GlApplication.getContext(), getResources().getString(R.string.msg_no_find),
                             Toast.LENGTH_SHORT).show();
                     mRefreshLayout.setRefreshing(false);
@@ -402,7 +429,7 @@ public class HomeFragment extends Fragment {
                         page++;
                     }
                 }
-                mAnns.addAll(dbBookData.getAnnotations());
+                mAnns.addAll(listData.getAnnotations());
                 mAdapter.notifyDataSetChanged();
             }
         }

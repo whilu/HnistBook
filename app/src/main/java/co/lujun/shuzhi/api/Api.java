@@ -12,4 +12,6 @@ public class Api {
     private final static String SZ_HOST = "http://api.lujun.co/bookz/v1/";
     public final static String GET_TOKEN_URL = SZ_HOST + "Index/getToken";
     public final static String GET_TODAY_BOOK_URL = SZ_HOST + "Book/today";
+    public final static String GET_7DAY_BOOK_URL = SZ_HOST + "Book/7day";
+    public final static String GET_30DAY_BOOK_URL = SZ_HOST + "Book/30day";
 }
