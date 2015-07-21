@@ -93,11 +93,11 @@ public class DailyListFragment extends Fragment {
                     //TODO put some info with daily bean
                     mBundle.clear();
                     mBundle.putString(Config.BOOK.title.toString(),
-                            ((Book) view.getTag()).getTitle());
+                            ((Daily) view.getTag()).getBook().getTitle());
                     mBundle.putString(Config.BOOK.isbn13.toString(),
-                            (((Book) view.getTag()).getIsbn13()));
+                            (((Daily) view.getTag()).getBook().getIsbn13()));
                     mBundle.putString(Config.BOOK.isbn10.toString(),
-                            (((Book) view.getTag()).getIsbn10()));
+                            (((Daily) view.getTag()).getBook().getIsbn10()));
                     mDailyDetailIntent.putExtras(mBundle);
                     IntentUtils.startPreviewActivity(getActivity(), mDailyDetailIntent);
                 }
