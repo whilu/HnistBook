@@ -40,9 +40,6 @@
 -keep class android.net.http.SslError
 -keep class android.webkit.**{*;}
 
--dontwarn com.umeng.**
--keep class com.umeng.**{*;}
-
 -keepclasseswithmembernames class * {
     native <methods>;
 }
@@ -70,4 +67,53 @@
 
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
+}
+
+#shuzhi proguard rules
+-keepclassmembers class * {
+    public <methods>;
+}
+
+-dontwarn android.support.**
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+    public <fields>;
+}
+-keepattributes Signature#过滤泛型
+
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.** { *; }
+
+-dontwarn com.umeng.**
+-keep class com.umeng.**{*;}
+-keep class com.umeng.message.* {
+        public <fields>;
+        public <methods>;
+}
+-keep class com.umeng.message.protobuffer.* {
+        public <fields>;
+        public <methods>;
+}
+-keep class com.squareup.wire.* {
+        public <fields>;
+        public <methods>;
+}
+-keep class org.android.agoo.impl.*{
+        public <fields>;
+        public <methods>;
+}
+-keep class org.android.agoo.service.* {*;}
+-keep class org.android.spdy.**{*;}
+-keep public class co.lujun.shuzhi.R$*{
+    public static final int *;
+}
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
 }

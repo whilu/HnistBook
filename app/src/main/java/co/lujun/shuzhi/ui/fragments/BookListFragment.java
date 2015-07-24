@@ -142,8 +142,8 @@ public class BookListFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }else {
-                        Toast.makeText(getActivity(),
-                                getResources().getString(R.string.msg_key_word_null),
+                        Toast.makeText(GlApplication.getContext(),
+                                GlApplication.getContext().getResources().getString(R.string.msg_key_word_null),
                                 Toast.LENGTH_SHORT).show();
                     }
                 }else {
@@ -151,7 +151,7 @@ public class BookListFragment extends Fragment {
                             getResources().getString(R.string.msg_intent_extras_null),
                             Toast.LENGTH_SHORT).show();*/
                     Toast.makeText(GlApplication.getContext(),
-                            getResources().getString(R.string.msg_param_null),
+                            GlApplication.getContext().getResources().getString(R.string.msg_param_null),
                             Toast.LENGTH_SHORT).show();
                 }
             }else {
@@ -159,7 +159,7 @@ public class BookListFragment extends Fragment {
                         getResources().getString(R.string.msg_intent_null),
                         Toast.LENGTH_SHORT).show();*/
                 Toast.makeText(GlApplication.getContext(),
-                        getResources().getString(R.string.msg_param_null),
+                        GlApplication.getContext().getResources().getString(R.string.msg_param_null),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -167,14 +167,15 @@ public class BookListFragment extends Fragment {
 
     private void onUpdate(String keyword){
         if (TextUtils.isEmpty(keyword)){
-            Toast.makeText(getActivity(),
-                    getResources().getString(R.string.msg_key_word_null),
+            Toast.makeText(GlApplication.getContext(),
+                    GlApplication.getContext().getResources().getString(R.string.msg_key_word_null),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
-            Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_internet),
+            Toast .makeText(GlApplication.getContext(),
+                    GlApplication.getContext().getResources().getString(R.string.msg_no_internet),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
             return;
@@ -192,11 +193,11 @@ public class BookListFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
                             mSwipeRefreshLayout.setRefreshing(false);
-                            Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                            /*Toast .makeText(getActivity(),
-                                    getResources().getString(R.string.msg_find_error),
+                            /*Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
                                     Toast.LENGTH_SHORT).show();*/
+                            Toast .makeText(GlApplication.getContext(),
+                                    GlApplication.getContext().getResources().getString(R.string.msg_find_error),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
             );
@@ -234,7 +235,8 @@ public class BookListFragment extends Fragment {
             start += listData.getCount();
 
             if (listData.getBooks().size() <= 0){
-                Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
+                Toast .makeText(GlApplication.getContext(),
+                        GlApplication.getContext().getResources().getString(R.string.msg_no_find),
                         Toast.LENGTH_SHORT).show();
                 mSwipeRefreshLayout.setRefreshing(false);
                 return;
@@ -242,7 +244,8 @@ public class BookListFragment extends Fragment {
             mBooks.addAll(listData.getBooks());
             mAdapter.notifyDataSetChanged();
         }else {
-            Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
+            Toast .makeText(GlApplication.getContext(),
+                    GlApplication.getContext().getResources().getString(R.string.msg_no_find),
                     Toast.LENGTH_SHORT).show();
         }
         mSwipeRefreshLayout.setRefreshing(false);

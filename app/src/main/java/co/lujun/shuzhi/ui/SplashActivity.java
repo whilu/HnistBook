@@ -22,6 +22,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         //init push
+        PushAgent.getInstance(this).setDebugMode(false);
         if (!PreferencesUtils.getBoolean(this, Config.CONFIG_PUSH_MSG_KEY, false)){
             PushAgent.getInstance(this).enable();
             PreferencesUtils.putBoolean(this, Config.CONFIG_PUSH_MSG_KEY, true);

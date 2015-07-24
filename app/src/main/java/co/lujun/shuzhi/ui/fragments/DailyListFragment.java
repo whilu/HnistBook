@@ -119,8 +119,8 @@ public class DailyListFragment extends Fragment {
                             }
                         });
                     }else {
-                        Toast.makeText(getActivity(),
-                                getResources().getString(R.string.msg_param_null),
+                        Toast.makeText(GlApplication.getContext(),
+                                GlApplication.getContext().getResources().getString(R.string.msg_param_null),
                                 Toast.LENGTH_SHORT).show();
                     }
                 }else {
@@ -128,7 +128,7 @@ public class DailyListFragment extends Fragment {
                             getResources().getString(R.string.msg_intent_extras_null),
                             Toast.LENGTH_SHORT).show();*/
                     Toast.makeText(GlApplication.getContext(),
-                            getResources().getString(R.string.msg_param_null),
+                            GlApplication.getContext().getResources().getString(R.string.msg_param_null),
                             Toast.LENGTH_SHORT).show();
                 }
             }else {
@@ -136,7 +136,7 @@ public class DailyListFragment extends Fragment {
                         getResources().getString(R.string.msg_intent_null),
                         Toast.LENGTH_SHORT).show();*/
                 Toast.makeText(GlApplication.getContext(),
-                        getResources().getString(R.string.msg_param_null),
+                        GlApplication.getContext().getResources().getString(R.string.msg_param_null),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -165,7 +165,7 @@ public class DailyListFragment extends Fragment {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
                                 Toast.makeText(GlApplication.getContext(),
-                                        getResources().getString(R.string.msg_request_error),
+                                        GlApplication.getContext().getResources().getString(R.string.msg_request_error),
                                         Toast.LENGTH_SHORT).show();
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
@@ -187,14 +187,15 @@ public class DailyListFragment extends Fragment {
      */
     private void onUpdate(String url){
         if (TextUtils.isEmpty(url)){
-            Toast.makeText(getActivity(),
-                    getResources().getString(R.string.msg_param_null),
+            Toast.makeText(GlApplication.getContext(),
+                    GlApplication.getContext().getResources().getString(R.string.msg_param_null),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
-            Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_internet),
+            Toast .makeText(GlApplication.getContext(),
+                    GlApplication.getContext().getResources().getString(R.string.msg_no_internet),
                     Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
             return;
@@ -209,7 +210,8 @@ public class DailyListFragment extends Fragment {
             mDailies.clear();
 
             if (listData.getDailies().size() <= 0){
-                Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
+                Toast .makeText(GlApplication.getContext(),
+                        GlApplication.getContext().getResources().getString(R.string.msg_no_find),
                         Toast.LENGTH_SHORT).show();
                 mSwipeRefreshLayout.setRefreshing(false);
                 return;
@@ -217,7 +219,8 @@ public class DailyListFragment extends Fragment {
             mDailies.addAll(listData.getDailies());
             mAdapter.notifyDataSetChanged();
         }else {
-            Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
+            Toast .makeText(GlApplication.getContext(),
+                    GlApplication.getContext().getResources().getString(R.string.msg_no_find),
                     Toast.LENGTH_SHORT).show();
         }
         mSwipeRefreshLayout.setRefreshing(false);
