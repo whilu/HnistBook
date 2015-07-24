@@ -26,7 +26,6 @@ import java.util.Map;
 
 import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
-import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.bean.Daily;
 import co.lujun.shuzhi.bean.JSONRequest;
@@ -76,7 +75,6 @@ public class DailyListFragment extends Fragment {
         mAdapter = new DailyAdapter(mDailies);
         mBundle = new Bundle();
         mTokenUtils = new TokenUtils();
-        //TODO replace BookDetailActivity.class with DailyDetailActivity.class
         mDailyDetailIntent = new Intent(getActivity(), BookDetailActivity.class);
     }
 
@@ -90,7 +88,6 @@ public class DailyListFragment extends Fragment {
             mAdapter.setOnItemClickListener(new DailyAdapter.ViewHolder.ItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    //TODO put some info with daily bean
                     mBundle.clear();
                     mBundle.putString(Config.BOOK.title.toString(),
                             ((Daily) view.getTag()).getBook().getTitle());
@@ -168,7 +165,7 @@ public class DailyListFragment extends Fragment {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
                                 Toast.makeText(GlApplication.getContext(),
-                                        volleyError.getMessage(),
+                                        getResources().getString(R.string.msg_request_error),
                                         Toast.LENGTH_SHORT).show();
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
@@ -193,13 +190,13 @@ public class DailyListFragment extends Fragment {
             Toast.makeText(getActivity(),
                     getResources().getString(R.string.msg_param_null),
                     Toast.LENGTH_SHORT).show();
-            onUpdateComplete();
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_internet),
                     Toast.LENGTH_SHORT).show();
-            onUpdateComplete();
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
@@ -214,7 +211,7 @@ public class DailyListFragment extends Fragment {
             if (listData.getDailies().size() <= 0){
                 Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
                         Toast.LENGTH_SHORT).show();
-                onUpdateComplete();
+                mSwipeRefreshLayout.setRefreshing(false);
                 return;
             }
             mDailies.addAll(listData.getDailies());
@@ -223,10 +220,6 @@ public class DailyListFragment extends Fragment {
             Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
                     Toast.LENGTH_SHORT).show();
         }
-        onUpdateComplete();
-    }
-
-    private void onUpdateComplete(){
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

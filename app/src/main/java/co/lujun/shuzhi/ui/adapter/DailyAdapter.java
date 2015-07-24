@@ -46,15 +46,23 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
             Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
                     .into(viewHolder.ivBookImg);
         }
-        viewHolder.tvBookTitle.setText(book.getTitle());
+        viewHolder.tvBookTitle.setText(
+                GlApplication.getContext().getResources().getString(R.string.tv_title)
+                        + book.getTitle());
         String author = "";
         for (int j = 0; j < book.getAuthor().length; j++){
             author += book.getAuthor()[j] + "、";
         }
         if (author.length() > 0){ author = author.substring(0, author.length() - 1); }
-        viewHolder.tvBookAuthor.setText(author);
-        viewHolder.tvBookVol.setText(daily.getExtra().getVol());
-        viewHolder.tvBookSub.setText(daily.getExtra().getBrief());
+        viewHolder.tvBookAuthor.setText(
+                GlApplication.getContext().getResources().getString(R.string.tv_author) + author);
+        viewHolder.tvBookVol.setText(
+                GlApplication.getContext().getResources().getString(R.string.tv_vol)
+                        + daily.getExtra().getVol());
+        viewHolder.tvBookSZDate.setText(daily.getExtra().getDate());
+        viewHolder.tvBookSub.setText(
+                GlApplication.getContext().getResources().getString(R.string.tv_daily)
+                        + daily.getExtra().getBrief());
         viewHolder.itemView.setTag(mDailies.get(i));
     }
 
@@ -74,6 +82,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
         final TextView tvBookAuthor;
         final TextView tvBookSub;
         final TextView tvBookVol;
+        final TextView tvBookSZDate;
         private ItemClickListener mItemClickListener;
 
         public ViewHolder(View view, ItemClickListener listener){
@@ -83,6 +92,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
             tvBookAuthor = (TextView) view.findViewById(R.id.tv_dli_book_author);
             tvBookSub = (TextView) view.findViewById(R.id.tv_dli_book_sub);
             tvBookVol = (TextView) view.findViewById(R.id.tv_dli_book_vol);
+            tvBookSZDate = (TextView) view.findViewById(R.id.tv_dli_book_date);
             mItemClickListener = listener;
             view.setOnClickListener(this);
         }

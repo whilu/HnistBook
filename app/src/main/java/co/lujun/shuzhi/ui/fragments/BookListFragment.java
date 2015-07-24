@@ -170,13 +170,13 @@ public class BookListFragment extends Fragment {
             Toast.makeText(getActivity(),
                     getResources().getString(R.string.msg_key_word_null),
                     Toast.LENGTH_SHORT).show();
-            onUpdateComplete();
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_internet),
                     Toast.LENGTH_SHORT).show();
-            onUpdateComplete();
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
@@ -191,7 +191,7 @@ public class BookListFragment extends Fragment {
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            onUpdateComplete();
+                            mSwipeRefreshLayout.setRefreshing(false);
                             Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
                                     Toast.LENGTH_SHORT).show();
                             /*Toast .makeText(getActivity(),
@@ -217,7 +217,7 @@ public class BookListFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        onUpdateComplete();
+                        mSwipeRefreshLayout.setRefreshing(false);
                         Toast .makeText(getActivity(), volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -236,7 +236,7 @@ public class BookListFragment extends Fragment {
             if (listData.getBooks().size() <= 0){
                 Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
                         Toast.LENGTH_SHORT).show();
-                onUpdateComplete();
+                mSwipeRefreshLayout.setRefreshing(false);
                 return;
             }
             mBooks.addAll(listData.getBooks());
@@ -245,10 +245,6 @@ public class BookListFragment extends Fragment {
             Toast .makeText(getActivity(), getResources().getString(R.string.msg_no_find),
                     Toast.LENGTH_SHORT).show();
         }
-        onUpdateComplete();
-    }
-
-    private void onUpdateComplete(){
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

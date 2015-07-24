@@ -17,6 +17,7 @@
     <string name="msg_no_internet">网络未连接</string>
     <string name="msg_key_word_null">关键字不能为空</string>
     <string name="msg_find_error">查找失败，请刷新重试</string>
+    <string name="msg_request_error">请求失败，下拉刷新看看~</string>
     <string name="msg_book_id_null">书籍ID为空，请重试</string>
     <string name="msg_cache_error">数据缓存失败</string>
     <string name="msg_cache_cleared">缓存已清理</string>
@@ -54,6 +55,10 @@
     <string name="tv_chapter">章节：</string>
     <string name="tv_annotation">读书笔记</string>
     <string name="tv_write">写于</string>
+    <string name="tv_vol">VOL.</string>
+    <string name="tv_title">Title:</string>
+    <string name="tv_author">Author:</string>
+    <string name="tv_daily">Daily:</string>
 
     <!--button text-->
     <string name="btn_see_detail">查看详细</string>

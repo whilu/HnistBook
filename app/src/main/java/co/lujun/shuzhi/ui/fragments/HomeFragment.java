@@ -265,7 +265,7 @@ public class HomeFragment extends Fragment {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
                                 Toast.makeText(GlApplication.getContext(),
-                                        volleyError.getMessage(),
+                                        getResources().getString(R.string.msg_request_error),
                                         Toast.LENGTH_SHORT).show();
                                 mRefreshLayout.setRefreshing(false);
                             }
@@ -295,6 +295,7 @@ public class HomeFragment extends Fragment {
      */
     private void onSetBookData(Daily daily, boolean isCache){
         if (daily == null){
+            mRefreshLayout.setRefreshing(false);
             return;
         }
         int status = daily.getStatus();
@@ -336,7 +337,7 @@ public class HomeFragment extends Fragment {
                             });
                 }
                 if (extra != null){
-                    tvPage2Which.setText("VOL." + extra.getVol());
+                    tvPage2Which.setText(getResources().getString(R.string.tv_vol) + extra.getVol());
                     tvPage2Sub.setText(extra.getBrief());
                     tvPage2YM.setText(extra.getYMD()[1] + "." + extra.getYMD()[0]);
                     tvPage2Day.setText(extra.getYMD()[2]);
@@ -358,8 +359,10 @@ public class HomeFragment extends Fragment {
                 }
             }
         }else {
-            Toast.makeText(GlApplication.getContext(), daily.getInfo(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(GlApplication.getContext(),
+                    getResources().getString(R.string.msg_no_find), Toast.LENGTH_SHORT).show();
         }
+        mRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -369,7 +372,6 @@ public class HomeFragment extends Fragment {
         if (TextUtils.isEmpty(id)){
             Toast.makeText(GlApplication.getContext(),
                     getResources().getString(R.string.msg_book_id_null), Toast.LENGTH_SHORT).show();
-            mRefreshLayout.setRefreshing(false);
             return;
         }
         JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
@@ -388,11 +390,11 @@ public class HomeFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                            /*Toast .makeText(GlApplication.getContext(),,
+                        /*Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
+                                Toast.LENGTH_SHORT).show();*/
+                            Toast .makeText(GlApplication.getContext(),
                                     getResources().getString(R.string.msg_find_error),
-                                    Toast.LENGTH_SHORT).show();*/
+                                    Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -422,7 +424,6 @@ public class HomeFragment extends Fragment {
                 if (listData.getAnnotations().size() <= 0){
                     Toast .makeText(GlApplication.getContext(), getResources().getString(R.string.msg_no_find),
                             Toast.LENGTH_SHORT).show();
-                    mRefreshLayout.setRefreshing(false);
                     return;
                 }else {
                     if(!isCache) {
@@ -433,7 +434,6 @@ public class HomeFragment extends Fragment {
                 mAdapter.notifyDataSetChanged();
             }
         }
-        mRefreshLayout.setRefreshing(false);
     }
 
     /**

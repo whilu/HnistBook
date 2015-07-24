@@ -1,7 +1,5 @@
 package co.lujun.shuzhi.util;
 
-import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -40,10 +38,10 @@ public class TokenUtils {
         // 网络未连接
         if (NetWorkUtils.getNetWorkType(
                 GlApplication.getContext()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
-            Toast.makeText(
-                    GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_no_internet),
-                    Toast.LENGTH_SHORT).show();
+            if (mResponseListener != null){
+                mResponseListener.onFailure(GlApplication.getContext()
+                        .getResources().getString(R.string.msg_no_internet));
+            }
             return;
         }
         // 获取TOKEN
@@ -74,7 +72,9 @@ public class TokenUtils {
                     public void onErrorResponse(VolleyError volleyError) {
                         volleyError.printStackTrace();
                         if (mResponseListener != null){
-                            mResponseListener.onFailure(volleyError.getMessage());
+                            //volleyError.getMessage()
+                            mResponseListener.onFailure(GlApplication.getContext()
+                                    .getResources().getString(R.string.msg_request_error));
                         }
                     }
                 });
