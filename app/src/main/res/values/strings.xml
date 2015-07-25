@@ -40,7 +40,7 @@
     
     <!-- dialog-->
     <string name="d_about_title">关于</string>
-    <string name="d_about_msg">作者：书志团队\n源码：https://github.com/whilu/HnistBook</string>
+    <string name="d_about_msg">开发者：「书志」\n图书Api：豆瓣图书Api V2\nApp源码：https://github.com/whilu/HnistBook</string>
     <string name="d_about_p_button">确定</string>
 
     <!-- texxtview hint-->
