@@ -11,7 +11,7 @@
 <img src="/screenshots/Screenshot_2015-07-25-23-31-06.jpeg" alt="Screenshot_2015-07-25-23-31-06.jpeg" title="Screenshot_2015-07-25-23-31-06.jpeg"  width="270" height="486"/>
 
 ### APK下载
-[豌豆荚市场(http://www.wandoujia.com/apps/co.lujun.shuzhi)
+(http://www.wandoujia.com/apps/co.lujun.shuzhi)
 
 ### 关于
 任何问题[邮件](mailto:lujun.byte@gmail.com).
