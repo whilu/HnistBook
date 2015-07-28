@@ -48,7 +48,7 @@
             android:title="手动检查更新">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="http://lujun.co/app/shuzhi" />
+                android:data="http://app.lujun.co/shuzhi/" />
         </Preference>
 
         <Preference
