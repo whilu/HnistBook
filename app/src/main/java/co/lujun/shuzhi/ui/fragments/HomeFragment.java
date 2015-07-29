@@ -293,7 +293,7 @@ public class HomeFragment extends Fragment {
      * set book data
      * @param daily
      */
-    private void onSetBookData(Daily daily, boolean isCache){
+    private void onSetBookData(Daily daily, final boolean isCache){
         if (daily == null){
             mRefreshLayout.setRefreshing(false);
             return;
@@ -327,7 +327,7 @@ public class HomeFragment extends Fragment {
                                             new ViewTreeObserver.OnGlobalLayoutListener() {
                                             @Override
                                             public void onGlobalLayout() {
-                                                if (vPage2BookBlur.getBackground() == null) {
+                                                if (vPage2BookBlur.getBackground() == null && !isCache) {
                                                     BlurUtils.blur(bmp, vPage2BookBlur);
                                                 }
                                             }
