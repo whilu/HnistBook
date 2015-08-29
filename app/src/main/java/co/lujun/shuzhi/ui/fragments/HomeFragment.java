@@ -377,7 +377,7 @@ public class HomeFragment extends Fragment {
             return;
         }
         JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
-                Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page,
+                Api.DOUBAN_HOST + id + "/annotations" + "?page=" + page + Api.API_KEY,
                 ListData.class,
                 new Response.Listener<ListData>() {
                     @Override

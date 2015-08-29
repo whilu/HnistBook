@@ -143,7 +143,7 @@ public class BookDetailActivity extends SlidingActivity {
             return;
         }
         JSONRequest<Book> jsonRequest = new JSONRequest<Book>(
-                Api.GET_ISBNBOOK_URL + isbn,
+                Api.GET_ISBNBOOK_URL + isbn + "?" + Api.API_KEY,
                 Book.class,
                 new Response.Listener<Book>() {
                     @Override
