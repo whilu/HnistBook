@@ -182,7 +182,7 @@ public class BookListFragment extends Fragment {
         }
         if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
             JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
-                    Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=0" + Api.API_KEY,
+                    Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=0" + "&" + Api.API_KEY,
                     ListData.class,
                     new Response.Listener<ListData>() {
                         @Override
@@ -207,7 +207,7 @@ public class BookListFragment extends Fragment {
 
     private void onLoadMore(){
         JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
-                Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=" + start + Api.API_KEY,
+                Api.BOOK_SEARCH_URL + "?q=" + keyword + "&start=" + start + "&" + Api.API_KEY,
                 ListData.class,
                 new Response.Listener<ListData>() {
                     @Override

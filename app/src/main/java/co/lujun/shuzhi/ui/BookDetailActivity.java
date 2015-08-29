@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -142,6 +143,7 @@ public class BookDetailActivity extends SlidingActivity {
             onLoadComplete();
             return;
         }
+        Log.d("debugss", Api.GET_ISBNBOOK_URL + isbn + "?" + Api.API_KEY);
         JSONRequest<Book> jsonRequest = new JSONRequest<Book>(
                 Api.GET_ISBNBOOK_URL + isbn + "?" + Api.API_KEY,
                 Book.class,
@@ -155,12 +157,12 @@ public class BookDetailActivity extends SlidingActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
+                        /*Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
+                                Toast.LENGTH_SHORT).show();*/
+                        Toast .makeText(GlApplication.getContext(),
+                                getResources().getString(R.string.msg_find_error),
                                 Toast.LENGTH_SHORT).show();
                         onLoadComplete();
-                        /*Toast .makeText(getActivity(),
-                                    getResources().getString(R.string.msg_find_error),
-                                    Toast.LENGTH_SHORT).show();*/
                     }
                 });
         GlApplication.getRequestQueue().add(jsonRequest);

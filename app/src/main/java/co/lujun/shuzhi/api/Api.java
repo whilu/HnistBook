@@ -8,7 +8,7 @@ public class Api {
     public final static String DOUBAN_HOST = "https://api.douban.com/v2/book/";
     public final static String BOOK_SEARCH_URL = DOUBAN_HOST + "search";
     public final static String GET_ISBNBOOK_URL = DOUBAN_HOST + "isbn/";
-    public final static String API_KEY = "&apikey=00e84c9d0269476f02b8e5d7073bd64d";
+    public final static String API_KEY = "apikey=00e84c9d0269476f02b8e5d7073bd64d";
 
     private final static String SZ_HOST = "http://api.lujun.co/bookz/v1/";
     public final static String GET_TOKEN_URL = SZ_HOST + "Index/getToken";

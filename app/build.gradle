@@ -1,32 +1,84 @@
 apply plugin: 'com.android.application'
 
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))}
+
 android {
-    signingConfigs {
-        config {
-        }
-    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
+
     defaultConfig {
         applicationId "co.lujun.shuzhi"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 1
+        versionCode 101
         versionName "1.0.1"
-    }
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //signingConfig signingConfigs.config
-        }
-        debug {
-            //signingConfig signingConfigs.config
-        }
+
+        //dexMethod 65535
+        multiDexEnabled true
+        //default flavor
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Shuzhi"]
     }
 
     lintOptions{
         abortOnError false
+    }
+
+    signingConfigs {
+        debug{
+            //
+        }
+        release {
+            keyAlias 'lujun'
+            keyPassword KEYPASSWORD
+            storeFile file('E:/Code/Android/Keystore/lujun.keystore')
+            storePassword STOREPASSWORD
+        }
+    }
+
+    buildTypes {
+        debug {
+            //don't show Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            versionNameSuffix "-debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            //don't show Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            minifyEnabled true
+            zipAlignEnabled true
+            //remove unuse resources files
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all{variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // output apk name Ϊshuzhi_v1.0.1_2015-01-15_Wandoujia.apk
+                        def fileName = "shuzhi_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+    }
+
+    productFlavors {
+        Shuzhi {}
+        Mi {}
+        Meizu {}
+        Yingyongbao {}
+        app360 {}
+        Wandoujia {}
+        productFlavors.all {
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        }
     }
 }
 
