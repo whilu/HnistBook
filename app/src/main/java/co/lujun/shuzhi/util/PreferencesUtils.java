@@ -30,7 +30,7 @@ import android.content.SharedPreferences;
  */
 public class PreferencesUtils {
 
-    public static String PREFERENCE_NAME = "ledandan_preference";
+    public static String PREFERENCE_NAME = "shuzhi_preference";
 
     private PreferencesUtils() {
         throw new AssertionError();
