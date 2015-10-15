@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ import co.lujun.shuzhi.ui.widget.AnnDetailView;
 import co.lujun.shuzhi.util.BlurUtils;
 import co.lujun.shuzhi.util.CacheFileUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
+import co.lujun.shuzhi.util.ScreenUtils;
 import co.lujun.shuzhi.util.TokenUtils;
 
 /**
@@ -116,7 +118,9 @@ public class HomeFragment extends Fragment {
             return;
         }
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
-        views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page2, null));
+        int tmpLayout = ScreenUtils.checkIfDeviceHasNavBar(getActivity()) ?
+                R.layout.view_home_page2_with_navbar : R.layout.view_home_page2;
+        views.add(LayoutInflater.from(getActivity()).inflate(tmpLayout, null));
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page3, null));
         mViewPagerAdapter = new ViewPagerAdapter(views, null);
         mViewPager.setAdapter(mViewPagerAdapter);

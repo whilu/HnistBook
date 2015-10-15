@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.view.ViewConfiguration;
 import android.view.WindowManager;
 
 import co.lujun.shuzhi.GlApplication;
@@ -28,5 +31,22 @@ public class ScreenUtils {
             display.getSize(point);
             return new int[]{point.x, point.y};
         }
+    }
+
+    /**
+     * check device has navagtion bar
+     * @param context
+     * @return
+     */
+    public static boolean checkIfDeviceHasNavBar(Context context){
+        boolean hasMenuKey = false;
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            hasMenuKey = ViewConfiguration.get(context).hasPermanentMenuKey();
+        }
+        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+        if (!hasMenuKey && !hasBackKey){
+            return true;
+        }
+        return false;
     }
 }
