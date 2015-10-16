@@ -12,13 +12,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -50,10 +50,12 @@ import co.lujun.shuzhi.bean.ListData;
 import co.lujun.shuzhi.ui.adapter.AnnotationAdapter;
 import co.lujun.shuzhi.ui.adapter.ViewPagerAdapter;
 import co.lujun.shuzhi.ui.widget.AnnDetailView;
+import co.lujun.shuzhi.ui.widget.ShareWindow;
 import co.lujun.shuzhi.util.BlurUtils;
 import co.lujun.shuzhi.util.CacheFileUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
 import co.lujun.shuzhi.util.ScreenUtils;
+import co.lujun.shuzhi.util.SystemUtil;
 import co.lujun.shuzhi.util.TokenUtils;
 
 /**
@@ -80,6 +82,9 @@ public class HomeFragment extends Fragment {
     private View mContainer;
     private CardView mCardView1, mCardView2, mStartCardView;
     private Button btnFlip;
+    private ImageButton fabShare;
+
+    private ShareWindow shareWindow;
 
     private SwipViewAnimation mSwipViewAnimation;
 
@@ -103,7 +108,7 @@ public class HomeFragment extends Fragment {
         return mView;
     }
 
-    private void init(){
+    private void init() {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         views = new ArrayList<View>();
@@ -118,6 +123,7 @@ public class HomeFragment extends Fragment {
             return;
         }
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
+        shareWindow = new ShareWindow(getActivity(), new OnShreBtnClickListener());
         int tmpLayout = ScreenUtils.checkIfDeviceHasNavBar(getActivity()) ?
                 R.layout.view_home_page2_with_navbar : R.layout.view_home_page2;
         views.add(LayoutInflater.from(getActivity()).inflate(tmpLayout, null));
@@ -144,9 +150,10 @@ public class HomeFragment extends Fragment {
         tvPage2Summary = (TextView) views.get(0).findViewById(R.id.tv_page2_summary);
 
         //
-        mContainer  = views.get(0).findViewById(R.id.fl_container);
+        mContainer = views.get(0).findViewById(R.id.fl_container);
         mCardView1 = (CardView) views.get(0).findViewById(R.id.cv_1);
         mCardView2 = (CardView) views.get(0).findViewById(R.id.cv_2);
+        fabShare = (ImageButton) views.get(0).findViewById(R.id.fab_share);
         btnFlip = (Button) views.get(0).findViewById(R.id.btn_flip);
         mStartCardView = mCardView1;
         //
@@ -209,6 +216,12 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+        fabShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareWindow.show(mView, Gravity.CENTER, 0, 0);
+            }
+        });
 
         //
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -237,11 +250,11 @@ public class HomeFragment extends Fragment {
 
         //set cache
         Daily daily = (Daily) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
-        if (daily != null){
+        if (daily != null) {
             onSetBookData(daily, true);
         }
         ListData tmpAnn = (ListData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
-        if (tmpAnn != null){
+        if (tmpAnn != null) {
             onSetAnnData(tmpAnn, true, true);
         }
         //请求TOKEN设置回调监听
@@ -289,34 +302,35 @@ public class HomeFragment extends Fragment {
     /**
      * 请求更新今日书志，首先获取OKEN，成功后回调请求书志信息
      */
-    private void onUpdateTodayDaily(){
+    private void onUpdateTodayDaily() {
         mTokenUtils.getRequestParam();
     }
 
     /**
      * set book data
+     *
      * @param daily
      */
-    private void onSetBookData(Daily daily, final boolean isCache){
-        if (daily == null){
+    private void onSetBookData(Daily daily, final boolean isCache) {
+        if (daily == null) {
             mRefreshLayout.setRefreshing(false);
             return;
         }
         int status = daily.getStatus();
-        if (status == 1){
+        if (status == 1) {
             Book book = daily.getBook();
             Daily.Extra extra = daily.getExtra();
-            if (book != null){
+            if (book != null) {
                 //write cache
                 if (!isCache) {
-                    if (!CacheFileUtils.saveObject(daily, Config.SZ_CACHE_FILE_PATH)){
-                        Toast .makeText(GlApplication.getContext(),
+                    if (!CacheFileUtils.saveObject(daily, Config.SZ_CACHE_FILE_PATH)) {
+                        Toast.makeText(GlApplication.getContext(),
                                 GlApplication.getContext().getResources().getString(R.string.msg_cache_error),
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
                 //set data
-                if (!TextUtils.isEmpty(book.getImages().getSmall())){
+                if (!TextUtils.isEmpty(book.getImages().getSmall())) {
                     Glide.with(GlApplication.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
                     //book background blur
@@ -329,18 +343,18 @@ public class HomeFragment extends Fragment {
                                     final Bitmap bmp = loadedImage;
                                     vPage2BookBlur.getViewTreeObserver().addOnGlobalLayoutListener(
                                             new ViewTreeObserver.OnGlobalLayoutListener() {
-                                            @Override
-                                            public void onGlobalLayout() {
-                                                if (vPage2BookBlur.getBackground() == null && !isCache) {
-                                                    BlurUtils.blur(bmp, vPage2BookBlur);
+                                                @Override
+                                                public void onGlobalLayout() {
+                                                    if (vPage2BookBlur.getBackground() == null && !isCache) {
+                                                        BlurUtils.blur(bmp, vPage2BookBlur);
+                                                    }
                                                 }
                                             }
-                                        }
                                     );
                                 }
                             });
                 }
-                if (extra != null){
+                if (extra != null) {
                     tvPage2Which.setText(GlApplication.getContext().getResources()
                             .getString(R.string.tv_vol) + extra.getVol());
                     tvPage2Sub.setText(extra.getBrief());
@@ -349,10 +363,12 @@ public class HomeFragment extends Fragment {
                 }
                 tvPage2Title.setText(book.getTitle());
                 String author = "";
-                for (int j = 0; j < book.getAuthor().length; j++){
+                for (int j = 0; j < book.getAuthor().length; j++) {
                     author += book.getAuthor()[j] + "、";
                 }
-                if (author.length() > 0){ author = author.substring(0, author.length() - 1); }
+                if (author.length() > 0) {
+                    author = author.substring(0, author.length() - 1);
+                }
                 tvPage2Author.setText(author);
                 tvPage2Publisher.setText(book.getPublisher());
                 tvPage2PYear.setText(book.getPubdate());
@@ -363,7 +379,7 @@ public class HomeFragment extends Fragment {
                     onUpdateAnnotation(id);
                 }
             }
-        }else {
+        } else {
             Toast.makeText(GlApplication.getContext(),
                     GlApplication.getContext().getResources().getString(R.string.msg_no_find), Toast.LENGTH_SHORT).show();
         }
@@ -373,8 +389,8 @@ public class HomeFragment extends Fragment {
     /**
      * update book annotation with book id
      */
-    private void onUpdateAnnotation(String id){
-        if (TextUtils.isEmpty(id)){
+    private void onUpdateAnnotation(String id) {
+        if (TextUtils.isEmpty(id)) {
             Toast.makeText(GlApplication.getContext(),
                     GlApplication.getContext().getResources().getString(R.string.msg_book_id_null),
                     Toast.LENGTH_SHORT).show();
@@ -386,9 +402,9 @@ public class HomeFragment extends Fragment {
                 new Response.Listener<ListData>() {
                     @Override
                     public void onResponse(ListData listData) {
-                        if (page == 0){
+                        if (page == 0) {
                             onSetAnnData(listData, true, false);
-                        }else {
+                        } else {
                             onSetAnnData(listData, false, false);
                         }
                     }
@@ -398,9 +414,9 @@ public class HomeFragment extends Fragment {
                     public void onErrorResponse(VolleyError volleyError) {
                         /*Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
                                 Toast.LENGTH_SHORT).show();*/
-                            Toast .makeText(GlApplication.getContext(),
-                                    GlApplication.getContext().getResources().getString(R.string.msg_find_error),
-                                    Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GlApplication.getContext(),
+                                GlApplication.getContext().getResources().getString(R.string.msg_find_error),
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -409,31 +425,32 @@ public class HomeFragment extends Fragment {
 
     /**
      * set Annotation list data
+     *
      * @param listData
      * @param isUpdate
      * @param isCache
      */
-    private void onSetAnnData(ListData listData, boolean isUpdate, boolean isCache){
-        if (listData != null){
-            if (isUpdate){// update
-                if (!isCache){
+    private void onSetAnnData(ListData listData, boolean isUpdate, boolean isCache) {
+        if (listData != null) {
+            if (isUpdate) {// update
+                if (!isCache) {
                     if (!CacheFileUtils.saveObject(listData,
-                            Config.ANN_CACHE_FILE_PATH)){
-                        Toast .makeText(GlApplication.getContext(),
+                            Config.ANN_CACHE_FILE_PATH)) {
+                        Toast.makeText(GlApplication.getContext(),
                                 GlApplication.getContext().getResources().getString(R.string.msg_cache_error),
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
                 mAnns.clear();
             }
-            if (listData.getAnnotations() != null){
-                if (listData.getAnnotations().size() <= 0){
-                    Toast .makeText(GlApplication.getContext(),
+            if (listData.getAnnotations() != null) {
+                if (listData.getAnnotations().size() <= 0) {
+                    Toast.makeText(GlApplication.getContext(),
                             GlApplication.getContext().getResources().getString(R.string.msg_no_find),
                             Toast.LENGTH_SHORT).show();
                     return;
-                }else {
-                    if(!isCache) {
+                } else {
+                    if (!isCache) {
                         page++;
                     }
                 }
@@ -462,6 +479,37 @@ public class HomeFragment extends Fragment {
         public void onPageScrollStateChanged(int arg0) {
 
         }
+    }
+
+    class OnShreBtnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.btn_share_wechatf:
+                    SystemUtil.showToast("wx f");
+                    break;
+
+                case R.id.btn_share_wechatt:
+                    SystemUtil.showToast("wx t");
+                    break;
+
+                case R.id.btn_share_weibo:
+                    SystemUtil.showToast("weibo");
+                    break;
+
+                case R.id.btn_share_qqf:
+                    SystemUtil.showToast("qq");
+                    break;
+
+                case R.id.btn_share_qqt:
+                    SystemUtil.showToast("qzone");
+                    break;
+
+                default:break;
+            }
+        }
+
     }
 
     @Override

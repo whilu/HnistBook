@@ -5,7 +5,9 @@
     <string name="app_name">书志</string>
     <string name="action_search">搜索</string>
     <string name="action_settings">设置</string>
+    <string name="action_share">分享</string>
     <string name="action_scan">扫一扫</string>
+    <string name="action_share_to">分享到</string>
     <string name="tv_hint_theme">one day, one book</string>
     <!-- end menu-->
 
