@@ -261,15 +261,15 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(getClass().getSimpleName());
         MobclickAgent.onResume(this);
     }
 
-    @Override
-    protected void onPause() {
+    @Override protected void onPause() {
         super.onPause();
+        MobclickAgent.onPageEnd(getClass().getSimpleName());
         MobclickAgent.onPause(this);
     }
 }

@@ -56,6 +56,29 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Shuzhi" />
+        <!--TPShareLogini-->
+        <!--QQ-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 需要改写此处的appId，将tencent后面xxx的改为自己申请的appId，如tencent129068312-->
+                <data android:scheme="tencent1104730321" />
+            </intent-filter>
+        </activity>
+
+        <!-- Weixin-->
+        <activity android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoDisplay"/>
+
+        <!-- Weibo-->
         <!-- umeng message push-->
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"

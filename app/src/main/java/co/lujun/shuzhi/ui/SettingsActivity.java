@@ -18,14 +18,13 @@ import com.umeng.message.PushAgent;
 import co.lujun.shuzhi.GlApplication;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
-import co.lujun.shuzhi.ui.widget.SlidingActivity;
 import co.lujun.shuzhi.util.CacheFileUtils;
 import co.lujun.shuzhi.util.PreferencesUtils;
 
 /**
  * Created by lujun on 2015/3/4.
  */
-public class SettingsActivity extends SlidingActivity {
+public class SettingsActivity extends BaseActivity {
 
     private Toolbar mToolBar;
     private SettingsFragment mSettingsFragment;
@@ -141,17 +140,5 @@ public class SettingsActivity extends SlidingActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 }

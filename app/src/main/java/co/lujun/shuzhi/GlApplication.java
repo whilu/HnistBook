@@ -18,7 +18,9 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.litepal.LitePalApplication;
 
+import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.widget.AnnDetailView;
+import co.lujun.tpsharelogin.TPManager;
 
 /**
  * Created by lujun on 2015/3/1.
@@ -56,6 +58,11 @@ public class GlApplication extends LitePalApplication {
         AnnDetailView.init(this);
         mRequestQueue = Volley.newRequestQueue(this);
         MobclickAgent.openActivityDurationTrack(false);
+
+        TPManager.getInstance().initAppConfig(
+                Config.WB_REDIRECT_URL, Config.WB_APP_KEY, Config.WB_APP_SECRET,
+                Config.QQ_APP_ID, Config.QQ_APP_KEY,
+                Config.WX_APP_ID, Config.WX_APP_SECRET);
     }
 
     public static Context getContext(){

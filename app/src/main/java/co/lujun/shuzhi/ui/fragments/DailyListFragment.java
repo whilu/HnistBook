@@ -3,7 +3,6 @@ package co.lujun.shuzhi.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +17,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,7 @@ import co.lujun.shuzhi.util.TokenUtils;
 /**
  * Created by lujun on 2015/7/17.
  */
-public class DailyListFragment extends Fragment {
+public class DailyListFragment extends BaseFragment {
 
     private View mView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -224,19 +222,5 @@ public class DailyListFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
         mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(DailyListFragment.class.getName());
-        MobclickAgent.onResume(getActivity());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(DailyListFragment.class.getName());
-        MobclickAgent.onPause(getActivity());
     }
 }

@@ -29,14 +29,13 @@ import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.bean.JSONRequest;
-import co.lujun.shuzhi.ui.widget.SlidingActivity;
 import co.lujun.shuzhi.util.BlurUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
 
 /**
  * Created by lujun on 2015/3/18.
  */
-public class BookDetailActivity extends SlidingActivity {
+public class BookDetailActivity extends BaseActivity {
 
     private Toolbar mToolBar;
     private ImageView ivBookImg;
@@ -232,17 +231,5 @@ public class BookDetailActivity extends SlidingActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 }

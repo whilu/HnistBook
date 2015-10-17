@@ -2,8 +2,8 @@ package co.lujun.shuzhi.ui.fragments;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,7 +31,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.umeng.analytics.MobclickAgent;
+import com.tencent.connect.share.QQShare;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,18 +50,27 @@ import co.lujun.shuzhi.bean.ListData;
 import co.lujun.shuzhi.ui.adapter.AnnotationAdapter;
 import co.lujun.shuzhi.ui.adapter.ViewPagerAdapter;
 import co.lujun.shuzhi.ui.widget.AnnDetailView;
+import co.lujun.shuzhi.ui.widget.LoadingWindow;
 import co.lujun.shuzhi.ui.widget.ShareWindow;
 import co.lujun.shuzhi.util.BlurUtils;
 import co.lujun.shuzhi.util.CacheFileUtils;
+import co.lujun.shuzhi.util.ImageUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
 import co.lujun.shuzhi.util.ScreenUtils;
 import co.lujun.shuzhi.util.SystemUtil;
 import co.lujun.shuzhi.util.TokenUtils;
+import co.lujun.tpsharelogin.bean.QQShareContent;
+import co.lujun.tpsharelogin.bean.WBShareContent;
+import co.lujun.tpsharelogin.bean.WXShareContent;
+import co.lujun.tpsharelogin.listener.StateListener;
+import co.lujun.tpsharelogin.platform.qq.QQManager;
+import co.lujun.tpsharelogin.platform.weibo.WBManager;
+import co.lujun.tpsharelogin.platform.weixin.WXManager;
 
 /**
  * Created by lujun on 2015/3/9.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
 
     private View mView;
     private ViewPager mViewPager;
@@ -85,10 +94,14 @@ public class HomeFragment extends Fragment {
     private ImageButton fabShare;
 
     private ShareWindow shareWindow;
-
     private SwipViewAnimation mSwipViewAnimation;
-
     private TokenUtils mTokenUtils;
+
+    private WXManager wxManager;
+    private WBManager wbManager;
+    private QQManager qqManager;
+    private StateListener mShareStateListener;
+    private LoadingWindow winLoading;
 
     private String id = "";
     private int page = 0;
@@ -116,12 +129,37 @@ public class HomeFragment extends Fragment {
         mAdapter = new AnnotationAdapter(mAnns);
         mPageChangeListener = new PageChangedListener();
         mTokenUtils = new TokenUtils();
+        wxManager = new WXManager(getActivity());
+        wbManager = new WBManager(getActivity());
+        qqManager = new QQManager(getActivity());
+        mShareStateListener = new StateListener() {
+            @Override public void onComplete(Object o) {
+                winLoading.dismiss();
+                SystemUtil.showToast(R.string.msg_share_succes);
+            }
+
+            @Override public void onError(String err) {
+                winLoading.dismiss();
+                SystemUtil.showToast(R.string.msg_share_failed);
+            }
+
+            @Override public void onCancel() {
+                winLoading.dismiss();
+                SystemUtil.showToast(R.string.msg_share_cancel);
+            }
+        };
+        wxManager.setListener(mShareStateListener);
+        wbManager.setListener(mShareStateListener);
+        qqManager.setListener(mShareStateListener);
     }
 
     private void initView() {
         if (mView == null) {
             return;
         }
+        winLoading = new LoadingWindow(
+                LayoutInflater.from(getActivity()).inflate(R.layout.view_loading, null, false));
+        winLoading.setProgressText(getString(R.string.msg_share_ing));
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
         shareWindow = new ShareWindow(getActivity(), new OnShreBtnClickListener());
         int tmpLayout = ScreenUtils.checkIfDeviceHasNavBar(getActivity()) ?
@@ -481,48 +519,96 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * share to platform
+     * @param plat
+     */
+    private void shareTo(final int plat){
+        if (!winLoading.isShowing()){
+            winLoading.showAtLocation(mView, 0, 0, Gravity.CENTER);
+        }
+        shareWindow.hide();
+        new Thread(new Runnable() {
+            @Override public void run() {
+                mCardView1.setDrawingCacheEnabled(true);
+                Bitmap bmp = mCardView1.getDrawingCache();
+                if (bmp == null || !ImageUtils.checkSDCardAvailable()){
+                    SystemUtil.showToast(R.string.msg_img_not_found);
+                    return;
+                }
+                String path = Environment.getExternalStorageDirectory() + Config.IMG_PATH;
+                ImageUtils.savePhotoToSDCard(bmp, path, Config.SHARE_IMG_NAME);
+                switch (plat){
+                    case R.id.btn_share_wechatf:
+                        shareToWX(WXShareContent.WXSession, path, Config.SHARE_IMG_NAME);
+                        break;
+
+                    case R.id.btn_share_wechatt:
+                        shareToWX(WXShareContent.WXTimeline, path, Config.SHARE_IMG_NAME);
+                        break;
+
+                    case R.id.btn_share_weibo:
+                        shareToWB(path, Config.SHARE_IMG_NAME);
+                        break;
+
+                    case R.id.btn_share_qqf:
+                        shareToQQ(QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE,
+                                path, Config.SHARE_IMG_NAME);
+                        break;
+
+                    case R.id.btn_share_qqt:
+                        shareToQQ(QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN,
+                                path, Config.SHARE_IMG_NAME);
+                        break;
+
+                    default:break;
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * share to weixin
+     * @param scene
+     * @param path
+     * @param name
+     */
+    private void shareToWX(int scene, String path, String name){
+        WXShareContent content = new WXShareContent();
+        content.setScene(scene).setType(WXShareContent.share_type.Image).setImage_url(path + name);
+        wxManager.share(content);
+    }
+
+    /**
+     * share to weibo
+     * @param path
+     * @param name
+     */
+    private void shareToWB(String path, String name){
+        WBShareContent content = new WBShareContent();
+        content.setStatus(getString(R.string.share_copy))
+                .setImage_path(path + name).setWbShareApiType(WBShareContent.UPLOAD);
+        wbManager.share(content);
+    }
+
+    /**
+     * share to qq or qzone
+     * @param scene
+     * @param path
+     * @param name
+     */
+    private void shareToQQ(int scene, String path, String name){
+        QQShareContent content = new QQShareContent();
+        content.setShareType(QQShare.SHARE_TO_QQ_TYPE_IMAGE)
+                .setImage_path(path + name).setShareExt(scene);
+        qqManager.share(content);
+    }
+
     class OnShreBtnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.btn_share_wechatf:
-                    SystemUtil.showToast("wx f");
-                    break;
-
-                case R.id.btn_share_wechatt:
-                    SystemUtil.showToast("wx t");
-                    break;
-
-                case R.id.btn_share_weibo:
-                    SystemUtil.showToast("weibo");
-                    break;
-
-                case R.id.btn_share_qqf:
-                    SystemUtil.showToast("qq");
-                    break;
-
-                case R.id.btn_share_qqt:
-                    SystemUtil.showToast("qzone");
-                    break;
-
-                default:break;
-            }
+            shareTo(v.getId());
         }
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(HomeFragment.class.getName());
-        MobclickAgent.onResume(getActivity());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(HomeFragment.class.getName());
-        MobclickAgent.onPause(getActivity());
     }
 }

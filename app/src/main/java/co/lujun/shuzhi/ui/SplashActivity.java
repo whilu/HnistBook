@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -17,8 +18,7 @@ import co.lujun.shuzhi.util.PreferencesUtils;
  */
 public class SplashActivity extends Activity {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         //init push
@@ -36,5 +36,17 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.finish();
             }
         }, Config.APP_SPLASH_TIME);
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(getClass().getSimpleName());
+        MobclickAgent.onResume(this);
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getClass().getSimpleName());
+        MobclickAgent.onPause(this);
     }
 }

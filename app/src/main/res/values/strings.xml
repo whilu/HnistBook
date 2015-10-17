@@ -23,7 +23,12 @@
     <string name="msg_book_id_null">书籍ID为空，请重试</string>
     <string name="msg_cache_error">数据缓存失败</string>
     <string name="msg_cache_cleared">缓存已清理</string>
+    <string name="msg_img_not_found">未找到图片</string>
     <string name="msg_get_token_err">Get token failed!</string>
+    <string name="msg_share_succes">分享成功</string>
+    <string name="msg_share_failed">分享失败</string>
+    <string name="msg_share_cancel">取消分享</string>
+    <string name="msg_share_ing">正在分享...</string>
     <!-- end message-->
 
     <!-- slide drawer hint-->
@@ -44,6 +49,7 @@
     <string name="d_about_title">关于</string>
     <string name="d_about_msg">开发者：「书志」\n图书Api：豆瓣图书Api V2\n源码：https://github.com/whilu/HnistBook</string>
     <string name="d_about_p_button">确定</string>
+    <string name="share_copy">每天一本好书！来自「书志APP」http://app.lujun.co/shuzhi</string>
 
     <!-- texxtview hint-->
     <string name="tv_book_info">书本信息</string>

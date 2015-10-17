@@ -3,7 +3,6 @@ package co.lujun.shuzhi.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.umeng.analytics.MobclickAgent;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -38,7 +36,7 @@ import co.lujun.shuzhi.util.NetWorkUtils;
 /**
  * Created by lujun on 2015/3/17.
  */
-public class BookListFragment extends Fragment {
+public class BookListFragment extends BaseFragment {
 
     private View mView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -249,19 +247,5 @@ public class BookListFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
         mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(BookListFragment.class.getName());
-        MobclickAgent.onResume(getActivity());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(BookListFragment.class.getName());
-        MobclickAgent.onPause(getActivity());
     }
 }

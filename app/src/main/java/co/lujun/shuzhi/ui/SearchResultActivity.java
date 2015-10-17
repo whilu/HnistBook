@@ -17,7 +17,7 @@ import co.lujun.shuzhi.ui.fragments.BookListFragment;
 /**
  * Created by lujun on 2015/3/2.
  */
-public class SearchResultActivity extends co.lujun.shuzhi.ui.widget.SlidingActivity {
+public class SearchResultActivity extends BaseActivity {
 
     private Toolbar mToolBar;
     private FragmentManager fragmentManager;
@@ -59,17 +59,5 @@ public class SearchResultActivity extends co.lujun.shuzhi.ui.widget.SlidingActiv
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 }
