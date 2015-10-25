@@ -28,7 +28,7 @@
     <string name="msg_share_succes">分享成功</string>
     <string name="msg_share_failed">分享失败</string>
     <string name="msg_share_cancel">取消分享</string>
-    <string name="msg_share_ing">正在分享...</string>
+    <string name="msg_share_ing">正在分享&#8230;</string>
     <!-- end message-->
 
     <!-- slide drawer hint-->

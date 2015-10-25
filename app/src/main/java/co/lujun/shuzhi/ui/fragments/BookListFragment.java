@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -32,6 +31,7 @@ import co.lujun.shuzhi.ui.BookDetailActivity;
 import co.lujun.shuzhi.ui.adapter.BookAdapter;
 import co.lujun.shuzhi.util.IntentUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
+import co.lujun.shuzhi.util.SystemUtil;
 
 /**
  * Created by lujun on 2015/3/17.
@@ -48,6 +48,7 @@ public class BookListFragment extends BaseFragment {
     private Bundle mBundle;
     private String keyword = "";
     private int start = 0;
+    private boolean hasMore = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class BookListFragment extends BaseFragment {
                     mBundle.putString(Config.BOOK.isbn10.toString(),
                             (((Book) view.getTag()).getIsbn10()));
                     mBookDetailIntent.putExtras(mBundle);
-                        IntentUtils.startPreviewActivity(getActivity(), mBookDetailIntent);
+                    IntentUtils.startPreviewActivity(getActivity(), mBookDetailIntent);
                 }
             });
             mRecycleView.setAdapter(mAdapter);
@@ -100,11 +101,11 @@ public class BookListFragment extends BaseFragment {
                         @Override
                         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                             super.onScrollStateChanged(recyclerView, newState);
-                            if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                                 int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
                                 int totalItemCount = mLayoutManager.getItemCount();
 
-                                if (lastVisibleItem == totalItemCount - 1){
+                                if (lastVisibleItem == totalItemCount - 1 && hasMore) {
                                     onLoadMore();
                                 }
                             }
@@ -119,62 +120,44 @@ public class BookListFragment extends BaseFragment {
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+                    hasMore = true;
                     onUpdate(keyword);
                 }
             });
-            if (getActivity().getIntent() != null){
-                Bundle bundle = getActivity().getIntent().getExtras();
-                if (bundle != null){
-                    keyword = bundle.getString(Config.BOOK_LST_SEARCH_KEY);
-                    if (!TextUtils.isEmpty(keyword)){
-                        try{
-                            keyword = URLEncoder.encode(keyword, "UTF-8");// 若关键字是中文，编码
-                            mSwipeRefreshLayout.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mSwipeRefreshLayout.setRefreshing(true);
-                                    onUpdate(keyword);
-                                }
-                            });
-                        }catch (UnsupportedEncodingException e){
-                            e.printStackTrace();
-                        }
-                    }else {
-                        Toast.makeText(GlApplication.getContext(),
-                                GlApplication.getContext().getResources().getString(R.string.msg_key_word_null),
-                                Toast.LENGTH_SHORT).show();
+            Bundle bundle;
+            if (getActivity().getIntent() == null
+                    || (bundle = getActivity().getIntent().getExtras()) == null){
+                SystemUtil.showToast(R.string.msg_param_null);
+                return;
+            }
+            keyword = bundle.getString(Config.BOOK_LST_SEARCH_KEY);
+            if (TextUtils.isEmpty(keyword)){
+                SystemUtil.showToast(R.string.msg_key_word_null);
+                return;
+            }
+            try{
+                keyword = URLEncoder.encode(keyword, "UTF-8");// 若关键字是中文，编码
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(true);
+                        onUpdate(keyword);
                     }
-                }else {
-                    /*Toast.makeText(getActivity(),
-                            getResources().getString(R.string.msg_intent_extras_null),
-                            Toast.LENGTH_SHORT).show();*/
-                    Toast.makeText(GlApplication.getContext(),
-                            GlApplication.getContext().getResources().getString(R.string.msg_param_null),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }else {
-                /*Toast.makeText(getActivity(),
-                        getResources().getString(R.string.msg_intent_null),
-                        Toast.LENGTH_SHORT).show();*/
-                Toast.makeText(GlApplication.getContext(),
-                        GlApplication.getContext().getResources().getString(R.string.msg_param_null),
-                        Toast.LENGTH_SHORT).show();
+                });
+            }catch (UnsupportedEncodingException e){
+                e.printStackTrace();
             }
         }
     }
 
     private void onUpdate(String keyword){
         if (TextUtils.isEmpty(keyword)){
-            Toast.makeText(GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_key_word_null),
-                    Toast.LENGTH_SHORT).show();
+            SystemUtil.showToast(R.string.msg_key_word_null);
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
-            Toast .makeText(GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_no_internet),
-                    Toast.LENGTH_SHORT).show();
+            SystemUtil.showToast(R.string.msg_no_internet);
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
@@ -191,11 +174,7 @@ public class BookListFragment extends BaseFragment {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
                             mSwipeRefreshLayout.setRefreshing(false);
-                            /*Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
-                                    Toast.LENGTH_SHORT).show();*/
-                            Toast .makeText(GlApplication.getContext(),
-                                    GlApplication.getContext().getResources().getString(R.string.msg_find_error),
-                                    Toast.LENGTH_SHORT).show();
+                            SystemUtil.showToast(R.string.msg_find_error);
                         }
                     }
             );
@@ -217,8 +196,7 @@ public class BookListFragment extends BaseFragment {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         mSwipeRefreshLayout.setRefreshing(false);
-                        Toast .makeText(getActivity(), volleyError.getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                        SystemUtil.showToast(R.string.msg_find_error);
                     }
                 }
         );
@@ -226,26 +204,24 @@ public class BookListFragment extends BaseFragment {
     }
 
     private void setData(ListData listData, boolean isUpdate){
-        if (listData != null && listData.getBooks() != null){
-            if (isUpdate){// update
-                mBooks.clear();
-            }
-            start += listData.getCount();
-
-            if (listData.getBooks().size() <= 0){
-                Toast .makeText(GlApplication.getContext(),
-                        GlApplication.getContext().getResources().getString(R.string.msg_no_find),
-                        Toast.LENGTH_SHORT).show();
-                mSwipeRefreshLayout.setRefreshing(false);
-                return;
-            }
-            mBooks.addAll(listData.getBooks());
-            mAdapter.notifyDataSetChanged();
-        }else {
-            Toast .makeText(GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_no_find),
-                    Toast.LENGTH_SHORT).show();
-        }
         mSwipeRefreshLayout.setRefreshing(false);
+        if (listData == null || listData.getBooks() == null) {
+            SystemUtil.showToast(R.string.msg_no_find);
+            return;
+        }
+        if (isUpdate) {// update
+            mBooks.clear();
+        }
+        start += listData.getCount();
+
+        if (listData.getBooks().size() <= 0){
+            if (!isUpdate){
+                hasMore = false;
+            }
+            SystemUtil.showToast(R.string.msg_no_find);
+            return;
+        }
+        mBooks.addAll(listData.getBooks());
+        mAdapter.notifyDataSetChanged();
     }
 }

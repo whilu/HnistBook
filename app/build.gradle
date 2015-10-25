@@ -94,5 +94,6 @@ dependencies {
     compile 'com.alibaba:fastjson:1.1.43.android'
     compile 'com.afollestad:material-dialogs:0.7.6.0'
     compile 'com.github.traex.rippleeffect:library:1.2.3'
-    compile 'co.lujun:tpsharelogin:1.0.2'
+//    compile 'co.lujun:tpsharelogin:1.0.2'
+    compile project(':tpsharelogin')
 }

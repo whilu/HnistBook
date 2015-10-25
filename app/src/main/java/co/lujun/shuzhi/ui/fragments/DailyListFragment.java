@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -32,6 +31,7 @@ import co.lujun.shuzhi.ui.BookDetailActivity;
 import co.lujun.shuzhi.ui.adapter.DailyAdapter;
 import co.lujun.shuzhi.util.IntentUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
+import co.lujun.shuzhi.util.SystemUtil;
 import co.lujun.shuzhi.util.TokenUtils;
 
 /**
@@ -104,45 +104,28 @@ public class DailyListFragment extends BaseFragment {
                     onUpdate(mUrl);
                 }
             });
-            if (getActivity().getIntent() != null){
-                Bundle bundle = getActivity().getIntent().getExtras();
-                if (bundle != null){
-                    mUrl = bundle.getString(Config.DAILY_LST_TYPE);
-                    if (!TextUtils.isEmpty(mUrl)){
-                        mSwipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSwipeRefreshLayout.setRefreshing(true);
-                                onUpdate(mUrl);
-                            }
-                        });
-                    }else {
-                        Toast.makeText(GlApplication.getContext(),
-                                GlApplication.getContext().getResources().getString(R.string.msg_param_null),
-                                Toast.LENGTH_SHORT).show();
+            Bundle bundle;
+            if (getActivity().getIntent() == null
+                    || (bundle = getActivity().getIntent().getExtras()) == null){
+                SystemUtil.showToast(R.string.msg_param_null);
+                return;
+            }
+            mUrl = bundle.getString(Config.DAILY_LST_TYPE);
+            if (!TextUtils.isEmpty(mUrl)){
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(true);
+                        onUpdate(mUrl);
                     }
-                }else {
-                    /*Toast.makeText(getActivity(),
-                            getResources().getString(R.string.msg_intent_extras_null),
-                            Toast.LENGTH_SHORT).show();*/
-                    Toast.makeText(GlApplication.getContext(),
-                            GlApplication.getContext().getResources().getString(R.string.msg_param_null),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }else {
-                /*Toast.makeText(getActivity(),
-                        getResources().getString(R.string.msg_intent_null),
-                        Toast.LENGTH_SHORT).show();*/
-                Toast.makeText(GlApplication.getContext(),
-                        GlApplication.getContext().getResources().getString(R.string.msg_param_null),
-                        Toast.LENGTH_SHORT).show();
+                });
             }
         }
         //请求TOKEN设置回调监听
         mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
             @Override
             public void onFailure(String s) {
-                Toast.makeText(GlApplication.getContext(), s, Toast.LENGTH_SHORT).show();
+                SystemUtil.showToast(R.string.msg_request_error);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
 
@@ -162,9 +145,7 @@ public class DailyListFragment extends BaseFragment {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
-                                Toast.makeText(GlApplication.getContext(),
-                                        GlApplication.getContext().getResources().getString(R.string.msg_request_error),
-                                        Toast.LENGTH_SHORT).show();
+                                SystemUtil.showToast(R.string.msg_request_error);
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
                         }
@@ -184,17 +165,13 @@ public class DailyListFragment extends BaseFragment {
      * @param url
      */
     private void onUpdate(String url){
-        if (TextUtils.isEmpty(url)){
-            Toast.makeText(GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_param_null),
-                    Toast.LENGTH_SHORT).show();
+        if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+            SystemUtil.showToast(R.string.msg_no_internet);
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
-        if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
-            Toast .makeText(GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_no_internet),
-                    Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(url)){
+            SystemUtil.showToast(R.string.msg_param_null);
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
@@ -204,23 +181,14 @@ public class DailyListFragment extends BaseFragment {
     }
 
     private void setData(ListData listData){
-        if (listData != null && listData.getDailies() != null){
-            mDailies.clear();
-
-            if (listData.getDailies().size() <= 0){
-                Toast .makeText(GlApplication.getContext(),
-                        GlApplication.getContext().getResources().getString(R.string.msg_no_find),
-                        Toast.LENGTH_SHORT).show();
-                mSwipeRefreshLayout.setRefreshing(false);
-                return;
-            }
-            mDailies.addAll(listData.getDailies());
-            mAdapter.notifyDataSetChanged();
-        }else {
-            Toast .makeText(GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_no_find),
-                    Toast.LENGTH_SHORT).show();
-        }
         mSwipeRefreshLayout.setRefreshing(false);
+        if (listData == null || listData.getDailies() == null || listData.getDailies().size() <= 0){
+            SystemUtil.showToast(R.string.msg_no_find);
+            mSwipeRefreshLayout.setRefreshing(false);
+            return;
+        }
+        mDailies.clear();
+        mDailies.addAll(listData.getDailies());
+        mAdapter.notifyDataSetChanged();
     }
 }

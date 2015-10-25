@@ -32,7 +32,8 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
     // 创建View，被LayoutManager调用
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.daily_list_item, parent, false);
+        View view = LayoutInflater
+                .from(parent.getContext()).inflate(R.layout.daily_list_item, parent, false);
         view.setTag(mDailies.get(i));
         return new ViewHolder(view, mItemClickListener);
     }

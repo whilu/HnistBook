@@ -22,7 +22,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -101,10 +100,10 @@ public class HomeFragment extends BaseFragment {
     private WBManager wbManager;
     private QQManager qqManager;
     private StateListener mShareStateListener;
-    private LoadingWindow winLoading;
 
     private String id = "";
     private int page = 0;
+    private boolean hasMore = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,17 +133,14 @@ public class HomeFragment extends BaseFragment {
         qqManager = new QQManager(getActivity());
         mShareStateListener = new StateListener() {
             @Override public void onComplete(Object o) {
-                winLoading.dismiss();
-                SystemUtil.showToast(R.string.msg_share_succes);
+//                SystemUtil.showToast(R.string.msg_share_succes);
             }
 
             @Override public void onError(String err) {
-                winLoading.dismiss();
                 SystemUtil.showToast(R.string.msg_share_failed);
             }
 
             @Override public void onCancel() {
-                winLoading.dismiss();
                 SystemUtil.showToast(R.string.msg_share_cancel);
             }
         };
@@ -157,9 +153,9 @@ public class HomeFragment extends BaseFragment {
         if (mView == null) {
             return;
         }
-        winLoading = new LoadingWindow(
+        /*winLoading = new LoadingWindow(
                 LayoutInflater.from(getActivity()).inflate(R.layout.view_loading, null, false));
-        winLoading.setProgressText(getString(R.string.msg_share_ing));
+        winLoading.setProgressText(getString(R.string.msg_share_ing));*/
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
         shareWindow = new ShareWindow(getActivity(), new OnShreBtnClickListener());
         int tmpLayout = ScreenUtils.checkIfDeviceHasNavBar(getActivity()) ?
@@ -194,12 +190,34 @@ public class HomeFragment extends BaseFragment {
         fabShare = (ImageButton) views.get(0).findViewById(R.id.fab_share);
         btnFlip = (Button) views.get(0).findViewById(R.id.btn_flip);
         mStartCardView = mCardView1;
+        //设置默认显示信息
+        tvPage2Author.setText(getString(R.string.tv_book_author));
+        tvPage2Publisher.setText(getString(R.string.tv_book_publisher));
+        tvPage2PYear.setText(getString(R.string.tv_book_pubdate));
+        tvPage2ISBN.setText(getString(R.string.tv_book_isbn));
+//        tvPage2Summary.setText("");
         //
+        initConfig();
 
+        //set cache
+        Daily daily = (Daily) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
+        if (daily != null) {
+            onSetBookData(daily, true);
+        }
+        ListData tmpAnn = (ListData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
+        if (tmpAnn != null) {
+            onSetAnnData(tmpAnn, true, true);
+        }
+
+        onUpdateTodayDaily();
+    }
+
+    /**
+     * init config
+     */
+    private void initConfig(){
         mRefreshLayout = (SwipeRefreshLayout) views.get(0).findViewById(R.id.srl_home2);
-
         mAnnRecycleView = (RecyclerView) views.get(1).findViewById(R.id.rv_annlist);
-
         mAnnRecycleView.setLayoutManager(mLayoutManager);
         mAnnRecycleView.setHasFixedSize(false);// 若每个item的高度固定，设置此项可以提高性能
         mAnnRecycleView.setItemAnimator(new DefaultItemAnimator());// item 动画效果
@@ -224,8 +242,7 @@ public class HomeFragment extends BaseFragment {
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                             int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
                             int totalItemCount = mLayoutManager.getItemCount();
-
-                            if (lastVisibleItem == totalItemCount - 1) {
+                            if (lastVisibleItem == totalItemCount - 1 && hasMore) {
                                 onUpdateAnnotation(id);
                             }
                         }
@@ -267,39 +284,23 @@ public class HomeFragment extends BaseFragment {
             public void onRefresh() {
                 if (NetWorkUtils.getNetWorkType(GlApplication.getContext())
                         == NetWorkUtils.NETWORK_TYPE_DISCONNECT) {
-                    Toast.makeText(GlApplication.getContext(),
-                            GlApplication.getContext().getResources().getString(R.string.msg_no_internet),
-                            Toast.LENGTH_SHORT).show();
+                    SystemUtil.showToast(R.string.msg_no_internet);
                     mRefreshLayout.setRefreshing(false);
                     return;
                 }
                 if (mRefreshLayout.isRefreshing()) {
                     onUpdateTodayDaily();
                     page = 0;
+                    hasMore = true;
                 }
             }
         });
-        //设置默认显示信息
-        tvPage2Author.setText(getString(R.string.tv_book_author));
-        tvPage2Publisher.setText(getString(R.string.tv_book_publisher));
-        tvPage2PYear.setText(getString(R.string.tv_book_pubdate));
-        tvPage2ISBN.setText(getString(R.string.tv_book_isbn));
-//        tvPage2Summary.setText("");
 
-        //set cache
-        Daily daily = (Daily) CacheFileUtils.readObject(Config.SZ_CACHE_FILE_PATH);
-        if (daily != null) {
-            onSetBookData(daily, true);
-        }
-        ListData tmpAnn = (ListData) CacheFileUtils.readObject(Config.ANN_CACHE_FILE_PATH);
-        if (tmpAnn != null) {
-            onSetAnnData(tmpAnn, true, true);
-        }
         //请求TOKEN设置回调监听
         mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
             @Override
             public void onFailure(String s) {
-                Toast.makeText(GlApplication.getContext(), s, Toast.LENGTH_SHORT).show();
+                SystemUtil.showToast(R.string.msg_request_error);
                 mRefreshLayout.setRefreshing(false);
             }
 
@@ -319,9 +320,7 @@ public class HomeFragment extends BaseFragment {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
-                                Toast.makeText(GlApplication.getContext(),
-                                        GlApplication.getContext().getResources().getString(R.string.msg_request_error),
-                                        Toast.LENGTH_SHORT).show();
+                                SystemUtil.showToast(R.string.msg_request_error);
                                 mRefreshLayout.setRefreshing(false);
                             }
                         }
@@ -334,7 +333,6 @@ public class HomeFragment extends BaseFragment {
                 GlApplication.getRequestQueue().add(jsonRequest);
             }
         });
-        onUpdateTodayDaily();
     }
 
     /**
@@ -360,12 +358,8 @@ public class HomeFragment extends BaseFragment {
             Daily.Extra extra = daily.getExtra();
             if (book != null) {
                 //write cache
-                if (!isCache) {
-                    if (!CacheFileUtils.saveObject(daily, Config.SZ_CACHE_FILE_PATH)) {
-                        Toast.makeText(GlApplication.getContext(),
-                                GlApplication.getContext().getResources().getString(R.string.msg_cache_error),
-                                Toast.LENGTH_SHORT).show();
-                    }
+                if (!isCache && !CacheFileUtils.saveObject(daily, Config.SZ_CACHE_FILE_PATH)) {
+                    SystemUtil.showToast(R.string.msg_cache_error);
                 }
                 //set data
                 if (!TextUtils.isEmpty(book.getImages().getSmall())) {
@@ -418,8 +412,7 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         } else {
-            Toast.makeText(GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_no_find), Toast.LENGTH_SHORT).show();
+            SystemUtil.showToast(R.string.msg_no_find);
         }
         mRefreshLayout.setRefreshing(false);
     }
@@ -429,9 +422,7 @@ public class HomeFragment extends BaseFragment {
      */
     private void onUpdateAnnotation(String id) {
         if (TextUtils.isEmpty(id)) {
-            Toast.makeText(GlApplication.getContext(),
-                    GlApplication.getContext().getResources().getString(R.string.msg_book_id_null),
-                    Toast.LENGTH_SHORT).show();
+            SystemUtil.showToast(R.string.msg_book_id_null);
             return;
         }
         JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
@@ -450,11 +441,7 @@ public class HomeFragment extends BaseFragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        /*Toast .makeText(GlApplication.getContext(), volleyError.getMessage(),
-                                Toast.LENGTH_SHORT).show();*/
-                        Toast.makeText(GlApplication.getContext(),
-                                GlApplication.getContext().getResources().getString(R.string.msg_find_error),
-                                Toast.LENGTH_SHORT).show();
+                        SystemUtil.showToast(R.string.msg_find_error);
                     }
                 }
         );
@@ -471,21 +458,17 @@ public class HomeFragment extends BaseFragment {
     private void onSetAnnData(ListData listData, boolean isUpdate, boolean isCache) {
         if (listData != null) {
             if (isUpdate) {// update
-                if (!isCache) {
-                    if (!CacheFileUtils.saveObject(listData,
-                            Config.ANN_CACHE_FILE_PATH)) {
-                        Toast.makeText(GlApplication.getContext(),
-                                GlApplication.getContext().getResources().getString(R.string.msg_cache_error),
-                                Toast.LENGTH_SHORT).show();
-                    }
+                if (!isCache && !CacheFileUtils.saveObject(listData, Config.ANN_CACHE_FILE_PATH)) {
+                    SystemUtil.showToast(R.string.msg_cache_error);
                 }
                 mAnns.clear();
             }
             if (listData.getAnnotations() != null) {
                 if (listData.getAnnotations().size() <= 0) {
-                    Toast.makeText(GlApplication.getContext(),
-                            GlApplication.getContext().getResources().getString(R.string.msg_no_find),
-                            Toast.LENGTH_SHORT).show();
+                    if (!isUpdate){
+                        hasMore = false;
+                    }
+                    SystemUtil.showToast(R.string.msg_no_find);
                     return;
                 } else {
                     if (!isCache) {
@@ -524,13 +507,14 @@ public class HomeFragment extends BaseFragment {
      * @param plat
      */
     private void shareTo(final int plat){
-        if (!winLoading.isShowing()){
-            winLoading.showAtLocation(mView, 0, 0, Gravity.CENTER);
-        }
         shareWindow.hide();
         new Thread(new Runnable() {
             @Override public void run() {
                 mCardView1.setDrawingCacheEnabled(true);
+                mCardView1.destroyDrawingCache();
+                // destory cache
+//                mCardView1.destroyDrawingCache();
+//                mCardView1.setDrawingCacheEnabled(false);
                 Bitmap bmp = mCardView1.getDrawingCache();
                 if (bmp == null || !ImageUtils.checkSDCardAvailable()){
                     SystemUtil.showToast(R.string.msg_img_not_found);
@@ -586,8 +570,9 @@ public class HomeFragment extends BaseFragment {
      */
     private void shareToWB(String path, String name){
         WBShareContent content = new WBShareContent();
-        content.setStatus(getString(R.string.share_copy))
-                .setImage_path(path + name).setWbShareApiType(WBShareContent.UPLOAD);
+        content.setShare_method(WBShareContent.COMMON_SHARE)
+                .setStatus(getString(R.string.share_copy))
+                .setImage_path(path + name);
         wbManager.share(content);
     }
 
@@ -600,7 +585,8 @@ public class HomeFragment extends BaseFragment {
     private void shareToQQ(int scene, String path, String name){
         QQShareContent content = new QQShareContent();
         content.setShareType(QQShare.SHARE_TO_QQ_TYPE_IMAGE)
-                .setImage_path(path + name).setShareExt(scene);
+                .setShareExt(scene)
+                .setImage_path(path + name);
         qqManager.share(content);
     }
 
