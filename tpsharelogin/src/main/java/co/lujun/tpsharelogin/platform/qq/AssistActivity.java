@@ -47,7 +47,7 @@ public class AssistActivity extends Activity {
                 if (type == Config.LOGIN_TYPE) {
 //                    getUserInfo(o);
                     //
-                    if (o == null){
+                    if (o == null) {
                         Log.e(TAG, "get auth info error!");
                         mIntent.putExtra(Config.KEY_OF_QQ_BCR, "get auth info error!");
                         onSendBroadCast();
@@ -62,12 +62,12 @@ public class AssistActivity extends Activity {
                         openId = jsonObject.getString(Constants.PARAM_OPEN_ID);
                         if (TextUtils.isEmpty(accessToken)
                                 || TextUtils.isEmpty(expires_in)
-                                || TextUtils.isEmpty(openId)){
+                                || TextUtils.isEmpty(openId)) {
                             Log.e(TAG, "get auth info null!");
                             mIntent.putExtra(Config.KEY_OF_QQ_BCR, "get auth info null!");
                             onSendBroadCast();
                         }
-                    }catch (JSONException e){
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     mIntent.putExtra(Config.KEY_OF_TYPE, Config.LOGIN_TYPE);
@@ -76,7 +76,7 @@ public class AssistActivity extends Activity {
                     mIntent.putExtra(Config.KEY_OF_EXPIRES_IN, expires_in);
                     mIntent.putExtra(Config.KEY_OF_OPEN_ID, openId);
                     mIntent.putExtra(Config.KEY_OF_VERIFY_DATA, o.toString());
-                }else{
+                } else {
                     mIntent.putExtra(Config.KEY_OF_QQ_BCR, "share successful!");
                 }
                 onSendBroadCast();
@@ -115,7 +115,9 @@ public class AssistActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Tencent.onActivityResultData(requestCode, resultCode, data, mListener);
+        if (mTencent != null){
+            mTencent.onActivityResult(requestCode, resultCode, data);
+        }
         mIntent.putExtra(Config.KEY_OF_QQ_BCR, "have send!");
         onSendBroadCast();
     }
