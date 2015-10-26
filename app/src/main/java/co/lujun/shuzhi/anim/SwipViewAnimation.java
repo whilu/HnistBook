@@ -6,15 +6,15 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
 /**
- * Created by Administrator on 2015/7/3.
+ * Created by lujun on 2015/7/3.
  */
 public class SwipViewAnimation {
 
     private int mIndex = 0;
-    private int mDuration = 300;
+    private int mDuration = 200;
     private float mCenterX = 0.0f;
     private float mCenterY = 0.0f;
-    float mDepthZ  = 500.0f;
+    float mDepthZ  = 800.0f;
 
     private View mContainer;
     private View mView1, mView2, mStartView;

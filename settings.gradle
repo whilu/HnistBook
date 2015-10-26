@@ -1,1 +1,1 @@
-include ':app', ':tpsharelogin'
+include ':tpsharelogin', ':app'

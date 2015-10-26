@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,6 +105,7 @@ public class HomeFragment extends BaseFragment {
     private String id = "";
     private int page = 0;
     private boolean hasMore = true;
+    private static final String TAG = "HomeFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
