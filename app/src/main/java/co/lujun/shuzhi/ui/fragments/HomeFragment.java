@@ -512,12 +512,12 @@ public class HomeFragment extends BaseFragment {
         shareWindow.hide();
         new Thread(new Runnable() {
             @Override public void run() {
-                mCardView1.setDrawingCacheEnabled(true);
-                mCardView1.destroyDrawingCache();
+                mContainer.setDrawingCacheEnabled(true);
+                mContainer.destroyDrawingCache();
                 // destory cache
-//                mCardView1.destroyDrawingCache();
-//                mCardView1.setDrawingCacheEnabled(false);
-                Bitmap bmp = mCardView1.getDrawingCache();
+//                mContainer.destroyDrawingCache();
+//                mContainer.setDrawingCacheEnabled(false);
+                Bitmap bmp = mContainer.getDrawingCache();
                 if (bmp == null || !ImageUtils.checkSDCardAvailable()){
                     SystemUtil.showToast(R.string.msg_img_not_found);
                     return;
