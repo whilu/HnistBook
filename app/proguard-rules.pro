@@ -91,6 +91,9 @@
 
 -dontwarn com.umeng.**
 -keep class com.umeng.**{*;}
+-keep public class co.lujun.shuzhi.R$*{
+    public static final int *;
+}
 -keep class com.umeng.message.* {
         public <fields>;
         public <methods>;
@@ -117,3 +120,47 @@
     **[] $VALUES;
     public *;
 }
+
+# For RxJava:
+-dontwarn org.mockito.**
+-dontwarn org.junit.**
+-dontwarn org.robolectric.**
+
+-dontwarn com.squareup.okhttp.**
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
+-dontwarn rx.**
+-dontwarn retrofit.**
+-keep class rx.** { *; }
+-keep class retrofit.** { *; }
+#-keepclasseswithmembers class * {
+#    @retrofit.http.* <methods>;
+#}
+-dontwarn com.loopj.android.http.**
+-keep class com.loopj.android.http.** { *; }
+
+-keepattributes *Annotation*
+
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }
+-keep class co.lujun.shuzhi.bean.** { *; }
+
+-keepclassmembers class * {
+   public <init>(org.json.JSONObject);
+}
+
+#-keep class org.apache.http.**
+-dontwarn org.android.agoo.net.**
+-dontwarn u.upd.**
+-dontwarn u.aly.**
+-dontwarn com.ta.**
+-dontwarn com.android.volley.**
+-keep class com.android.volley.** {*;}
+-dontwarn com.tencent.**
+-keep class com.tencent.mm.sdk.** {*;}
+-dontwarn com.sina.weibo.sdk.**
+-keep class com.sina.**{*;}
+-keep class * extends android.app.Dialog
+-keepattributes Exceptions
