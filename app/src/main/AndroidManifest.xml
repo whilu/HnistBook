@@ -55,7 +55,7 @@
             android:value="82cb7198dd18e4de1a25d49278ad46ac" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Shuzhi" />
+            android:value="${UMENG_CHANNEL_VALUE}" />
         <!--TPShareLogini-->
         <!--QQ-->
         <activity
@@ -73,10 +73,11 @@
         </activity>
 
         <!-- Weixin-->
-        <activity android:name=".wxapi.WXEntryActivity"
+        <activity
+            android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoDisplay"/>
+            android:theme="@android:style/Theme.NoDisplay" />
 
         <!-- Weibo-->
         <!-- umeng message push-->
