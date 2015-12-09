@@ -1,8 +1,6 @@
 package co.lujun.shuzhi.ui;
 
-import java.io.IOException;
-import java.util.Vector;
-
+import android.Manifest;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -27,9 +25,13 @@ import com.google.zxing.decoding.InactivityTimer;
 import com.google.zxing.view.ViewfinderView;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.IOException;
+import java.util.Vector;
+
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.util.IntentUtils;
+import co.lujun.shuzhi.util.SystemUtil;
 
 /**
  * Created by lujun on 2015/3/16.
@@ -48,6 +50,7 @@ public class CaptureActivity extends ActionBarActivity implements Callback {
     private Toolbar mToolBar;
     private Intent mIntent;
     private Bundle mBundle;
+    private static final int CAMERA_PERMISSION_REQ_CODE = 1;
 
     /** Called when the activity is first created. */
     @Override
@@ -64,6 +67,7 @@ public class CaptureActivity extends ActionBarActivity implements Callback {
         hasSurface = false;
         mIntent = new Intent(this, BookDetailActivity.class);
         mBundle = new Bundle();
+        SystemUtil.checkPermission(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQ_CODE);
     }
 
     @Override

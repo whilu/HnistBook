@@ -2,7 +2,10 @@ package co.lujun.shuzhi.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
@@ -75,6 +78,23 @@ public class SystemUtil {
 
         rsScript.destroy();
         return result;
+    }
+
+    /**
+     * check permission when system version >= 6.0 & targetSDKVersion >= 23
+     * @param activity
+     * @param permissions
+     * @param permissionCode
+     */
+    public static void checkPermission(Activity activity, String[] permissions, int permissionCode){
+        if (ContextCompat.checkSelfPermission(activity, permissions[0])
+                != PackageManager.PERMISSION_GRANTED){
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[0])){
+                // add your own explations to user
+//            }else {
+                ActivityCompat.requestPermissions(activity, permissions, permissionCode);
+//            }
+        }
     }
 
 }
