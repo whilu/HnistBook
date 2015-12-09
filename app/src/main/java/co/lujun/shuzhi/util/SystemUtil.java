@@ -2,11 +2,14 @@ package co.lujun.shuzhi.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.RenderScript;
+import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import co.lujun.shuzhi.GlApplication;
-import co.lujun.shuzhi.R;
 
 /**
  * Created by lujun on 2015/9/15.
@@ -49,4 +52,29 @@ public class SystemUtil {
     public static void showToast(String string){
         Toast.makeText(GlApplication.getContext(), string, Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * blur bitmap
+     * @param context
+     * @param input
+     * @param radius
+     * @return
+     */
+    public static Bitmap blurImage(Context context, Bitmap input, float radius) {
+        RenderScript rsScript = RenderScript.create(context);
+        Allocation alloc = Allocation.createFromBitmap(rsScript, input);
+
+        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rsScript, alloc.getElement());
+        blur.setRadius(radius);
+        blur.setInput(alloc);
+
+        Bitmap result = Bitmap.createBitmap(input.getWidth(), input.getHeight(), input.getConfig());
+        Allocation outAlloc = Allocation.createFromBitmap(rsScript, result);
+        blur.forEach(outAlloc);
+        outAlloc.copyTo(result);
+
+        rsScript.destroy();
+        return result;
+    }
+
 }

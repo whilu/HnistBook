@@ -65,9 +65,10 @@
                                         android:textColor="@color/gray_text"
                                         android:textSize="16sp" />
 
-                                    <View
-                                        android:id="@+id/v_bda_book_img_blur"
+                                    <ImageView
+                                        android:id="@+id/iv_bda_book_img_blur"
                                         android:layout_width="match_parent"
+                                        android:scaleType="centerCrop"
                                         android:layout_height="match_parent" />
 
                                 </RelativeLayout>

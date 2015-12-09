@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
 import co.lujun.shuzhi.GlApplication;
@@ -29,8 +28,7 @@ public class SettingsActivity extends BaseActivity {
     private Toolbar mToolBar;
     private SettingsFragment mSettingsFragment;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         mToolBar = (Toolbar) findViewById(R.id.settings_toolbar);
@@ -59,8 +57,7 @@ public class SettingsActivity extends BaseActivity {
         private Preference pClearCache, pAbout;
         private MaterialDialog aboutDialog;
 
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
+        @Override public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
             cbpPushService = (CheckBoxPreference)
@@ -78,8 +75,7 @@ public class SettingsActivity extends BaseActivity {
             pAbout.setOnPreferenceClickListener(this);
         }
 
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
+        @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference.getKey().equals(getString(R.string.pkey_push_service))){
                 // 推送开关，是否需要持久化处理
                 if ((Boolean) newValue){
@@ -103,8 +99,7 @@ public class SettingsActivity extends BaseActivity {
             return true;
         }
 
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
+        @Override public boolean onPreferenceClick(Preference preference) {
             if (preference.getKey().equals(getString(R.string.pkey_clear_cache))){
                 // 清空缓存
                 new Thread(new Runnable() {
@@ -133,8 +128,7 @@ public class SettingsActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
             finish();
             return true;

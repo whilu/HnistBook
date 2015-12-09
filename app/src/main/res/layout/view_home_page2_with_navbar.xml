@@ -77,10 +77,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                                <View
-                                    android:id="@+id/v_book_blur_bg"
+                                <ImageView
+                                    android:id="@+id/iv_book_blur_bg"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent" />
+                                    android:layout_height="match_parent"
+                                    android:scaleType="centerCrop" />
 
                                 <RelativeLayout
                                     android:layout_width="220dp"

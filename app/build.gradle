@@ -1,44 +1,90 @@
 apply plugin: 'com.android.application'
 
+def appConfiguration = rootProject.extensions.getByName("ext")
 def releaseTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))}
 
+Properties properties = new Properties();
+File gradlePropertiesFile = project.file('../gradle.properties')
+if(gradlePropertiesFile.exists()){
+    properties.load(gradlePropertiesFile.newDataInputStream())
+}else {
+    println("File gradlePropertiesFile doesn't exist!")
+}
+
+def CLIENT_ID = properties.getProperty("CLIENT_ID")
+def CLIENT_TOKEN = properties.getProperty("CLIENT_TOKEN")
+def API_ENDPOINT = properties.getProperty("API_ENDPOINT")
+def QQ_APPSECRET = properties.getProperty("QQ_APPSECRET")
+def QQ_APPKEY = properties.getProperty("QQ_APPKEY")
+def WX_APPKEY = properties.getProperty("WX_APPKEY")
+def WX_APPSECRET = properties.getProperty("WX_APPSECRET")
+def WB_APPKEY = properties.getProperty("WB_APPKEY")
+def WB_APPSECRET = properties.getProperty("WB_APPSECRET")
+def WB_APPREDIRECT = properties.getProperty("WB_APPREDIRECT")
+def UMENG_APPKEY = properties.getProperty("UMENG_APPKEY")
+def UMENG_MESSAGE_SECRET = properties.getProperty("UMENG_MESSAGE_SECRET")
+
 android {
-    compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+    compileSdkVersion appConfiguration.getAt("ANDROID_COMPILE_SDK_VERSION") as int
+    buildToolsVersion appConfiguration.getAt("ANDROID_BUILD_TOOLS_VERSION")
+
+    sourceSets.main {
+        jniLibs.srcDirs = ['libs']
+    }
 
     defaultConfig {
         applicationId "co.lujun.shuzhi"
-        minSdkVersion 16
-        targetSdkVersion 21
-        versionCode 102
-        versionName "1.0.2"
+        minSdkVersion appConfiguration.getAt("ANDROID_BUILD_MIN_SDK_VERSION") as int
+        targetSdkVersion appConfiguration.getAt("ANDROID_TARGET_SDK_VERSION") as int
+        versionCode appConfiguration.getAt("VERSION_CODE") as int
+        versionName appConfiguration.getAt("VERSION_NAME")
+
+        renderscriptTargetApi appConfiguration.getAt("RENDERSCRIPT_TARGET_API") as int
+        renderscriptSupportModeEnabled true
+
+        buildConfigField "String", "CLIENT_ID", "\"${CLIENT_ID}\""
+        buildConfigField "String", "CLIENT_TOKEN", "\"${CLIENT_TOKEN}\""
+        buildConfigField "String", "API_ENDPOINT", "\"${API_ENDPOINT}\""
+        buildConfigField "String", "QQ_APPSECRET", "\"${QQ_APPSECRET}\""
+        buildConfigField "String", "QQ_APPKEY", "\"${QQ_APPKEY}\""
+        buildConfigField "String", "WX_APPKEY", "\"${WX_APPKEY}\""
+        buildConfigField "String", "WX_APPSECRET", "\"${WX_APPSECRET}\""
+        buildConfigField "String", "WB_APPKEY", "\"${WB_APPKEY}\""
+        buildConfigField "String", "WB_APPSECRET", "\"${WB_APPSECRET}\""
+        buildConfigField "String", "WB_APPREDIRECT", "\"${WB_APPREDIRECT}\""
 
         //dexMethod 65535
         multiDexEnabled true
-        //default flavor
-        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Shuzhi"]
-    }
-
-    lintOptions{
-        abortOnError false
     }
 
     signingConfigs {
         debug{
-            //
         }
         release {
-            keyAlias 'lujun'
-            keyPassword KEYPASSWORD
-            storeFile file('E:/Code/Android/Keystore/lujun.keystore')
-            storePassword STOREPASSWORD
+            def signingFile = file('../signing.properties')
+            if(signingFile.canRead()){
+                def Properties props = new Properties()
+                props.load(new FileInputStream(signingFile))
+
+                try {
+                    storeFile = file( props['STORE_FILE'] )
+                    storePassword = props['STORE_PASSWORD']
+                    keyAlias = props['KEY_ALIAS']
+                    keyPassword = props['KEY_PASSWORD']
+
+                    println "RELEASE_BUILD: Signing..."
+                }catch (e){
+                    throw new InvalidUserDataException("You should define STORE_FILE and STORE_PASSWORD and KEY_ALIAS and KEY_PASSWORD in signing.properties.")
+                }
+            }else{
+                println "RELEASE_BUILD: signing.properties not found"
+            }
         }
     }
 
     buildTypes {
         debug {
-            //don't show Log
             buildConfigField "boolean", "LOG_DEBUG", "true"
             versionNameSuffix "-debug"
             minifyEnabled false
@@ -47,11 +93,9 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            //don't show Log
             buildConfigField "boolean", "LOG_DEBUG", "false"
             minifyEnabled true
             zipAlignEnabled true
-            //remove unuse resources files
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -71,29 +115,45 @@ android {
 
     productFlavors {
         Shuzhi {}
-        Mi {}
-        Meizu {}
-        Yingyongbao {}
-        app360 {}
-        Wandoujia {}
-        Fir {}
+//        Mi {
+//            动态修改string文件中AppName值为Mi_Sense
+//            resValue "string", "AppName", "Mi_Sense"}
+//        Meizu {}
+//        Yingyongbao {}
+//        app360 {}
+//        Wandoujia {}
+//        Fir {}
     }
+
     productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        flavor.manifestPlaceholders = [UMENG_APPKEY: UMENG_APPKEY, UMENG_CHANNEL: name,
+                                       UMENG_MESSAGE_SECRET: UMENG_MESSAGE_SECRET]
+    }
+
+    lintOptions {
+        abortOnError false
+        disable 'InvalidPackage'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/MANIFEST.MF'
     }
 }
 
+def SUPPORT_VERSION = appConfiguration.getAt("ANDROID_BUILD_TOOLS_VERSION")
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:cardview-v7:23.1.0'
-    compile 'com.android.support:recyclerview-v7:23.1.0'
+    compile 'com.android.support:appcompat-v7:' + SUPPORT_VERSION
+    compile 'com.android.support:recyclerview-v7:' + SUPPORT_VERSION
+    compile 'com.android.support:cardview-v7:' + SUPPORT_VERSION
     compile 'com.android.support:design:23.1.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.alibaba:fastjson:1.1.43.android'
-    compile 'com.afollestad:material-dialogs:0.7.6.0'
     compile 'com.github.traex.rippleeffect:library:1.2.3'
     compile 'co.lujun:tpsharelogin:1.0.3'
-//    compile project(':tpsharelogin')
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.0@aar') {
+        transitive = true
+    }
 }

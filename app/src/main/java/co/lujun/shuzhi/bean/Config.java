@@ -39,13 +39,5 @@ public class Config {
 
     //app config
     public static final long APP_SPLASH_TIME = 1000;
-
-    //third platform config
-    public static final String WB_REDIRECT_URL = "http://app.lujun.co/shuzhi";
-    public static final String WB_APP_KEY = "2165713124";
-    public static final String WB_APP_SECRET = "4837b12b453c76218d45541f846decef";
-    public static final String WX_APP_ID = "wxfe5a81b8f8721c6f";
-    public static final String WX_APP_SECRET = "c51762ec0e179bc78bcaf41e452d4037";
-    public static final String QQ_APP_ID = "1104730321";
-    public static final String QQ_APP_KEY = "9QoiADlAfE5TlMZQ";
+    public static final int BLUR_RADIUS = 7;
 }

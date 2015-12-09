@@ -1,13 +1,11 @@
 package co.lujun.shuzhi.bean;
 
-import org.litepal.crud.DataSupport;
-
 import java.io.Serializable;
 
 /**
  * Created by lujun on 2015/5/23.
  */
-public class Annotation extends DataSupport implements Serializable {
+public class Annotation implements Serializable {
 
     private static final long serialVersionUID = 2L; //Serializable ID
 

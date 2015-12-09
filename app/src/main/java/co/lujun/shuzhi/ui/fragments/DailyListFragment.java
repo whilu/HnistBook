@@ -51,15 +51,12 @@ public class DailyListFragment extends BaseFragment {
 
     private String mUrl = "";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_dailylist, null);
         initView();
@@ -123,35 +120,30 @@ public class DailyListFragment extends BaseFragment {
         }
         //请求TOKEN设置回调监听
         mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
-            @Override
-            public void onFailure(String s) {
+            @Override public void onFailure(String s) {
                 SystemUtil.showToast(R.string.msg_request_error);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
 
-            @Override
-            public void onSuccess(Map<String, String> map) {
+            @Override public void onSuccess(Map<String, String> map) {
                 final Map<String, String> tmpMap = map;
                 JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
                         Request.Method.POST,
                         mUrl,
                         ListData.class,
                         new Response.Listener<ListData>() {
-                            @Override
-                            public void onResponse(ListData listData) {
+                            @Override public void onResponse(ListData listData) {
                                 setData(listData);
                             }
                         },
                         new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
+                            @Override public void onErrorResponse(VolleyError volleyError) {
                                 SystemUtil.showToast(R.string.msg_request_error);
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
                         }
                 ) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
+                    @Override protected Map<String, String> getParams() throws AuthFailureError {
                         return tmpMap;
                     }
                 };

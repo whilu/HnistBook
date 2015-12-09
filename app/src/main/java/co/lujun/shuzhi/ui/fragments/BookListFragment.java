@@ -50,15 +50,12 @@ public class BookListFragment extends BaseFragment {
     private int start = 0;
     private boolean hasMore = true;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_booklist, null);
         initView();
@@ -98,8 +95,7 @@ public class BookListFragment extends BaseFragment {
             mRecycleView.setAdapter(mAdapter);
             mRecycleView.setOnScrollListener(
                     new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                             super.onScrollStateChanged(recyclerView, newState);
                             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                                 int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
@@ -111,8 +107,7 @@ public class BookListFragment extends BaseFragment {
                             }
                         }
 
-                        @Override
-                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
                         }
                     }

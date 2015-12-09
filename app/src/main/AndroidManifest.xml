@@ -42,22 +42,11 @@
         <activity
             android:name=".ui.SearchResultActivity"
             android:label="@string/app_name" />
+
         <activity
             android:name=".ui.BookDetailActivity"
             android:label="@string/app_name" />
-
-        <!-- umeng sdk-->
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="559b348f67e58e6d5d001218" />
-        <meta-data
-            android:name="UMENG_MESSAGE_SECRET"
-            android:value="82cb7198dd18e4de1a25d49278ad46ac" />
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL_VALUE}" />
-        <!--TPShareLogini-->
-        <!--QQ-->
+        <!--TPShareLogin-->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -67,24 +56,30 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- 需要改写此处的appId，将tencent后面xxx的改为自己申请的appId，如tencent129068312-->
                 <data android:scheme="tencent1104730321" />
             </intent-filter>
         </activity>
-
-        <!-- Weixin-->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoDisplay" />
 
-        <!-- Weibo-->
+        <!-- umeng-->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="${UMENG_APPKEY}" />
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="${UMENG_MESSAGE_SECRET}" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL}" />
         <!-- umeng message push-->
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
             android:exported="false"
-            android:process=":push"></receiver>
+            android:process=":push" />
         <receiver
             android:name="com.umeng.message.SystemReceiver"
             android:process=":push">
@@ -160,11 +155,11 @@
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
         <service
             android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService"></service>
+            android:process=":DownloadingService" />
 
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

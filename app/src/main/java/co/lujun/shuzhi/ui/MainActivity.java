@@ -26,7 +26,6 @@ import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.adapter.SliderMenuAdapter;
-import co.lujun.shuzhi.ui.fragments.BookListFragment;
 import co.lujun.shuzhi.ui.fragments.DailyListFragment;
 import co.lujun.shuzhi.ui.fragments.HomeFragment;
 import co.lujun.shuzhi.util.IntentUtils;
@@ -49,8 +48,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private String[] menuStrs;
     private static int[] mPlanetIcons;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init(savedInstanceState);
@@ -60,9 +58,8 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
      * init ui & members
      */
     private void init(Bundle savedInstanceState){
-        //init umeng update
+        //init umeng
         if (PreferencesUtils.getBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true)){
-            // 开启自动更新
             UmengUpdateAgent.update(this);
             PreferencesUtils.putBoolean(this, Config.CONFIG_AUTO_UPDATE_KEY, true);
         }
@@ -96,15 +93,13 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.drawer_open, R.string.drawer_close){
 
-            @Override
-            public void onDrawerClosed(View drawerView) {
+            @Override public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
             }
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
+            @Override public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
             }
@@ -133,8 +128,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -153,13 +147,11 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         return true;
     }
 
-    @Override
-    public boolean onQueryTextChange(String newText) {
+    @Override public boolean onQueryTextChange(String newText) {
         return false;
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
+    @Override public boolean onQueryTextSubmit(String query) {
         if (!TextUtils.isEmpty(query)){
             Intent searchIntent = new Intent(this, SearchResultActivity.class);
             searchIntent.putExtra(Config.SEARCH_KEY, query);
@@ -169,23 +161,17 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         return false;
     }
 
-    @Override
-    public boolean onClose() {
+    @Override public boolean onClose() {
         return false;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    @Override public boolean onPrepareOptionsMenu(Menu menu) {
 //        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 //        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -204,8 +190,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
      */
     private class DrawerItemClickListener implements ListView.OnItemClickListener{
 
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
             view.setPressed(true);
 
@@ -237,8 +222,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
+    @Override public void setTitle(CharSequence title) {
         super.setTitle(title);
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
@@ -248,14 +232,12 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
      */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
+    @Override protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    @Override public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);

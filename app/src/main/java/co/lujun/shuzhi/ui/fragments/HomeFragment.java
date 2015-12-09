@@ -5,19 +5,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,8 +26,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.tencent.connect.share.QQShare;
 
 import java.util.ArrayList;
@@ -50,9 +45,7 @@ import co.lujun.shuzhi.bean.ListData;
 import co.lujun.shuzhi.ui.adapter.AnnotationAdapter;
 import co.lujun.shuzhi.ui.adapter.ViewPagerAdapter;
 import co.lujun.shuzhi.ui.widget.AnnDetailView;
-import co.lujun.shuzhi.ui.widget.LoadingWindow;
 import co.lujun.shuzhi.ui.widget.ShareWindow;
-import co.lujun.shuzhi.util.BlurUtils;
 import co.lujun.shuzhi.util.CacheFileUtils;
 import co.lujun.shuzhi.util.ImageUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
@@ -66,56 +59,50 @@ import co.lujun.tpsharelogin.listener.StateListener;
 import co.lujun.tpsharelogin.platform.qq.QQManager;
 import co.lujun.tpsharelogin.platform.weibo.WBManager;
 import co.lujun.tpsharelogin.platform.weixin.WXManager;
+import co.lujun.tpsharelogin.utils.WXUtil;
 
 /**
  * Created by lujun on 2015/3/9.
  */
 public class HomeFragment extends BaseFragment {
 
-    private View mView;
+    private View mView, mContainer;
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
-    private PageChangedListener mPageChangeListener;
     private SwipeRefreshLayout mRefreshLayout;
     private ArrayList<View> views;
-    private TextView tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN;
-    private TextView tvPage2Which, tvPage2Title, tvPage2Sub, tvPage2Day, tvPage2YM, tvPage2Summary;
-    private ImageView ivPage2Image;
-    private View vPage2BookBlur;
+    private TextView tvPage2Author, tvPage2PYear, tvPage2Publisher, tvPage2ISBN, tvPage2Which,
+            tvPage2Title, tvPage2Sub, tvPage2Day, tvPage2YM, tvPage2Summary;
+    private ImageView ivPage2Image, ivPage2BookBlur;
     private ScrollView svPage2Main;
     private RecyclerView mAnnRecycleView;
-    private List<Annotation> mAnns;
-    private AnnotationAdapter mAdapter;
-    private LinearLayoutManager mLayoutManager;
-
-    private View mContainer;
     private CardView mCardView1, mCardView2, mStartCardView;
     private Button btnFlip;
     private ImageButton fabShare;
 
     private ShareWindow shareWindow;
-    private SwipViewAnimation mSwipViewAnimation;
-    private TokenUtils mTokenUtils;
-
     private WXManager wxManager;
     private WBManager wbManager;
     private QQManager qqManager;
+
+    private AnnotationAdapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private SwipViewAnimation mSwipViewAnimation;
+    private TokenUtils mTokenUtils;
     private StateListener mShareStateListener;
 
+    private List<Annotation> mAnns;
     private String id = "";
     private int page = 0;
     private boolean hasMore = true;
     private static final String TAG = "HomeFragment";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home, null);
         initView();
@@ -128,7 +115,6 @@ public class HomeFragment extends BaseFragment {
         views = new ArrayList<View>();
         mAnns = new ArrayList<Annotation>();
         mAdapter = new AnnotationAdapter(mAnns);
-        mPageChangeListener = new PageChangedListener();
         mTokenUtils = new TokenUtils();
         wxManager = new WXManager(getActivity());
         wbManager = new WBManager(getActivity());
@@ -155,9 +141,6 @@ public class HomeFragment extends BaseFragment {
         if (mView == null) {
             return;
         }
-        /*winLoading = new LoadingWindow(
-                LayoutInflater.from(getActivity()).inflate(R.layout.view_loading, null, false));
-        winLoading.setProgressText(getString(R.string.msg_share_ing));*/
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
         shareWindow = new ShareWindow(getActivity(), new OnShreBtnClickListener());
         int tmpLayout = ScreenUtils.checkIfDeviceHasNavBar(getActivity()) ?
@@ -166,26 +149,21 @@ public class HomeFragment extends BaseFragment {
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page3, null));
         mViewPagerAdapter = new ViewPagerAdapter(views, null);
         mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.setOnPageChangeListener(mPageChangeListener);
-//        mViewPager.setCurrentItem(1);
 
-        //
         svPage2Main = (ScrollView) views.get(0).findViewById(R.id.sv_page2_main);
         tvPage2Author = (TextView) views.get(0).findViewById(R.id.tv_page2_author);
         tvPage2PYear = (TextView) views.get(0).findViewById(R.id.tv_page2_pyear);
         tvPage2Publisher = (TextView) views.get(0).findViewById(R.id.tv_page2_publisher);
         tvPage2ISBN = (TextView) views.get(0).findViewById(R.id.tv_page2_isbn);
-
         tvPage2Which = (TextView) views.get(0).findViewById(R.id.tv_page2_which);
         tvPage2Title = (TextView) views.get(0).findViewById(R.id.tv_page2_title);
         tvPage2Sub = (TextView) views.get(0).findViewById(R.id.tv_page2_sub);
         tvPage2Day = (TextView) views.get(0).findViewById(R.id.tv_page2_day);
         tvPage2YM = (TextView) views.get(0).findViewById(R.id.tv_page2_ym);
         ivPage2Image = (ImageView) views.get(0).findViewById(R.id.iv_page2_image);
-        vPage2BookBlur = (View) views.get(0).findViewById(R.id.v_book_blur_bg);
+        ivPage2BookBlur = (ImageView) views.get(0).findViewById(R.id.iv_book_blur_bg);
         tvPage2Summary = (TextView) views.get(0).findViewById(R.id.tv_page2_summary);
 
-        //
         mContainer = views.get(0).findViewById(R.id.fl_container);
         mCardView1 = (CardView) views.get(0).findViewById(R.id.cv_1);
         mCardView2 = (CardView) views.get(0).findViewById(R.id.cv_2);
@@ -221,11 +199,10 @@ public class HomeFragment extends BaseFragment {
         mRefreshLayout = (SwipeRefreshLayout) views.get(0).findViewById(R.id.srl_home2);
         mAnnRecycleView = (RecyclerView) views.get(1).findViewById(R.id.rv_annlist);
         mAnnRecycleView.setLayoutManager(mLayoutManager);
-        mAnnRecycleView.setHasFixedSize(false);// 若每个item的高度固定，设置此项可以提高性能
-        mAnnRecycleView.setItemAnimator(new DefaultItemAnimator());// item 动画效果
+        mAnnRecycleView.setHasFixedSize(false);
+        mAnnRecycleView.setItemAnimator(new DefaultItemAnimator());
         mAdapter.setOnItemClickListener(new AnnotationAdapter.ViewHolder.ItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
+            @Override public void onItemClick(View view, int position) {
                 AnnDetailView.setTitle("《" + mAnns.get(position).getBook().getTitle() + "》"
                         + GlApplication.getContext().getResources().getString(R.string.tv_annotation));
                 AnnDetailView.setWriteInfo(mAnns.get(position).getAuthor_user().getName()
@@ -238,8 +215,7 @@ public class HomeFragment extends BaseFragment {
         mAnnRecycleView.setAdapter(mAdapter);
         mAnnRecycleView.setOnScrollListener(
                 new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                             int lastVisibleItem = mLayoutManager.findLastCompletelyVisibleItemPosition();
@@ -250,8 +226,7 @@ public class HomeFragment extends BaseFragment {
                         }
                     }
 
-                    @Override
-                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
                     }
                 }
@@ -261,8 +236,7 @@ public class HomeFragment extends BaseFragment {
         //
         mSwipViewAnimation = null;// make SwipViewAnimation null in a fragment
         btnFlip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 if (mSwipViewAnimation == null) {
                     mSwipViewAnimation = new SwipViewAnimation(mContainer, mCardView1, mCardView2);
                 }
@@ -274,16 +248,14 @@ public class HomeFragment extends BaseFragment {
             }
         });
         fabShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 shareWindow.show(mView, Gravity.CENTER, 0, 0);
             }
         });
 
         //
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+            @Override public void onRefresh() {
                 if (NetWorkUtils.getNetWorkType(GlApplication.getContext())
                         == NetWorkUtils.NETWORK_TYPE_DISCONNECT) {
                     SystemUtil.showToast(R.string.msg_no_internet);
@@ -300,35 +272,30 @@ public class HomeFragment extends BaseFragment {
 
         //请求TOKEN设置回调监听
         mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
-            @Override
-            public void onFailure(String s) {
+            @Override public void onFailure(String s) {
                 SystemUtil.showToast(R.string.msg_request_error);
                 mRefreshLayout.setRefreshing(false);
             }
 
-            @Override
-            public void onSuccess(Map<String, String> map) {
+            @Override public void onSuccess(Map<String, String> map) {
                 final Map<String, String> tmpMap = map;
                 JSONRequest<Daily> jsonRequest = new JSONRequest<Daily>(
                         Request.Method.POST,
                         Api.GET_TODAY_BOOK_URL,
                         Daily.class,
                         new Response.Listener<Daily>() {
-                            @Override
-                            public void onResponse(Daily daily) {
+                            @Override public void onResponse(Daily daily) {
                                 onSetBookData(daily, false);
                             }
                         },
                         new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
+                            @Override public void onErrorResponse(VolleyError volleyError) {
                                 SystemUtil.showToast(R.string.msg_request_error);
                                 mRefreshLayout.setRefreshing(false);
                             }
                         }
                 ) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
+                    @Override protected Map<String, String> getParams() throws AuthFailureError {
                         return tmpMap;
                     }
                 };
@@ -346,7 +313,6 @@ public class HomeFragment extends BaseFragment {
 
     /**
      * set book data
-     *
      * @param daily
      */
     private void onSetBookData(Daily daily, final boolean isCache) {
@@ -356,7 +322,7 @@ public class HomeFragment extends BaseFragment {
         }
         int status = daily.getStatus();
         if (status == 1) {
-            Book book = daily.getBook();
+            final Book book = daily.getBook();
             Daily.Extra extra = daily.getExtra();
             if (book != null) {
                 //write cache
@@ -368,25 +334,20 @@ public class HomeFragment extends BaseFragment {
                     Glide.with(GlApplication.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
                     //book background blur
-                    ImageLoader.getInstance().loadImage(book.getImages().getLarge(),
-                            new SimpleImageLoadingListener() {
-
-                                @Override
-                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                    super.onLoadingComplete(imageUri, view, loadedImage);
-                                    final Bitmap bmp = loadedImage;
-                                    vPage2BookBlur.getViewTreeObserver().addOnGlobalLayoutListener(
-                                            new ViewTreeObserver.OnGlobalLayoutListener() {
-                                                @Override
-                                                public void onGlobalLayout() {
-                                                    if (vPage2BookBlur.getBackground() == null && !isCache) {
-                                                        BlurUtils.blur(bmp, vPage2BookBlur);
-                                                    }
-                                                }
-                                            }
-                                    );
-                                }
-                            });
+                    new Thread(new Runnable() {
+                        @Override public void run() {
+                            Bitmap bmp = WXUtil.getBitmapFromUrl(book.getImages().getLarge());
+                            if (bmp != null){
+                                bmp = SystemUtil.blurImage(getActivity(), bmp, Config.BLUR_RADIUS);
+                                final Bitmap bmp2 = bmp;
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override public void run() {
+                                        ivPage2BookBlur.setImageBitmap(bmp2);
+                                    }
+                                });
+                            }
+                        }
+                    }).start();
                 }
                 if (extra != null) {
                     tvPage2Which.setText(GlApplication.getContext().getResources()
@@ -484,27 +445,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
-     * ViewPager滑动监听
-     */
-    private class PageChangedListener implements OnPageChangeListener {
-
-        @Override
-        public void onPageSelected(int arg0) {
-
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-
-        }
-    }
-
-    /**
      * share to platform
      * @param plat
      */
@@ -594,8 +534,7 @@ public class HomeFragment extends BaseFragment {
 
     class OnShreBtnClickListener implements View.OnClickListener {
 
-        @Override
-        public void onClick(View v) {
+        @Override public void onClick(View v) {
             shareTo(v.getId());
         }
     }
