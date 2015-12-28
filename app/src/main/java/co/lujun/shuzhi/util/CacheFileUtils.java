@@ -10,7 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 
 /**
  * Created by lujun on 2015/7/6.
@@ -28,7 +28,7 @@ public class CacheFileUtils {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            fos = GlApplication.getContext().openFileOutput(file, Context.MODE_PRIVATE);
+            fos = App.getContext().openFileOutput(file, Context.MODE_PRIVATE);
             oos = new ObjectOutputStream(fos);
             oos.writeObject(ser);
             oos.flush();
@@ -59,7 +59,7 @@ public class CacheFileUtils {
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try {
-            fis = GlApplication.getContext().openFileInput(file);
+            fis = App.getContext().openFileInput(file);
             ois = new ObjectInputStream(fis);
             return (Serializable) ois.readObject();
         }catch (Exception e){

@@ -12,7 +12,7 @@ import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 
 /**
  * Created by lujun on 2015/9/15.
@@ -44,8 +44,8 @@ public class SystemUtil {
      * @param strId
      */
     public static void showToast(int strId){
-        Toast.makeText(GlApplication.getContext(),
-                GlApplication.getContext().getString(strId), Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.getContext(),
+                App.getContext().getString(strId), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -53,7 +53,7 @@ public class SystemUtil {
      * @param string
      */
     public static void showToast(String string){
-        Toast.makeText(GlApplication.getContext(), string, Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.getContext(), string, Toast.LENGTH_SHORT).show();
     }
 
     /**

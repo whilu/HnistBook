@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.bean.Daily;
@@ -147,7 +147,7 @@ public class DailyListFragment extends BaseFragment {
                         return tmpMap;
                     }
                 };
-                GlApplication.getRequestQueue().add(jsonRequest);
+                App.getRequestQueue().add(jsonRequest);
             }
         });
     }

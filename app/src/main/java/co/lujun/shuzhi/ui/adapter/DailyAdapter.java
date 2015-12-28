@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Daily;
@@ -44,11 +44,11 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
         Daily daily = mDailies.get(i);
         Book book = daily.getBook();
         if (!TextUtils.isEmpty(book.getImages().getSmall())){
-            Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
+            Glide.with(App.getContext()).load(book.getImages().getSmall())
                     .into(viewHolder.ivBookImg);
         }
         viewHolder.tvBookTitle.setText(
-                GlApplication.getContext().getResources().getString(R.string.tv_title)
+                App.getContext().getResources().getString(R.string.tv_title)
                         + book.getTitle());
         String author = "";
         for (int j = 0; j < book.getAuthor().length; j++){
@@ -56,13 +56,13 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
         }
         if (author.length() > 0){ author = author.substring(0, author.length() - 1); }
         viewHolder.tvBookAuthor.setText(
-                GlApplication.getContext().getResources().getString(R.string.tv_author) + author);
+                App.getContext().getResources().getString(R.string.tv_author) + author);
         viewHolder.tvBookVol.setText(
-                GlApplication.getContext().getResources().getString(R.string.tv_vol)
+                App.getContext().getResources().getString(R.string.tv_vol)
                         + daily.getExtra().getVol());
         viewHolder.tvBookSZDate.setText(daily.getExtra().getDate());
         viewHolder.tvBookSub.setText(
-                GlApplication.getContext().getResources().getString(R.string.tv_daily)
+                App.getContext().getResources().getString(R.string.tv_daily)
                         + daily.getExtra().getBrief());
         viewHolder.itemView.setTag(mDailies.get(i));
     }

@@ -14,7 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.umeng.message.PushAgent;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.util.CacheFileUtils;
@@ -79,9 +79,9 @@ public class SettingsActivity extends BaseActivity {
             if (preference.getKey().equals(getString(R.string.pkey_push_service))){
                 // 推送开关，是否需要持久化处理
                 if ((Boolean) newValue){
-                    PushAgent.getInstance(GlApplication.getContext()).enable();
+                    PushAgent.getInstance(App.getContext()).enable();
                 }else {
-                    PushAgent.getInstance(GlApplication.getContext()).disable();
+                    PushAgent.getInstance(App.getContext()).disable();
                 }
             }/*else if (preference.getKey().equals(getString(R.string.pkey_night_model))){
                 // TODO 夜间模式开关
@@ -89,10 +89,10 @@ public class SettingsActivity extends BaseActivity {
             }*/else if (preference.getKey().equals(getString(R.string.pkey_auto_check_update))){
                 // 自动检测更新开关
                 if ((Boolean) newValue){
-                    PreferencesUtils.putBoolean(GlApplication.getContext(),
+                    PreferencesUtils.putBoolean(App.getContext(),
                             Config.CONFIG_AUTO_UPDATE_KEY, true);
                 }else{
-                    PreferencesUtils.putBoolean(GlApplication.getContext(),
+                    PreferencesUtils.putBoolean(App.getContext(),
                             Config.CONFIG_AUTO_UPDATE_KEY, false);
                 }
             }
@@ -105,14 +105,14 @@ public class SettingsActivity extends BaseActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        CacheFileUtils.deleteFile(GlApplication.getContext().getFilesDir()
+                        CacheFileUtils.deleteFile(App.getContext().getFilesDir()
                                 + "/" + Config.SZ_CACHE_FILE_PATH);
-                        CacheFileUtils.deleteFile(GlApplication.getContext().getFilesDir()
+                        CacheFileUtils.deleteFile(App.getContext().getFilesDir()
                                 + "/" + Config.ANN_CACHE_FILE_PATH);
-                        CacheFileUtils.deleteFile(GlApplication.getContext().getCacheDir() + "");
+                        CacheFileUtils.deleteFile(App.getContext().getCacheDir() + "");
                     }
                 }).start();
-                Toast.makeText(GlApplication.getContext(),
+                Toast.makeText(App.getContext(),
                         getResources().getString(R.string.msg_cache_cleared),
                         Toast.LENGTH_SHORT).show();
             }else if (preference.getKey().equals(getString(R.string.pkey_about))){

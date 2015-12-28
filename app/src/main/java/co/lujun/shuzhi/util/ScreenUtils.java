@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 
 /**
  * Created by lujun on 2015/7/7.
@@ -21,7 +21,7 @@ public class ScreenUtils {
      * @return
      */
     public static int[] getScreenWidthXHeight_Px(){
-        WindowManager wm = (WindowManager) GlApplication.getContext()
+        WindowManager wm = (WindowManager) App.getContext()
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         if (Build.VERSION.SDK_INT < 13){

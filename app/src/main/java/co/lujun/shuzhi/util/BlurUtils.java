@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 
 /**
  * Created by lujun on 2015/7/1.
@@ -43,7 +43,7 @@ public class BlurUtils {
         canvas.drawBitmap(bkg, 0, 0, paint);
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
-        view.setBackground(new BitmapDrawable(GlApplication.getContext().getResources(), overlay));
+        view.setBackground(new BitmapDrawable(App.getContext().getResources(), overlay));
 //        Log.d("cost", "cost " + (System.currentTimeMillis() - startMs) + "ms");
     }
 

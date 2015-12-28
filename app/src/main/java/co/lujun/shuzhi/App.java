@@ -13,7 +13,7 @@ import co.lujun.tpsharelogin.TPManager;
 /**
  * Created by lujun on 2015/3/1.
  */
-public class GlApplication extends Application {
+public class App extends Application {
 
     private static Context sContext;
     private static RequestQueue mRequestQueue;

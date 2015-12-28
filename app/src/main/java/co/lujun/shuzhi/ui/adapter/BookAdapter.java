@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Book;
 
@@ -41,7 +41,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder viewHolder, int i){
         Book book = mBooks.get(i);
         if (!TextUtils.isEmpty(book.getImages().getSmall())){
-            Glide.with(GlApplication.getContext()).load(book.getImages().getSmall())
+            Glide.with(App.getContext()).load(book.getImages().getSmall())
                     .into(viewHolder.ivBookImg);
         }
         viewHolder.tvBookTitle.setText(book.getTitle());

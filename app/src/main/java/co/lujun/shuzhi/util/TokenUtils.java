@@ -13,7 +13,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.JSONRequest;
@@ -37,9 +37,9 @@ public class TokenUtils {
     public void getRequestParam(){
         // 网络未连接
         if (NetWorkUtils.getNetWorkType(
-                GlApplication.getContext()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
+                App.getContext()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             if (mResponseListener != null){
-                mResponseListener.onFailure(GlApplication.getContext()
+                mResponseListener.onFailure(App.getContext()
                         .getResources().getString(R.string.msg_no_internet));
             }
             return;
@@ -61,7 +61,7 @@ public class TokenUtils {
                             }
                         }else {
                             if (mResponseListener != null){
-                                mResponseListener.onFailure(GlApplication.getContext()
+                                mResponseListener.onFailure(App.getContext()
                                         .getResources().getString(R.string.msg_get_token_err));
                             }
                         }
@@ -73,12 +73,12 @@ public class TokenUtils {
                         volleyError.printStackTrace();
                         if (mResponseListener != null){
                             //volleyError.getMessage()
-                            mResponseListener.onFailure(GlApplication.getContext()
+                            mResponseListener.onFailure(App.getContext()
                                     .getResources().getString(R.string.msg_request_error));
                         }
                     }
                 });
-        GlApplication.getRequestQueue().add(jsonRequest);
+        App.getRequestQueue().add(jsonRequest);
     }
 
     /**

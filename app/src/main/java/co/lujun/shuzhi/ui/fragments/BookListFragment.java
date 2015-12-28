@@ -20,7 +20,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Book;
@@ -173,7 +173,7 @@ public class BookListFragment extends BaseFragment {
                         }
                     }
             );
-            GlApplication.getRequestQueue().add(jsonRequest);
+            App.getRequestQueue().add(jsonRequest);
         }
     }
 
@@ -195,7 +195,7 @@ public class BookListFragment extends BaseFragment {
                     }
                 }
         );
-        GlApplication.getRequestQueue().add(jsonRequest);
+        App.getRequestQueue().add(jsonRequest);
     }
 
     private void setData(ListData listData, boolean isUpdate){

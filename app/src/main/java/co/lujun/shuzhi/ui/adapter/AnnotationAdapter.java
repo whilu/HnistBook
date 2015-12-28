@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Annotation;
 
@@ -41,7 +41,7 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
     public void onBindViewHolder(ViewHolder viewHolder, int i){
         Annotation annotation = mAnns.get(i);
         if (!TextUtils.isEmpty(annotation.getAuthor_user().getAvatar())){
-            Glide.with(GlApplication.getContext()).load(annotation.getAuthor_user().getAvatar())
+            Glide.with(App.getContext()).load(annotation.getAuthor_user().getAvatar())
                     .into(viewHolder.ivAvatar);
         }
         viewHolder.tvName.setText(annotation.getAuthor_user().getName());
@@ -49,7 +49,7 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
         viewHolder.tvAbstract.setText(annotation.getAbstract());
         viewHolder.tvBookTitle.setText("《" +annotation.getBook().getTitle() + "》");
         viewHolder.tvChapter.setText(
-                GlApplication.getContext().getResources().getString(R.string.tv_chapter)
+                App.getContext().getResources().getString(R.string.tv_chapter)
                         + annotation.getChapter());
         viewHolder.itemView.setTag(mAnns.get(i));
     }

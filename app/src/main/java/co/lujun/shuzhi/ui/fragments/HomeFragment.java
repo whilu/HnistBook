@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.anim.SwipViewAnimation;
 import co.lujun.shuzhi.api.Api;
@@ -204,9 +204,9 @@ public class HomeFragment extends BaseFragment {
         mAdapter.setOnItemClickListener(new AnnotationAdapter.ViewHolder.ItemClickListener() {
             @Override public void onItemClick(View view, int position) {
                 AnnDetailView.setTitle("《" + mAnns.get(position).getBook().getTitle() + "》"
-                        + GlApplication.getContext().getResources().getString(R.string.tv_annotation));
+                        + App.getContext().getResources().getString(R.string.tv_annotation));
                 AnnDetailView.setWriteInfo(mAnns.get(position).getAuthor_user().getName()
-                        + GlApplication.getContext().getResources().getString(R.string.tv_write)
+                        + App.getContext().getResources().getString(R.string.tv_write)
                         + mAnns.get(position).getTime().substring(0, 10));
                 AnnDetailView.setContent(mAnns.get(position).getContent());
                 AnnDetailView.show(view, Gravity.CENTER, 0, 0);
@@ -256,7 +256,7 @@ public class HomeFragment extends BaseFragment {
         //
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override public void onRefresh() {
-                if (NetWorkUtils.getNetWorkType(GlApplication.getContext())
+                if (NetWorkUtils.getNetWorkType(App.getContext())
                         == NetWorkUtils.NETWORK_TYPE_DISCONNECT) {
                     SystemUtil.showToast(R.string.msg_no_internet);
                     mRefreshLayout.setRefreshing(false);
@@ -299,7 +299,7 @@ public class HomeFragment extends BaseFragment {
                         return tmpMap;
                     }
                 };
-                GlApplication.getRequestQueue().add(jsonRequest);
+                App.getRequestQueue().add(jsonRequest);
             }
         });
     }
@@ -331,7 +331,7 @@ public class HomeFragment extends BaseFragment {
                 }
                 //set data
                 if (!TextUtils.isEmpty(book.getImages().getSmall())) {
-                    Glide.with(GlApplication.getContext()).load(book.getImages().getLarge())
+                    Glide.with(App.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
                     //book background blur
                     new Thread(new Runnable() {
@@ -350,7 +350,7 @@ public class HomeFragment extends BaseFragment {
                     }).start();
                 }
                 if (extra != null) {
-                    tvPage2Which.setText(GlApplication.getContext().getResources()
+                    tvPage2Which.setText(App.getContext().getResources()
                             .getString(R.string.tv_vol) + extra.getVol());
                     tvPage2Sub.setText(extra.getBrief());
                     tvPage2YM.setText(extra.getYMD()[1] + "." + extra.getYMD()[0]);
@@ -408,7 +408,7 @@ public class HomeFragment extends BaseFragment {
                     }
                 }
         );
-        GlApplication.getRequestQueue().add(jsonRequest);
+        App.getRequestQueue().add(jsonRequest);
     }
 
     /**

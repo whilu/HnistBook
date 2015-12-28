@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 
 /**
@@ -23,7 +23,7 @@ public class SliderMenuAdapter extends BaseAdapter {
         isFirstDrawer = true;
         mPlanetTitles = planetTitles;
         mPlanetIcons = planetIcons;
-        mInflater = LayoutInflater.from(GlApplication.getContext());
+        mInflater = LayoutInflater.from(App.getContext());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SliderMenuAdapter extends BaseAdapter {
         }
         if (isFirstDrawer && position == 0) {
             isFirstDrawer = false;
-            convertView.setBackgroundColor(GlApplication.getContext().getResources().getColor(R.color.gray));
+            convertView.setBackgroundColor(App.getContext().getResources().getColor(R.color.gray));
         }
         holder.ivIcon.setImageResource(mPlanetIcons[position]);
         holder.tvLabel.setText(mPlanetTitles[position]);

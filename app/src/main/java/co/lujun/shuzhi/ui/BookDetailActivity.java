@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import co.lujun.shuzhi.GlApplication;
+import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.anim.SwipViewAnimation;
 import co.lujun.shuzhi.api.Api;
@@ -139,7 +139,7 @@ public class BookDetailActivity extends BaseActivity {
                         onLoadComplete();
                     }
                 });
-        GlApplication.getRequestQueue().add(jsonRequest);
+        App.getRequestQueue().add(jsonRequest);
     }
 
     private void setData(final Book book){
