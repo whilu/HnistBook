@@ -1,40 +1,21 @@
 package co.lujun.shuzhi.util;
 
+import android.graphics.Bitmap;
+import android.os.Environment;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-
 public final class ImageUtils {
-
-    /**
-     * Resize the bitmap
-     * @param bitmap
-     * @param width
-     * @param height
-     * @return
-     */
-    public static Bitmap zoomBitmap(Bitmap bitmap, int width, int height) {
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        Matrix matrix = new Matrix();
-        float scaleWidth = ((float) width / w);
-        float scaleHeight = ((float) height / h);
-        matrix.postScale(scaleWidth, scaleHeight);
-        Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
-        return newbmp;
-    }
     
     /**
      * Check the SD card 
      * @return
      */
     public static boolean checkSDCardAvailable(){
-        return android.os.Environment.getExternalStorageState()
-                .equals(android.os.Environment.MEDIA_MOUNTED);
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
     
     /**
@@ -74,19 +55,5 @@ public final class ImageUtils {
                 }
             }
         } 
-    }
-    
-    /**
-     * Delete the image
-     * @param path
-     */
-    public static void deleteAllPhoto(String path){
-        if (checkSDCardAvailable()) {
-            File folder = new File(path);
-            File[] files = folder.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                files[i].delete();
-            }
-        }
     }
 }

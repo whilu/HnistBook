@@ -25,7 +25,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.tencent.connect.share.QQShare;
 
 import java.util.ArrayList;
@@ -49,7 +48,6 @@ import co.lujun.shuzhi.ui.widget.ShareWindow;
 import co.lujun.shuzhi.util.CacheFileUtils;
 import co.lujun.shuzhi.util.ImageUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
-import co.lujun.shuzhi.util.ScreenUtils;
 import co.lujun.shuzhi.util.SystemUtil;
 import co.lujun.shuzhi.util.TokenUtils;
 import co.lujun.tpsharelogin.bean.QQShareContent;
@@ -60,6 +58,11 @@ import co.lujun.tpsharelogin.platform.qq.QQManager;
 import co.lujun.tpsharelogin.platform.weibo.WBManager;
 import co.lujun.tpsharelogin.platform.weixin.WXManager;
 import co.lujun.tpsharelogin.utils.WXUtil;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by lujun on 2015/3/9.
@@ -143,7 +146,7 @@ public class HomeFragment extends BaseFragment {
         }
         mViewPager = (ViewPager) mView.findViewById(R.id.vp_home);
         shareWindow = new ShareWindow(getActivity(), new OnShreBtnClickListener());
-        int tmpLayout = ScreenUtils.checkIfDeviceHasNavBar(getActivity()) ?
+        int tmpLayout = SystemUtil.checkIfDeviceHasNavBar(getActivity()) ?
                 R.layout.view_home_page2_with_navbar : R.layout.view_home_page2;
         views.add(LayoutInflater.from(getActivity()).inflate(tmpLayout, null));
         views.add(LayoutInflater.from(getActivity()).inflate(R.layout.view_home_page3, null));
@@ -305,7 +308,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
-     * 请求更新今日书志，首先获取OKEN，成功后回调请求书志信息
+     * 请求更新今日书志，首先获取TOKEN，成功后回调请求书志信息
      */
     private void onUpdateTodayDaily() {
         mTokenUtils.getRequestParam();
@@ -330,8 +333,9 @@ public class HomeFragment extends BaseFragment {
                     SystemUtil.showToast(R.string.msg_cache_error);
                 }
                 //set data
-                if (!TextUtils.isEmpty(book.getImages().getSmall())) {
-                    Glide.with(App.getContext()).load(book.getImages().getLarge())
+                String imgUrl = book.getImages().getLarge();
+                if (!TextUtils.isEmpty(imgUrl)) {
+                    /*Glide.with(App.getContext()).load(book.getImages().getLarge())
                             .into(ivPage2Image);
                     //book background blur
                     new Thread(new Runnable() {
@@ -347,7 +351,25 @@ public class HomeFragment extends BaseFragment {
                                 });
                             }
                         }
-                    }).start();
+                    }).start();*/
+                    Observable.just(imgUrl)
+                            .map(new Func1<String, Bitmap[]>() {
+                                @Override
+                                public Bitmap[] call(String s) {
+                                    Bitmap bmp = WXUtil.getBitmapFromUrl(s);
+                                    return new Bitmap[]{bmp, SystemUtil.blurImage(
+                                            getActivity(), bmp, Config.BLUR_RADIUS)};
+                                }
+                            })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<Bitmap[]>() {
+                                @Override
+                                public void call(Bitmap[] bitmaps) {
+                                    ivPage2Image.setImageBitmap(bitmaps[0]);
+                                    ivPage2BookBlur.setImageBitmap(bitmaps[1]);
+                                }
+                            });
                 }
                 if (extra != null) {
                     tvPage2Which.setText(App.getContext().getResources()

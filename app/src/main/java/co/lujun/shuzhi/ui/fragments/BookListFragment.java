@@ -47,6 +47,7 @@ public class BookListFragment extends BaseFragment {
     private Intent mBookDetailIntent;
     private Bundle mBundle;
     private String keyword = "";
+
     private int start = 0;
     private boolean hasMore = true;
 

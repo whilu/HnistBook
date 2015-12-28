@@ -26,6 +26,11 @@ import co.lujun.shuzhi.bean.JSONRequest;
 import co.lujun.shuzhi.util.NetWorkUtils;
 import co.lujun.shuzhi.util.SystemUtil;
 import co.lujun.tpsharelogin.utils.WXUtil;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by lujun on 2015/3/18.
@@ -147,8 +152,9 @@ public class BookDetailActivity extends BaseActivity {
             SystemUtil.showToast(R.string.msg_no_find);
             return;
         }
-        if (!TextUtils.isEmpty(book.getImages().getMedium())){
-            new Thread(new Runnable() {
+        String imgUrl = book.getImages().getLarge();
+        if (!TextUtils.isEmpty(imgUrl)){
+            /*new Thread(new Runnable() {
                 @Override public void run() {
                     Bitmap bmp = WXUtil.getBitmapFromUrl(book.getImages().getLarge());
                     if (bmp != null){
@@ -163,7 +169,23 @@ public class BookDetailActivity extends BaseActivity {
                         });
                     }
                 }
-            }).start();
+            }).start();*/
+            Observable.just(imgUrl)
+                    .map(new Func1<String, Bitmap[]>() {
+                        @Override public Bitmap[] call(String s) {
+                            Bitmap bmp = WXUtil.getBitmapFromUrl(s);
+                            return new Bitmap[]{bmp, SystemUtil.blurImage(
+                                    BookDetailActivity.this, bmp, Config.BLUR_RADIUS)};
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<Bitmap[]>() {
+                        @Override public void call(Bitmap[] bmps) {
+                            ivBookImg.setImageBitmap(bmps[0]);
+                            vBookImgBlur.setImageBitmap(bmps[1]);
+                        }
+                    });
         }
         if (TextUtils.isEmpty(getTitle())){ setTitle(book.getTitle()); }
         tvBookTitle.setText(book.getTitle());
