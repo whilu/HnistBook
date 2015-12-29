@@ -28,17 +28,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         this.mBooks = books;
     }
 
-    // 创建View，被LayoutManager调用
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_item, parent, false);
         view.setTag(mBooks.get(i));
         return new ViewHolder(view, mItemClickListener);
     }
 
-    // 将数据与界面进行绑定
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i){
+    @Override public void onBindViewHolder(ViewHolder viewHolder, int i){
         Book book = mBooks.get(i);
         if (!TextUtils.isEmpty(book.getImages().getSmall())){
             Glide.with(App.getContext()).load(book.getImages().getSmall())
@@ -56,8 +52,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         viewHolder.itemView.setTag(mBooks.get(i));
     }
 
-    @Override
-    public int getItemCount(){
+    @Override public int getItemCount(){
         return mBooks == null ? 0 : mBooks.size();
     }
 
@@ -85,8 +80,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             view.setOnClickListener(this);
         }
 
-        @Override
-         public void onClick(View v) {
+        @Override public void onClick(View v) {
             if (mItemClickListener != null){
                 mItemClickListener.onItemClick(v, getPosition());
             }

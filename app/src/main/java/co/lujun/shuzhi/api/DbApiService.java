@@ -13,7 +13,7 @@ import rx.Observable;
  */
 public interface DbApiService {
 
-    @GET("") Observable<ListData> getDbBookList(
+    @GET("/search") Observable<ListData> getDbBookList(
             @Query("q") String q, @Query("start") int start, @Query("apikey") String apikey);
 
     @GET("/isbn/{isbn}") Observable<Book> getDbBook(
