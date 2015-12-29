@@ -13,20 +13,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
 import co.lujun.shuzhi.App;
+import co.lujun.shuzhi.BuildConfig;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.anim.SwipViewAnimation;
-import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Config;
-import co.lujun.shuzhi.bean.JSONRequest;
 import co.lujun.shuzhi.util.NetWorkUtils;
 import co.lujun.shuzhi.util.SystemUtil;
 import co.lujun.tpsharelogin.utils.WXUtil;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -37,15 +34,15 @@ import rx.schedulers.Schedulers;
  */
 public class BookDetailActivity extends BaseActivity {
 
-    private Toolbar mToolBar;
+    private Button btnFlip;
+    private CardView mCardView1, mCardView2;
     private ImageView ivBookImg, vBookImgBlur;
-    private TextView tvBookTitle, tvBookAuthor, tvBookPublisher, tvBookPubdate, tvBookPages,
-            tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags, tvAp;
     private LinearLayout llProgressBar, llContent;
     private SwipeRefreshLayout srlBookDetail;
-    private CardView mCardView1, mCardView2;
+    private Toolbar mToolBar;
+    private TextView tvBookTitle, tvBookAuthor, tvBookPublisher, tvBookPubdate, tvBookPages,
+            tvBookPrice, tvBookIsbn, tvBookSummary, tvBookTags, tvAp;
     private View mContainer;
-    private Button btnFlip;
 
     private Bundle mBundle;
     private String isbn = "";
@@ -55,6 +52,10 @@ public class BookDetailActivity extends BaseActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_view);
+        init();
+    }
+
+    private void init(){
         mToolBar = (Toolbar) findViewById(R.id.book_detail_toolbar);
         ivBookImg = (ImageView) findViewById(R.id.iv_bda_book_img);
         vBookImgBlur = (ImageView) findViewById(R.id.iv_bda_book_img_blur);
@@ -78,18 +79,12 @@ public class BookDetailActivity extends BaseActivity {
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         srlBookDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (TextUtils.isEmpty(isbn)) {
-                    SystemUtil.showToast(R.string.msg_param_null);
-                    return;
-                }
+            @Override public void onRefresh() {
                 searchBook(isbn);
             }
         });
         btnFlip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 if (mSwipViewAnimation == null){
                     mSwipViewAnimation = new SwipViewAnimation(mContainer, mCardView1, mCardView2);
                 }
@@ -104,47 +99,44 @@ public class BookDetailActivity extends BaseActivity {
             String title = mBundle.getString(Config.BOOK.title.toString());
             String isbn10 = mBundle.getString(Config.BOOK.isbn10.toString());
             String isbn13 = mBundle.getString(Config.BOOK.isbn13.toString());
-            setTitle((title == null || title.equals("")) ? "" : "《" + title + "》");
-            if (isbn13 == null || isbn13.equals("")){
-                if (isbn10 == null || isbn10.equals("")){
-                    SystemUtil.showToast(R.string.msg_param_null);
-                }else {
-                    isbn = isbn10;
-                    searchBook(isbn10);
-                }
-            }else {
+            setTitle(TextUtils.isEmpty(title) ? "" : "《" + title + "》");
+            if (!TextUtils.isEmpty(isbn13)){
                 isbn = isbn13;
-                searchBook(isbn13);
+            }else if (!TextUtils.isEmpty(isbn10)){
+                isbn = isbn10;
             }
-        }else{
-            SystemUtil.showToast(R.string.msg_param_null);
+            searchBook(isbn);
         }
     }
 
     private void searchBook(String isbn){
+        if (TextUtils.isEmpty(isbn)) {
+            onLoadComplete();
+            return;
+        }
         if (NetWorkUtils.getNetWorkType(this) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             SystemUtil.showToast(R.string.msg_no_internet);
             onLoadComplete();
             return;
         }
-        JSONRequest<Book> jsonRequest = new JSONRequest<Book>(
-                Api.GET_ISBNBOOK_URL + isbn + "?" + Api.API_KEY,
-                Book.class,
-                new Response.Listener<Book>() {
-                    @Override
-                    public void onResponse(Book book) {
-                        setData(book);
-                        onLoadComplete();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
+
+        App.getDbApiService()
+                .getDbBook(isbn, BuildConfig.DB_TOKEN)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Book>() {
+                    @Override public void onCompleted() {}
+
+                    @Override public void onError(Throwable e) {
                         SystemUtil.showToast(R.string.msg_find_error);
                         onLoadComplete();
                     }
+
+                    @Override public void onNext(Book book) {
+                        onLoadComplete();
+                        setData(book);
+                    }
                 });
-        App.getRequestQueue().add(jsonRequest);
     }
 
     private void setData(final Book book){
@@ -154,22 +146,6 @@ public class BookDetailActivity extends BaseActivity {
         }
         String imgUrl = book.getImages().getLarge();
         if (!TextUtils.isEmpty(imgUrl)){
-            /*new Thread(new Runnable() {
-                @Override public void run() {
-                    Bitmap bmp = WXUtil.getBitmapFromUrl(book.getImages().getLarge());
-                    if (bmp != null){
-                        final Bitmap bmp3 = bmp;
-                        final Bitmap bmp2 = SystemUtil.blurImage(
-                                BookDetailActivity.this, bmp, Config.BLUR_RADIUS);
-                        runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                ivBookImg.setImageBitmap(bmp3);
-                                vBookImgBlur.setImageBitmap(bmp2);
-                            }
-                        });
-                    }
-                }
-            }).start();*/
             Observable.just(imgUrl)
                     .map(new Func1<String, Bitmap[]>() {
                         @Override public Bitmap[] call(String s) {

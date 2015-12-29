@@ -335,23 +335,6 @@ public class HomeFragment extends BaseFragment {
                 //set data
                 String imgUrl = book.getImages().getLarge();
                 if (!TextUtils.isEmpty(imgUrl)) {
-                    /*Glide.with(App.getContext()).load(book.getImages().getLarge())
-                            .into(ivPage2Image);
-                    //book background blur
-                    new Thread(new Runnable() {
-                        @Override public void run() {
-                            Bitmap bmp = WXUtil.getBitmapFromUrl(book.getImages().getLarge());
-                            if (bmp != null){
-                                bmp = SystemUtil.blurImage(getActivity(), bmp, Config.BLUR_RADIUS);
-                                final Bitmap bmp2 = bmp;
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override public void run() {
-                                        ivPage2BookBlur.setImageBitmap(bmp2);
-                                    }
-                                });
-                            }
-                        }
-                    }).start();*/
                     Observable.just(imgUrl)
                             .map(new Func1<String, Bitmap[]>() {
                                 @Override

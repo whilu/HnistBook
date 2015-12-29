@@ -5,10 +5,18 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.squareup.okhttp.OkHttpClient;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.concurrent.TimeUnit;
+
+import co.lujun.shuzhi.api.Api;
+import co.lujun.shuzhi.api.DbApiService;
+import co.lujun.shuzhi.api.SzApiService;
 import co.lujun.shuzhi.ui.widget.AnnDetailView;
 import co.lujun.tpsharelogin.TPManager;
+import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 
 /**
  * Created by lujun on 2015/3/1.
@@ -16,14 +24,17 @@ import co.lujun.tpsharelogin.TPManager;
 public class App extends Application {
 
     private static Context sContext;
-    private static RequestQueue mRequestQueue;
+    private static RequestQueue sRequestQueue;
+    private static RestAdapter sDbRestAdapter, sSzRestAdapter;
+    private static SzApiService sSzApiService;
+    private static DbApiService sDbApiService;
 
     @Override
     public void onCreate() {
         super.onCreate();
         sContext = getApplicationContext();
         AnnDetailView.init(this);
-        mRequestQueue = Volley.newRequestQueue(this);
+        sRequestQueue = Volley.newRequestQueue(this);
         MobclickAgent.openActivityDurationTrack(false);
 
         TPManager.getInstance().initAppConfig(
@@ -36,5 +47,60 @@ public class App extends Application {
         return sContext;
     }
 
-    public static RequestQueue getRequestQueue(){ return mRequestQueue; }
+    public static RequestQueue getRequestQueue(){ return sRequestQueue; }
+
+    public static RestAdapter getDbRestAdapter(){
+        if (sDbRestAdapter == null){
+            synchronized (App.class){
+                if (sDbRestAdapter == null){
+                    OkHttpClient client = new OkHttpClient();
+                    client.setConnectTimeout(10, TimeUnit.SECONDS);
+                    RestAdapter.Builder builder = new RestAdapter.Builder();
+                    builder.setClient(new OkClient(client));
+                    sDbRestAdapter = builder.setEndpoint(Api.DOUBAN_HOST).build();
+                }
+            }
+        }
+        return sDbRestAdapter;
+    }
+
+    public static RestAdapter geSzRestAdapter(){
+        if (sSzRestAdapter == null){
+            synchronized (App.class){
+                if (sSzRestAdapter == null){
+                    OkHttpClient client = new OkHttpClient();
+                    client.setConnectTimeout(10, TimeUnit.SECONDS);
+                    RestAdapter.Builder builder = new RestAdapter.Builder();
+                    builder.setClient(new OkClient(client));
+                    sSzRestAdapter = builder
+                            .setEndpoint(BuildConfig.API_ENDPOINT + BuildConfig.API_VERSION)
+                            .build();
+                }
+            }
+        }
+        return sSzRestAdapter;
+    }
+
+    public static SzApiService getSzApiService(){
+        if (sSzApiService == null){
+            synchronized (App.class){
+                if (sSzApiService == null){
+                    sSzApiService = getDbRestAdapter().create(SzApiService.class);
+                }
+            }
+        }
+        return sSzApiService;
+    }
+
+    public static DbApiService getDbApiService(){
+        if (sDbApiService == null){
+            synchronized (App.class){
+                if (sDbApiService == null){
+                    sDbApiService = getDbRestAdapter().create(DbApiService.class);
+                }
+            }
+        }
+        return sDbApiService;
+    }
+
 }
