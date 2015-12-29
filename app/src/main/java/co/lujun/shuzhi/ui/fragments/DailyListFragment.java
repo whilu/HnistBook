@@ -8,16 +8,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,31 +22,40 @@ import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.bean.Daily;
-import co.lujun.shuzhi.bean.JSONRequest;
 import co.lujun.shuzhi.bean.ListData;
+import co.lujun.shuzhi.bean.Token;
 import co.lujun.shuzhi.ui.BookDetailActivity;
 import co.lujun.shuzhi.ui.adapter.DailyAdapter;
 import co.lujun.shuzhi.util.IntentUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
+import co.lujun.shuzhi.util.SignatureUtils;
 import co.lujun.shuzhi.util.SystemUtil;
 import co.lujun.shuzhi.util.TokenUtils;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by lujun on 2015/7/17.
  */
 public class DailyListFragment extends BaseFragment {
 
-    private View mView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecycleView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private View mView;
     private LinearLayoutManager mLayoutManager;
-    private DailyAdapter mAdapter;
-    private List<Daily> mDailies;
-    private Intent mDailyDetailIntent;
+
     private Bundle mBundle;
+    private DailyAdapter mAdapter;
+    private Intent mDailyDetailIntent;
+    private List<Daily> mDailies;
     private TokenUtils mTokenUtils;
 
-    private String mUrl = "";
+    private String mTime;
+
+    private static final String TAG = "DailyListFragment";
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,11 +84,10 @@ public class DailyListFragment extends BaseFragment {
             mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.srl_dailylist);
             mRecycleView = (RecyclerView) mView.findViewById(R.id.rv_dailylist);
             mRecycleView.setLayoutManager(mLayoutManager);
-            mRecycleView.setHasFixedSize(true);// 若每个item的高度固定，设置此项可以提高性能
-            mRecycleView.setItemAnimator(new DefaultItemAnimator());// item 动画效果
+            mRecycleView.setHasFixedSize(true);
+            mRecycleView.setItemAnimator(new DefaultItemAnimator());
             mAdapter.setOnItemClickListener(new DailyAdapter.ViewHolder.ItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
+                @Override public void onItemClick(View view, int position) {
                     mBundle.clear();
                     mBundle.putString(Config.BOOK.title.toString(),
                             ((Daily) view.getTag()).getBook().getTitle());
@@ -96,80 +101,66 @@ public class DailyListFragment extends BaseFragment {
             });
             mRecycleView.setAdapter(mAdapter);
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    onUpdate(mUrl);
+                @Override public void onRefresh() {
+                    OnRequestData();
                 }
             });
+            
+            Intent intent = getActivity().getIntent();
             Bundle bundle;
-            if (getActivity().getIntent() == null
-                    || (bundle = getActivity().getIntent().getExtras()) == null){
-                SystemUtil.showToast(R.string.msg_param_null);
+            if (intent == null || (bundle = intent.getExtras()) == null 
+                    || TextUtils.isEmpty((mTime = bundle.getString(Config.DAILY_CHANNEL)))){
                 return;
             }
-            mUrl = bundle.getString(Config.DAILY_LST_TYPE);
-            if (!TextUtils.isEmpty(mUrl)){
-                mSwipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        onUpdate(mUrl);
-                    }
-                });
-            }
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override public void run() {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                    OnRequestData();
+                }
+            });
         }
-        //请求TOKEN设置回调监听
-        mTokenUtils.setResponseListener(new TokenUtils.OnResponseListener() {
-            @Override public void onFailure(String s) {
-                SystemUtil.showToast(R.string.msg_request_error);
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-
-            @Override public void onSuccess(Map<String, String> map) {
-                final Map<String, String> tmpMap = map;
-                JSONRequest<ListData> jsonRequest = new JSONRequest<ListData>(
-                        Request.Method.POST,
-                        mUrl,
-                        ListData.class,
-                        new Response.Listener<ListData>() {
-                            @Override public void onResponse(ListData listData) {
-                                setData(listData);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override public void onErrorResponse(VolleyError volleyError) {
-                                SystemUtil.showToast(R.string.msg_request_error);
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        }
-                ) {
-                    @Override protected Map<String, String> getParams() throws AuthFailureError {
-                        return tmpMap;
-                    }
-                };
-                App.getRequestQueue().add(jsonRequest);
-            }
-        });
     }
 
-    /**
-     * 更新信息
-     * @param url
-     */
-    private void onUpdate(String url){
+    private void OnRequestData(){
         if (NetWorkUtils.getNetWorkType(getActivity()) == NetWorkUtils.NETWORK_TYPE_DISCONNECT){
             SystemUtil.showToast(R.string.msg_no_internet);
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
-        if (TextUtils.isEmpty(url)){
-            SystemUtil.showToast(R.string.msg_param_null);
-            mSwipeRefreshLayout.setRefreshing(false);
-            return;
+        App.getSzApiService()
+                .getSzToken()
+                .flatMap(new Func1<Token, Observable<ListData>>() {
+                    @Override public Observable<ListData> call(Token token) {
+                        return getDailyData(token);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ListData>() {
+                    @Override public void onCompleted() {}
+
+                    @Override public void onError(Throwable e) {
+                        SystemUtil.showToast(R.string.msg_request_error);
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override public void onNext(ListData listData) {
+                        setData(listData);
+                    }
+                });
+    }
+
+    // IO thread
+    private Observable<ListData> getDailyData(Token token){
+        if (token == null || token.getStatus() != 1){
+            return null;
         }
-        if (mSwipeRefreshLayout.isRefreshing()) {//检查是否正在刷新
-            mTokenUtils.getRequestParam();
-        }
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("sign", timeStamp);
+        String sign = SignatureUtils.makeSignature(token.getData(), map);
+        Log.d(TAG, timeStamp + ", " + sign + ", " + token.getData());
+        return App.getSzApiService().getSzBookList(mTime, timeStamp, sign);
     }
 
     private void setData(ListData listData){

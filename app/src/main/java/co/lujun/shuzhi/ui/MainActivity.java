@@ -23,7 +23,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import co.lujun.shuzhi.R;
-import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.adapter.SliderMenuAdapter;
 import co.lujun.shuzhi.ui.fragments.DailyListFragment;
@@ -45,7 +44,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
     private Fragment[] fragments;
     private Fragment curFragment;
     private Bundle mBundle;
-    private String[] menuStrs;
+    private String[] mChannels;
     private static int[] mPlanetIcons;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
         fragmentManager = getSupportFragmentManager();
         //
         mBundle = new Bundle();
-        menuStrs = new String[]{"", Api.GET_7DAY_BOOK_URL, Api.GET_30DAY_BOOK_URL};
+        mChannels = new String[]{"", "week", "month"};
         //
 
         fragments = new Fragment[]{
@@ -196,7 +195,7 @@ public class MainActivity extends ActionBarActivity implements SearchView.OnQuer
 
             Intent intent = new Intent();
             mBundle.clear();
-            mBundle.putString(Config.DAILY_LST_TYPE, menuStrs[position]);
+            mBundle.putString(Config.DAILY_CHANNEL, mChannels[position]);
             intent.putExtras(mBundle);
             setIntent(intent);
             replaceFragment(curFragment, fragments[position]);

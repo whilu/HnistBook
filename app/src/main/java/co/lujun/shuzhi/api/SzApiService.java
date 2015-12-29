@@ -7,6 +7,7 @@ import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import rx.Observable;
 
 /**
@@ -20,7 +21,7 @@ public interface SzApiService {
     @FormUrlEncoded @POST("/Book/today") Observable<Daily> getSzDaily(
             @Field("timestamp") String timestamp, @Field("sign") String sign);
 
-    @FormUrlEncoded @POST("") Observable<ListData> getSzBookList(
-            @Field("timestamp") String timestamp, @Field("sign") String sign);
+    @FormUrlEncoded @POST("/Book/{t}") Observable<ListData> getSzBookList(
+            @Path("t") String t, @Field("timestamp") String timestamp, @Field("sign") String sign);
 
 }

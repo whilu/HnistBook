@@ -23,7 +23,7 @@ public class Config {
 
     //key
     public static final String BOOK_LST_SEARCH_KEY = "BookListFragment_search_key";
-    public static final String DAILY_LST_TYPE = "DailyListFragment_url";
+    public static final String DAILY_CHANNEL = "daily_channel";
     public static final String SEARCH_KEY = "search_key_words";
     public static final String CONFIG_PUSH_MSG_KEY = "config_push_message_key";
     public static final String CONFIG_AUTO_UPDATE_KEY = "config_auto_update_key";
