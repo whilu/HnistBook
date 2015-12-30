@@ -8,7 +8,7 @@ import android.view.animation.DecelerateInterpolator;
 /**
  * Created by lujun on 2015/7/3.
  */
-public class SwipViewAnimation {
+public class SwipeViewAnimation {
 
     private int mIndex = 0;
     private int mDuration = 200;
@@ -19,7 +19,7 @@ public class SwipViewAnimation {
     private View mContainer;
     private View mView1, mView2, mStartView;
 
-    public SwipViewAnimation(View container, View view1, View view2){
+    public SwipeViewAnimation(View container, View view1, View view2){
         this.mContainer = container;
         this.mView1 = view1;
         this.mView2 = view2;

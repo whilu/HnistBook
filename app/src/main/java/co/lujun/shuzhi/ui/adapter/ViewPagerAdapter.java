@@ -5,16 +5,16 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lujun on 2015/3/9.
  */
 public class ViewPagerAdapter extends PagerAdapter {
-    private ArrayList<View> mViews;
-    private ArrayList<String> mTitles;
+    private List<View> mViews;
+    private List<String> mTitles;
 
-    public ViewPagerAdapter(ArrayList<View> views, ArrayList<String> titles) {
+    public ViewPagerAdapter(List<View> views, List<String> titles) {
         // TODO Auto-generated constructor stub
         this.mViews = views;
         this.mTitles = titles;

@@ -6,7 +6,9 @@ package co.lujun.shuzhi.bean;
 public class Token {
 
     private String data;
+
     private String info;
+
     private int status;
 
     public String getData(){ return data; }

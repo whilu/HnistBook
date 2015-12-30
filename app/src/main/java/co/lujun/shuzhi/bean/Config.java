@@ -40,4 +40,7 @@ public class Config {
     //app config
     public static final long APP_SPLASH_TIME = 1000;
     public static final int BLUR_RADIUS = 7;
+
+    // Douban host
+    public final static String DOUBAN_HOST = "https://api.douban.com/v2/book";
 }

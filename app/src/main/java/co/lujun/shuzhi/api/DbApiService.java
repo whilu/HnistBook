@@ -16,6 +16,9 @@ public interface DbApiService {
     @GET("/search") Observable<ListData> getDbBookList(
             @Query("q") String q, @Query("start") int start, @Query("apikey") String apikey);
 
+    @GET("/{id}/annotations") Observable<ListData> getDbAnnotationList(
+            @Path("id") String id, @Query("page") int page, @Query("apikey") String apikey);
+
     @GET("/isbn/{isbn}") Observable<Book> getDbBook(
             @Path("isbn") String isbn, @Query("apikey") String apikey);
 

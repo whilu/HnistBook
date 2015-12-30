@@ -38,32 +38,22 @@ public class AnnDetailView extends PopupWindow {
         tvContent = (TextView) mView.findViewById(R.id.tv_adv_content);
         svContent = (ScrollView) mView.findViewById(R.id.sv_adv_content);
 
-        //设置PopupWindow的View
         this.setContentView(mView);
-        //设置PopupWindow弹出窗体的宽
         this.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        //设置PopupWindow弹出窗体的高
         this.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
-        //设置PopupWindow弹出窗体可点击
         this.setFocusable(true);
-        //设置PopupWindow弹出窗体动画效果
         showAnim = AnimationUtils.loadAnimation(context, R.anim.anim_in);
         showAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         hideAnim = AnimationUtils.loadAnimation(context, R.anim.anim_out);
         hideAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-        //实例化一个ColorDrawable颜色为半透明
         ColorDrawable bgColor = new ColorDrawable(0x60000000);
-        //设置PopupWindow弹出窗体的背景
         this.setBackgroundDrawable(bgColor);
-        //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
         mView.setOnTouchListener(new MenuItemOnTouchListener());
     }
 
-    //触摸在popupWindow上方则取消显示
     private class MenuItemOnTouchListener implements View.OnTouchListener {
 
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
+        @Override public boolean onTouch(View v, MotionEvent event) {
             int y = (int) event.getY();
             int x = (int) event.getX();
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -90,18 +80,11 @@ public class AnnDetailView extends PopupWindow {
         cvGptv.startAnimation(hideAnim);
         hideAnim.setAnimationListener(new Animation.AnimationListener() {
 
-            @Override
-            public void onAnimationStart(Animation animation) {
+            @Override public void onAnimationStart(Animation animation) {}
 
-            }
+            @Override public void onAnimationRepeat(Animation animation) {}
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
+            @Override public void onAnimationEnd(Animation animation) {
                 mInstance.dismiss();
             }
         });

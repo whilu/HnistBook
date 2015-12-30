@@ -57,7 +57,7 @@
             android:summary="若您觉得书志很赞，去应用商店给我们赏个好评吧！非常感谢！">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="market://details?id=cn.hnist.lib.android.hnistbook" />
+                android:data="market://details?id=co.lujun.shuzhi" />
         </Preference>
 
     </PreferenceCategory>

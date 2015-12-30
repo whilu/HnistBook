@@ -3,13 +3,9 @@ package co.lujun.shuzhi;
 import android.app.Application;
 import android.content.Context;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-import com.umeng.analytics.MobclickAgent;
-
-import co.lujun.shuzhi.api.Api;
 import co.lujun.shuzhi.api.DbApiService;
 import co.lujun.shuzhi.api.SzApiService;
+import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.widget.AnnDetailView;
 import co.lujun.tpsharelogin.TPManager;
 import retrofit.RestAdapter;
@@ -20,7 +16,6 @@ import retrofit.RestAdapter;
 public class App extends Application {
 
     private static Context sContext;
-    private static RequestQueue sRequestQueue;
     private static RestAdapter sDbRestAdapter, sSzRestAdapter;
     private static SzApiService sSzApiService;
     private static DbApiService sDbApiService;
@@ -30,8 +25,6 @@ public class App extends Application {
         super.onCreate();
         sContext = getApplicationContext();
         AnnDetailView.init(this);
-        sRequestQueue = Volley.newRequestQueue(this);
-        MobclickAgent.openActivityDurationTrack(false);
 
         TPManager.getInstance().initAppConfig(
                 BuildConfig.WB_APPREDIRECT, BuildConfig.WB_APPKEY, BuildConfig.WB_APPSECRET,
@@ -43,8 +36,6 @@ public class App extends Application {
         return sContext;
     }
 
-    public static RequestQueue getRequestQueue(){ return sRequestQueue; }
-
     public static RestAdapter getDbRestAdapter(){
         if (sDbRestAdapter == null){
             synchronized (App.class){
@@ -53,7 +44,7 @@ public class App extends Application {
 //                    client.setConnectTimeout(10, TimeUnit.SECONDS);
                     RestAdapter.Builder builder = new RestAdapter.Builder();
 //                    builder.setClient(new OkClient(client));
-                    sDbRestAdapter = builder.setEndpoint(Api.DOUBAN_HOST).build();
+                    sDbRestAdapter = builder.setEndpoint(Config.DOUBAN_HOST).build();
                 }
             }
         }

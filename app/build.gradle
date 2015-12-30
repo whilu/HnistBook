@@ -93,7 +93,7 @@ android {
             minifyEnabled false
             zipAlignEnabled false
             shrinkResources false
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
         release {
             buildConfigField "boolean", "LOG_DEBUG", "false"

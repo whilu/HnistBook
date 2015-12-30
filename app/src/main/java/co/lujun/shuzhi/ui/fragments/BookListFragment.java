@@ -23,6 +23,7 @@ import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.bean.ListData;
 import co.lujun.shuzhi.ui.BookDetailActivity;
 import co.lujun.shuzhi.ui.adapter.BookAdapter;
+import co.lujun.shuzhi.ui.listener.ItemClickListener;
 import co.lujun.shuzhi.util.IntentUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
 import co.lujun.shuzhi.util.SystemUtil;
@@ -78,7 +79,7 @@ public class BookListFragment extends BaseFragment {
             mRecycleView.setLayoutManager(mLayoutManager);
             mRecycleView.setHasFixedSize(true);
             mRecycleView.setItemAnimator(new DefaultItemAnimator());
-            mAdapter.setOnItemClickListener(new BookAdapter.ViewHolder.ItemClickListener() {
+            mAdapter.setOnItemClickListener(new ItemClickListener() {
                 @Override public void onItemClick(View view, int position) {
                     mBundle.clear();
                     mBundle.putString(Config.BOOK.title.toString(),

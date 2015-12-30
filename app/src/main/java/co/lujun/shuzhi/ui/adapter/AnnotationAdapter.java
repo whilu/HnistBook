@@ -15,6 +15,7 @@ import java.util.List;
 import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Annotation;
+import co.lujun.shuzhi.ui.listener.ItemClickListener;
 
 /**
  * Created by lujun on 2015/3/1.
@@ -22,23 +23,21 @@ import co.lujun.shuzhi.bean.Annotation;
 public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.ViewHolder> {
 
     private List<Annotation> mAnns;
-    private ViewHolder.ItemClickListener mItemClickListener;
+    private ItemClickListener mItemClickListener;
+
+    private static final String TAG = "AnnotationAdapter";
 
     public AnnotationAdapter(List<Annotation> anns) {
         this.mAnns = anns;
     }
 
-    // 创建View，被LayoutManager调用
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ann_list_item, parent, false);
         view.setTag(mAnns.get(i));
         return new ViewHolder(view, mItemClickListener);
     }
 
-    // 将数据与界面进行绑定
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i){
+    @Override public void onBindViewHolder(ViewHolder viewHolder, int i){
         Annotation annotation = mAnns.get(i);
         if (!TextUtils.isEmpty(annotation.getAuthor_user().getAvatar())){
             Glide.with(App.getContext()).load(annotation.getAuthor_user().getAvatar())
@@ -46,7 +45,8 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
         }
         viewHolder.tvName.setText(annotation.getAuthor_user().getName());
         viewHolder.tvTime.setText(annotation.getTime().substring(0, 10));
-        viewHolder.tvAbstract.setText(annotation.getAbstract());
+//        viewHolder.tvAbstract.setText(annotation.getAbstract());
+        viewHolder.tvAbstract.setText(randomContent2Abstract(annotation.getContent(), 102));
         viewHolder.tvBookTitle.setText("《" +annotation.getBook().getTitle() + "》");
         viewHolder.tvChapter.setText(
                 App.getContext().getResources().getString(R.string.tv_chapter)
@@ -54,12 +54,11 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
         viewHolder.itemView.setTag(mAnns.get(i));
     }
 
-    @Override
-    public int getItemCount(){
+    @Override public int getItemCount(){
         return mAnns == null ? 0 : mAnns.size();
     }
 
-    public void setOnItemClickListener(ViewHolder.ItemClickListener listener){
+    public void setOnItemClickListener(ItemClickListener listener){
         this.mItemClickListener = listener;
     }
 
@@ -85,15 +84,15 @@ public class AnnotationAdapter extends RecyclerView.Adapter<AnnotationAdapter.Vi
             view.setOnClickListener(this);
         }
 
-        @Override
-         public void onClick(View v) {
+        @Override public void onClick(View v) {
             if (mItemClickListener != null){
                 mItemClickListener.onItemClick(v, getPosition());
             }
         }
+    }
 
-        public interface ItemClickListener{
-            void onItemClick(View view, int position);
-        }
+    private String randomContent2Abstract(String content, int length){
+        int cLength = content.length();
+        return cLength < length ? content : content.substring(0, length) + "...";
     }
 }

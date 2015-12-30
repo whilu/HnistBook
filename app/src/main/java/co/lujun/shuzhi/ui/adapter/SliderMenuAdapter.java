@@ -26,23 +26,19 @@ public class SliderMenuAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(App.getContext());
     }
 
-    @Override
-    public Object getItem(int position) {
+    @Override public Object getItem(int position) {
         return null;
     }
 
-    @Override
-    public long getItemId(int position) {
+    @Override public long getItemId(int position) {
         return position;
     }
 
-    @Override
-    public int getCount() {
+    @Override public int getCount() {
         return Math.min(mPlanetTitles.length, mPlanetIcons.length);
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @Override public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null){
             holder = new ViewHolder();

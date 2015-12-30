@@ -29,7 +29,6 @@ public class ShareWindow extends PopupWindow {
     public ShareWindow(Context context, View.OnClickListener listener) {
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //关联布局文件
         mView = inflater.inflate(R.layout.view_share, null);
         cvGptv = (CardView) mView.findViewById(R.id.cv_gptv_share);
         btnWXF = (ImageButton) mView.findViewById(R.id.btn_share_wechatf);
@@ -44,28 +43,19 @@ public class ShareWindow extends PopupWindow {
         btnQF.setOnClickListener(listener);
         btnQT.setOnClickListener(listener);
 
-        //设置PopupWindow的View
         this.setContentView(mView);
-        //设置PopupWindow弹出窗体的宽
         this.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        //设置PopupWindow弹出窗体的高
         this.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
-        //设置PopupWindow弹出窗体可点击
         this.setFocusable(true);
-        //设置PopupWindow弹出窗体动画效果
         showAnim = AnimationUtils.loadAnimation(context, R.anim.anim_in);
         showAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         hideAnim = AnimationUtils.loadAnimation(context, R.anim.anim_out);
         hideAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-        //实例化一个ColorDrawable颜色为半透明
         ColorDrawable bgColor = new ColorDrawable(0x60000000);
-        //设置PopupWindow弹出窗体的背景
         this.setBackgroundDrawable(bgColor);
-        //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
         mView.setOnTouchListener(new MenuItemOnTouchListener());
     }
 
-    //触摸在popupWindow上方则取消显示
     private class MenuItemOnTouchListener implements View.OnTouchListener {
 
         @Override public boolean onTouch(View v, MotionEvent event) {

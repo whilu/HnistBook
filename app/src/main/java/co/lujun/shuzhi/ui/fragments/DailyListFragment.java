@@ -26,11 +26,11 @@ import co.lujun.shuzhi.bean.ListData;
 import co.lujun.shuzhi.bean.Token;
 import co.lujun.shuzhi.ui.BookDetailActivity;
 import co.lujun.shuzhi.ui.adapter.DailyAdapter;
+import co.lujun.shuzhi.ui.listener.ItemClickListener;
 import co.lujun.shuzhi.util.IntentUtils;
 import co.lujun.shuzhi.util.NetWorkUtils;
 import co.lujun.shuzhi.util.SignatureUtils;
 import co.lujun.shuzhi.util.SystemUtil;
-import co.lujun.shuzhi.util.TokenUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -51,7 +51,6 @@ public class DailyListFragment extends BaseFragment {
     private DailyAdapter mAdapter;
     private Intent mDailyDetailIntent;
     private List<Daily> mDailies;
-    private TokenUtils mTokenUtils;
 
     private String mTime;
 
@@ -75,7 +74,6 @@ public class DailyListFragment extends BaseFragment {
         mDailies = new ArrayList<Daily>();
         mAdapter = new DailyAdapter(mDailies);
         mBundle = new Bundle();
-        mTokenUtils = new TokenUtils();
         mDailyDetailIntent = new Intent(getActivity(), BookDetailActivity.class);
     }
 
@@ -86,7 +84,7 @@ public class DailyListFragment extends BaseFragment {
             mRecycleView.setLayoutManager(mLayoutManager);
             mRecycleView.setHasFixedSize(true);
             mRecycleView.setItemAnimator(new DefaultItemAnimator());
-            mAdapter.setOnItemClickListener(new DailyAdapter.ViewHolder.ItemClickListener() {
+            mAdapter.setOnItemClickListener(new ItemClickListener() {
                 @Override public void onItemClick(View view, int position) {
                     mBundle.clear();
                     mBundle.putString(Config.BOOK.title.toString(),
@@ -140,6 +138,7 @@ public class DailyListFragment extends BaseFragment {
                     @Override public void onCompleted() {}
 
                     @Override public void onError(Throwable e) {
+                        Log.d(TAG, e.getMessage() + ", ");
                         SystemUtil.showToast(R.string.msg_request_error);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -157,15 +156,15 @@ public class DailyListFragment extends BaseFragment {
         }
         String timeStamp = String.valueOf(System.currentTimeMillis());
         Map<String, String> map = new HashMap<String, String>();
-        map.put("sign", timeStamp);
+        map.put("timestamp", timeStamp);
         String sign = SignatureUtils.makeSignature(token.getData(), map);
-        Log.d(TAG, timeStamp + ", " + sign + ", " + token.getData());
         return App.getSzApiService().getSzBookList(mTime, timeStamp, sign);
     }
 
     private void setData(ListData listData){
         mSwipeRefreshLayout.setRefreshing(false);
         if (listData == null || listData.getDailies() == null || listData.getDailies().size() <= 0){
+            Log.d(TAG, listData.getDailies().size() + ", ");
             SystemUtil.showToast(R.string.msg_no_find);
             mSwipeRefreshLayout.setRefreshing(false);
             return;

@@ -23,6 +23,7 @@
         <activity
             android:name=".ui.SplashActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,20 +33,22 @@
         </activity>
         <activity
             android:name=".ui.MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.SettingsActivity"
-            android:label="@string/app_name" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CaptureActivity"
-            android:label="@string/app_name" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SearchResultActivity"
-            android:label="@string/app_name" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.BookDetailActivity"
-            android:label="@string/app_name" />
+            android:screenOrientation="portrait" />
+
         <!--TPShareLogin-->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -56,6 +59,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tencent1104730321" />
             </intent-filter>
         </activity>
@@ -75,7 +79,8 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL}" />
-        <!-- umeng message push-->
+
+        <!-- umeng message-->
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
             android:exported="false"
@@ -92,7 +97,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
                 <data android:scheme="package" />
-               </intent-filter>
+            </intent-filter>
         </receiver>
         <receiver
             android:name="com.umeng.message.MessageReceiver"

@@ -15,6 +15,7 @@ import java.util.List;
 import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Book;
+import co.lujun.shuzhi.ui.listener.ItemClickListener;
 
 /**
  * Created by lujun on 2015/3/1.
@@ -22,7 +23,7 @@ import co.lujun.shuzhi.bean.Book;
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     private List<Book> mBooks;
-    private ViewHolder.ItemClickListener mItemClickListener;
+    private ItemClickListener mItemClickListener;
 
     public BookAdapter(List<Book> books) {
         this.mBooks = books;
@@ -56,7 +57,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         return mBooks == null ? 0 : mBooks.size();
     }
 
-    public void setOnItemClickListener(ViewHolder.ItemClickListener listener){
+    public void setOnItemClickListener(ItemClickListener listener){
         this.mItemClickListener = listener;
     }
 
@@ -84,10 +85,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             if (mItemClickListener != null){
                 mItemClickListener.onItemClick(v, getPosition());
             }
-        }
-
-        public interface ItemClickListener{
-            void onItemClick(View view, int position);
         }
     }
 }

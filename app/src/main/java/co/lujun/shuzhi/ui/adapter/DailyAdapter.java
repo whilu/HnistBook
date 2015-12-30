@@ -16,6 +16,7 @@ import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Daily;
+import co.lujun.shuzhi.ui.listener.ItemClickListener;
 
 /**
  * Created by lujun on 2015/7/17.
@@ -23,24 +24,20 @@ import co.lujun.shuzhi.bean.Daily;
 public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> {
 
     private List<Daily> mDailies;
-    private ViewHolder.ItemClickListener mItemClickListener;
+    private ItemClickListener mItemClickListener;
 
     public DailyAdapter(List<Daily> dailies) {
         this.mDailies = dailies;
     }
 
-    // 创建View，被LayoutManager调用
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View view = LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.daily_list_item, parent, false);
         view.setTag(mDailies.get(i));
         return new ViewHolder(view, mItemClickListener);
     }
 
-    // 将数据与界面进行绑定
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i){
+    @Override public void onBindViewHolder(ViewHolder viewHolder, int i){
         Daily daily = mDailies.get(i);
         Book book = daily.getBook();
         if (!TextUtils.isEmpty(book.getImages().getSmall())){
@@ -67,12 +64,11 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
         viewHolder.itemView.setTag(mDailies.get(i));
     }
 
-    @Override
-    public int getItemCount(){
+    @Override public int getItemCount(){
         return mDailies == null ? 0 : mDailies.size();
     }
 
-    public void setOnItemClickListener(ViewHolder.ItemClickListener listener){
+    public void setOnItemClickListener(ItemClickListener listener){
         this.mItemClickListener = listener;
     }
 
@@ -98,15 +94,10 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> 
             view.setOnClickListener(this);
         }
 
-        @Override
-         public void onClick(View v) {
+        @Override public void onClick(View v) {
             if (mItemClickListener != null){
                 mItemClickListener.onItemClick(v, getPosition());
             }
-        }
-
-        public interface ItemClickListener{
-            void onItemClick(View view, int position);
         }
     }
 }

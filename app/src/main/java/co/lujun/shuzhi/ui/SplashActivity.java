@@ -7,7 +7,6 @@ import android.os.Handler;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
-import com.umeng.update.UmengUpdateAgent;
 
 import co.lujun.shuzhi.R;
 import co.lujun.shuzhi.bean.Config;
@@ -21,7 +20,8 @@ public class SplashActivity extends Activity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        //init push
+        //init umeng
+        MobclickAgent.openActivityDurationTrack(false);
         PushAgent.getInstance(this).setDebugMode(false);
         if (!PreferencesUtils.getBoolean(this, Config.CONFIG_PUSH_MSG_KEY, false)){
             PushAgent.getInstance(this).enable();

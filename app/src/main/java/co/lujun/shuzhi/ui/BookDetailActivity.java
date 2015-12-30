@@ -16,7 +16,7 @@ import android.widget.TextView;
 import co.lujun.shuzhi.App;
 import co.lujun.shuzhi.BuildConfig;
 import co.lujun.shuzhi.R;
-import co.lujun.shuzhi.anim.SwipViewAnimation;
+import co.lujun.shuzhi.anim.SwipeViewAnimation;
 import co.lujun.shuzhi.bean.Book;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.util.NetWorkUtils;
@@ -25,7 +25,6 @@ import co.lujun.tpsharelogin.utils.WXUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -47,7 +46,7 @@ public class BookDetailActivity extends BaseActivity {
     private Bundle mBundle;
     private String isbn = "";
 
-    private SwipViewAnimation mSwipViewAnimation;
+    private SwipeViewAnimation mSwipeViewAnimation;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,13 +84,13 @@ public class BookDetailActivity extends BaseActivity {
         });
         btnFlip.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (mSwipViewAnimation == null){
-                    mSwipViewAnimation = new SwipViewAnimation(mContainer, mCardView1, mCardView2);
+                if (mSwipeViewAnimation == null){
+                    mSwipeViewAnimation = new SwipeViewAnimation(mContainer, mCardView1, mCardView2);
                 }
-                if (0 == mSwipViewAnimation.getIndex() % 2) {
-                    mSwipViewAnimation.applyRotation(0, 90);
+                if (0 == mSwipeViewAnimation.getIndex() % 2) {
+                    mSwipeViewAnimation.applyRotation(0, 90);
                 } else {
-                    mSwipViewAnimation.applyRotation(0, -90);
+                    mSwipeViewAnimation.applyRotation(0, -90);
                 }
             }
         });
@@ -156,10 +155,14 @@ public class BookDetailActivity extends BaseActivity {
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Bitmap[]>() {
-                        @Override public void call(Bitmap[] bmps) {
-                            ivBookImg.setImageBitmap(bmps[0]);
-                            vBookImgBlur.setImageBitmap(bmps[1]);
+                    .subscribe(new Subscriber<Bitmap[]>() {
+                        @Override public void onCompleted() {}
+
+                        @Override public void onError(Throwable e) {}
+
+                        @Override public void onNext(Bitmap[] bitmaps) {
+                            ivBookImg.setImageBitmap(bitmaps[0]);
+                            vBookImgBlur.setImageBitmap(bitmaps[1]);
                         }
                     });
         }
