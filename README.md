@@ -14,11 +14,11 @@
 http://www.wandoujia.com/apps/co.lujun.shuzhi
 
 ### 关于
-任何问题[邮件](mailto:lujun.byte@gmail.com).
+如您有任何问题，联系我: [lujun.byte#gmail.com](mailto:lujun.byte@gmail.com).
 
 License
 ============
-    Copyright 2015 whilu
+    Copyright 2015 lujun
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.

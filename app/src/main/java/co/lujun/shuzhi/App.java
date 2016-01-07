@@ -3,12 +3,17 @@ package co.lujun.shuzhi;
 import android.app.Application;
 import android.content.Context;
 
+import com.squareup.okhttp.OkHttpClient;
+
+import java.util.concurrent.TimeUnit;
+
 import co.lujun.shuzhi.api.DbApiService;
 import co.lujun.shuzhi.api.SzApiService;
 import co.lujun.shuzhi.bean.Config;
 import co.lujun.shuzhi.ui.widget.AnnDetailView;
 import co.lujun.tpsharelogin.TPManager;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 
 /**
  * Created by lujun on 2015/3/1.
@@ -40,10 +45,10 @@ public class App extends Application {
         if (sDbRestAdapter == null){
             synchronized (App.class){
                 if (sDbRestAdapter == null){
-//                    OkHttpClient client = new OkHttpClient();
-//                    client.setConnectTimeout(10, TimeUnit.SECONDS);
+                    OkHttpClient client = new OkHttpClient();
+                    client.setConnectTimeout(10, TimeUnit.SECONDS);
                     RestAdapter.Builder builder = new RestAdapter.Builder();
-//                    builder.setClient(new OkClient(client));
+                    builder.setClient(new OkClient(client));
                     sDbRestAdapter = builder.setEndpoint(Config.DOUBAN_HOST).build();
                 }
             }
@@ -55,10 +60,10 @@ public class App extends Application {
         if (sSzRestAdapter == null){
             synchronized (App.class){
                 if (sSzRestAdapter == null){
-//                    OkHttpClient client = new OkHttpClient();
-//                    client.setConnectTimeout(10, TimeUnit.SECONDS);
+                    OkHttpClient client = new OkHttpClient();
+                    client.setConnectTimeout(10, TimeUnit.SECONDS);
                     RestAdapter.Builder builder = new RestAdapter.Builder();
-//                    builder.setClient(new OkClient(client));
+                    builder.setClient(new OkClient(client));
                     sSzRestAdapter = builder
                             .setEndpoint(BuildConfig.API_ENDPOINT + BuildConfig.API_VERSION)
                             .build();
